@@ -10,7 +10,25 @@ namespace Skybrud.Umbraco.Spa.Json.Resolvers {
 
     public class SpaPublishedContentContractResolver : DefaultContractResolver {
 
-        public static readonly SpaPublishedContentContractResolver Instance = new SpaPublishedContentContractResolver();
+        #region Properties
+
+        public SpaGridJsonConverterBase GridConverter { get; }
+
+        #endregion
+
+        #region Constructors
+
+        public SpaPublishedContentContractResolver() {
+            GridConverter = new SpaGridJsonConverterBase();
+        }
+
+        public SpaPublishedContentContractResolver(SpaGridJsonConverterBase gridConverter) {
+            GridConverter = gridConverter;
+        }
+
+        #endregion
+
+        #region Member methods
 
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization) {
 
@@ -60,11 +78,13 @@ namespace Skybrud.Umbraco.Spa.Json.Resolvers {
 
             // this will only be called once and then cached
             if (objectType == typeof(GridDataModel)) {
-                contract.Converter = new SpaGridJsonConverterBase();
+                contract.Converter = GridConverter;
             }
 
             return contract;
         }
+
+        #endregion
 
     }
 

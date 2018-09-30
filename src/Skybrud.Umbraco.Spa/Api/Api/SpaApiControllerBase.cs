@@ -5,6 +5,7 @@ using System.Web;
 using Newtonsoft.Json;
 using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Spa.Api.Models;
+using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Json.Resolvers;
 using Skybrud.WebApi.Json;
 using Skybrud.WebApi.Json.Meta;
@@ -82,7 +83,7 @@ namespace Skybrud.Umbraco.Spa.Api.Api {
             return ReturnRedirect(request, destinationUrl, permanent ? HttpStatusCode.MovedPermanently : HttpStatusCode.TemporaryRedirect);
         }
 
-        protected virtual HttpResponseMessage ReturnRedirect(SpaApiRequest request, string destinationUrl, HttpStatusCode statusCode = HttpStatusCode.MovedPermanently) {
+        protected virtual HttpResponseMessage ReturnRedirect(SpaApiRequest request, string destinationUrl, HttpStatusCode statusCode) {
 
             // Initialize the "data" object for the response
             var body = new {
@@ -115,17 +116,9 @@ namespace Skybrud.Umbraco.Spa.Api.Api {
         /// <param name="data">The data to be serialized to JSON and returned as the response body.</param>
         /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
         protected virtual HttpResponseMessage CreateSpaResponse(HttpStatusCode statusCode, object data) {
-
-            // Serialize "data" to a raw JSON string
-            string rawJson = JsonConvert.SerializeObject(data, Formatting.None, new JsonSerializerSettings {
-                ContractResolver = new SpaPublishedContentContractResolver()
-            });
-
-            // Return the response message
             return new HttpResponseMessage(statusCode) {
-                Content = new StringContent(rawJson, Encoding.UTF8, "application/json")
+                Content = new StringContent(Serialize(data), Encoding.UTF8, "application/json")
             };
-
         }
 
         /// <summary>
@@ -161,6 +154,16 @@ namespace Skybrud.Umbraco.Spa.Api.Api {
         protected virtual bool BeforeSetup(SpaApiRequest request, out HttpResponseMessage response) {
             response = null;
             return false;
+        }
+
+        protected virtual string Serialize(object data) {
+
+            SpaGridJsonConverterBase gridConverter = new SpaGridJsonConverterBase();
+
+            return JsonConvert.SerializeObject(data, Formatting.None, new JsonSerializerSettings {
+                ContractResolver = new SpaPublishedContentContractResolver(gridConverter)
+            });
+
         }
 
         #region Abstract methods

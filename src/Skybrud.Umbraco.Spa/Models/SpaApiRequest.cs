@@ -3,7 +3,7 @@ using Newtonsoft.Json;
 using Skybrud.Essentials.Enums;
 using Skybrud.Umbraco.Spa.Extensions;
 
-namespace Skybrud.Umbraco.Spa.Api.Models {
+namespace Skybrud.Umbraco.Spa.Models {
 
     public class SpaApiRequest {
 

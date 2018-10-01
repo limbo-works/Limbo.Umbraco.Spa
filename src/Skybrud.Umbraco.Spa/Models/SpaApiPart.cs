@@ -1,4 +1,4 @@
-﻿namespace Skybrud.Umbraco.Spa.Api.Models {
+﻿namespace Skybrud.Umbraco.Spa.Models {
 
     /// <summary>
     /// Enums class representing the parts of a SPA response.

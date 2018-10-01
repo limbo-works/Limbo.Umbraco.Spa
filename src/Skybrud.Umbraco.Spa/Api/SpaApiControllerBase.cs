@@ -4,16 +4,16 @@ using System.Text;
 using System.Web;
 using Newtonsoft.Json;
 using Skybrud.Umbraco.Redirects.Models;
-using Skybrud.Umbraco.Spa.Api.Models;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Json.Resolvers;
+using Skybrud.Umbraco.Spa.Models;
 using Skybrud.WebApi.Json;
 using Skybrud.WebApi.Json.Meta;
 using Umbraco.Core.Models;
 using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 
-namespace Skybrud.Umbraco.Spa.Api.Api {
+namespace Skybrud.Umbraco.Spa.Api {
 
     [JsonOnlyConfiguration]
     public abstract class SpaApiControllerBase : UmbracoApiController {

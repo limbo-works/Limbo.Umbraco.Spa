@@ -1,9 +1,10 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Skybrud.Umbraco.GridData;
 using Skybrud.Umbraco.GridData.Values;
+using Skybrud.Umbraco.Spa.Models.Grid;
 using Umbraco.Web;
 using Umbraco.Web.Templates;
 
@@ -17,6 +18,16 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
 
         public override bool CanWrite => true;
 
+        public bool SkipInvalidControls { get; set; }
+
+        #endregion
+
+        #region Constructors
+
+        public SpaGridJsonConverterBase() {
+            SkipInvalidControls = true;
+        }
+
         #endregion
 
         #region Member methods
@@ -26,26 +37,39 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
             GridDataModel grid = value as GridDataModel;
             if (grid == null) return;
 
-            var hai = new {
-                name = grid.Name,
-                sections = from section in grid.Sections select new {
-                    grid = section.Grid,
-                    rows = from row in section.Rows select new {
-                        id = row.Id,
-                        name = row.Name,
-                        styles = row.Styles.JObject,
-                        config = row.Config.JObject,
-                        areas = from area in row.Areas select new {
-                            grid = area.Grid,
-                            //allowAll = area.AllowAll,
-                            //allowed = area.Allowed,
-                            config = area.Config.JObject,
-                            styles = area.Styles.JObject,
-                            controls = from control in area.Controls select GetControl(control)
+            List<SpaGridSection> sections = new List<SpaGridSection>();
+
+            foreach (GridSection section in grid.Sections) {
+                
+                List<SpaGridRow> rows = new List<SpaGridRow>();
+
+                foreach (GridRow row in section.Rows) {
+
+                    List<SpaGridArea> areas = new List<SpaGridArea>();
+
+                    foreach (GridArea area in row.Areas) {
+
+                        List<SpaGridControl> controls = new List<SpaGridControl>();
+
+                        foreach (GridControl control in area.Controls) {
+                            SpaGridControl c = GetControl(control);
+                            if (SkipInvalidControls && c == null) continue;
+                            controls.Add(c);
                         }
+
+                        if (controls.Count > 0) areas.Add(new SpaGridArea(area, controls));
+
                     }
+
+                    if (areas.Count > 0) rows.Add(new SpaGridRow(row, areas));
+
                 }
-            };
+
+                if (rows.Count > 0) sections.Add(new SpaGridSection(section, rows));
+
+            }
+
+            SpaGridModel hai = new SpaGridModel(grid, sections);
 
             JObject obj = JObject.FromObject(hai);
 
@@ -61,9 +85,10 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
             return false;
         }
 
-        protected virtual object GetControl(GridControl control) {
+        protected virtual SpaGridControl GetControl(GridControl control) {
 
             object value;
+            SpaGridEditor editor = GetEditor(control.Editor);
 
             switch (control.Editor.Alias) {
 
@@ -73,25 +98,17 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
 
                 default:
                     // Avoid returning too much data by default
-                    return new JObject {
-                        {"alias", control.Editor.Alias },
-                        {"value", control.Value?.GetType().Name }
-                    };
+                    return new SpaGridControl(control.Value?.GetType().Name, control.Editor.Alias);
 
             }
 
-            return new {
-                value,
-                editor = GetEditor(control.Editor)
-            };
+            return new SpaGridControl(value, editor);
 
         }
         
-        protected virtual object GetEditor(GridEditor editor) {
+        protected virtual SpaGridEditor GetEditor(GridEditor editor) {
             // Other properties are ommitted since I'm not sure we need them for SPA solutions (including the config)
-            return new {
-                alias = editor.Alias,
-            };
+            return new SpaGridEditor(editor.Alias);
         }
         protected virtual string GetRteParsedValue(GridControlRichTextValue value) {
             return value == null ? null : TemplateUtilities.ParseInternalLinks(value.Value, UmbracoContext.Current.UrlProvider);

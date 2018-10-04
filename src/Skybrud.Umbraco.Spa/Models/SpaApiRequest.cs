@@ -2,6 +2,7 @@
 using Newtonsoft.Json;
 using Skybrud.Essentials.Enums;
 using Skybrud.Umbraco.Spa.Extensions;
+using Umbraco.Core.Models;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
@@ -42,6 +43,11 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// Gets the host name of the current request.
         /// </summary>
         public string HostName { get; set; }
+
+        /// <summary>
+        /// Gets or sets the content item of the request.
+        /// </summary>
+        public IPublishedContent Content { get; set; }
 
         #endregion
 

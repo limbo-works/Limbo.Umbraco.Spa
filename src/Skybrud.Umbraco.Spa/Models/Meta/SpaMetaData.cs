@@ -2,6 +2,9 @@
 using Newtonsoft.Json;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Models.Meta.OpenGraph;
+using Umbraco.Core.Models;
+
+// ReSharper disable UnusedParameter.Local
 
 namespace Skybrud.Umbraco.Spa.Models.Meta {
 
@@ -71,7 +74,7 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
 
         #region Constructors
 
-        public SpaMetaData() {
+        public SpaMetaData(SpaSiteModel site, IPublishedContent content) {
             OpenGraphImages = new List<SpaOpenGraphImage>();
             Scripts = new List<SpaMetaScript>();
         }

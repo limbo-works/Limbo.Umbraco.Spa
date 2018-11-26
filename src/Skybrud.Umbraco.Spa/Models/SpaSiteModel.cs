@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using Umbraco.Core.Models;
 using Umbraco.Web;
 
@@ -12,7 +13,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// Gets a reference to the root content node.
         /// </summary>
         [JsonIgnore]
-        public IPublishedContent Content { get; }
+        public IPublishedContent Site { get; }
 
         /// <summary>
         /// Gets a reference to the content node that provides culture specific settings for the site.
@@ -20,35 +21,66 @@ namespace Skybrud.Umbraco.Spa.Models {
         [JsonIgnore]
         public IPublishedContent Culture { get; }
 
+        /// <summary>
+        /// Gets the ID of the culture node, or <c>0</c> if the site context doesn't have a culture node.
+        /// </summary>
         [JsonIgnore]
         public int CultureId => Culture?.Id ?? 0;
 
         /// <summary>
+        /// Gets whether the site context has a reference to a culture node.
+        /// </summary>
+        [JsonIgnore]
+        public bool HasCulture => Culture != null;
+
+        /// <summary>
         /// Gets the ID of the site.
         /// </summary>
-        [JsonProperty("id")]
+        [JsonProperty("id", Order = -100)]
         public int Id { get; protected set; }
 
         /// <summary>
         /// Gets the name of the site.
         /// </summary>
-        [JsonProperty("name")]
+        [JsonProperty("name", Order = -95)]
         public string Name { get; protected set; }
 
         #endregion
 
         #region Constructors
 
-        public SpaSiteModel(IPublishedContent site, IPublishedContent culture) {
-
+        /// <summary>
+        /// Initializes a new site model from the specified <paramref name="site"/>.
+        /// 
+        /// When this constructor is used, it's assumed that the site doesn't use cultures.
+        /// </summary>
+        /// <param name="site">An instance of <see cref="IPublishedContent"/> representing the site node.</param>
+        public SpaSiteModel(IPublishedContent site) {
+            
             // Site
-            Content = site;
-            Id = Content.Id;
+            Site = site ?? throw new ArgumentNullException(nameof(site));
+            Id = site.Id;
+            Name = site.GetPropertyValue<string>("siteName");
+
+        }
+
+        /// <summary>
+        /// Initializes a new site model from the specified <paramref name="site"/> and <paramref name="culture"/>.
+        /// 
+        /// When this constructor is used, a culture node must be present.
+        /// </summary>
+        /// <param name="site">An instance of <see cref="IPublishedContent"/> representing the site node.</param>
+        /// <param name="culture">An instance of <see cref="IPublishedContent"/> representing the culture node.</param>
+        public SpaSiteModel(IPublishedContent site, IPublishedContent culture) {
+            
+            // Site
+            Site = site ?? throw new ArgumentNullException(nameof(site));
+            Id = site.Id;
 
             // Culture
-            Culture = culture;
+            Culture = culture ?? throw new ArgumentNullException(nameof(culture));
             Name = culture.GetPropertyValue<string>("siteName");
-            
+
         }
 
         #endregion

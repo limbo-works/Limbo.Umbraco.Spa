@@ -45,6 +45,12 @@ namespace Skybrud.Umbraco.Spa.Models {
         [JsonProperty("name", Order = -95)]
         public string Name { get; protected set; }
 
+        /// <summary>
+        /// Gets the URL of the site or culture node.
+        /// </summary>
+        [JsonProperty("url", Order = -90)]
+        public string Url { get; protected set; }
+
         #endregion
 
         #region Constructors
@@ -61,6 +67,7 @@ namespace Skybrud.Umbraco.Spa.Models {
             Site = site ?? throw new ArgumentNullException(nameof(site));
             Id = site.Id;
             Name = site.GetPropertyValue<string>("siteName");
+            Url = site.Url;
 
         }
 
@@ -80,6 +87,7 @@ namespace Skybrud.Umbraco.Spa.Models {
             // Culture
             Culture = culture ?? throw new ArgumentNullException(nameof(culture));
             Name = culture.GetPropertyValue<string>("siteName");
+            Url = culture.Url;
 
         }
 

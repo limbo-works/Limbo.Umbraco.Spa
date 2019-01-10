@@ -17,6 +17,14 @@ namespace Skybrud.Umbraco.Spa.Models {
         public int SiteId { get; set; }
 
         /// <summary>
+        /// Gets a reference to the <see cref="IPublishedContent"/> representing the site node.
+        /// </summary>
+        [JsonIgnore]
+        public IPublishedContent Site { get; set; }
+
+        public SpaSiteModel SiteModel { get; set; }
+
+        /// <summary>
         /// Gets the URL of the current page.
         /// </summary>
         [JsonProperty("url")]
@@ -49,6 +57,8 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         public IPublishedContent Content { get; set; }
 
+        public object ContentModel { get; set; }
+
         #endregion
 
         #region Constructors
@@ -79,6 +89,14 @@ namespace Skybrud.Umbraco.Spa.Models {
 
         public SpaApiRequest(int siteId, string url, string parts) {
             SiteId = siteId;
+            Url = String.IsNullOrWhiteSpace(url) ? "/" : url;
+            IsPreview = Url.IsPreviewUrl();
+            Parts = GetParts(parts);
+        }
+
+        public SpaApiRequest(int siteId, IPublishedContent site, string url, string parts) {
+            SiteId = siteId;
+            Site = site;
             Url = String.IsNullOrWhiteSpace(url) ? "/" : url;
             IsPreview = Url.IsPreviewUrl();
             Parts = GetParts(parts);

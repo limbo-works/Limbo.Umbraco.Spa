@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Text.RegularExpressions;
+using Skybrud.Essentials.Strings.Extensions;
 
 namespace Skybrud.Umbraco.Spa.Extensions {
 
@@ -18,14 +20,10 @@ namespace Skybrud.Umbraco.Spa.Extensions {
 
             } else {
 
-				string[] urlFolders = url.Split('/');
+                Match match = Regex.Match(url.Split('?')[0], "^([0-9]+)\\.aspx$");
+			    return match.Success ? match.Groups[1].Value.ToInt32() : 0;
 
-				//tjek om der er indhold i arrayet
-				if (urlFolders.Length <= 0) return -1;
-
-				//find nodeId og returnér til nodeId var
-				int.TryParse(urlFolders[1].Split('.')[0], out nodeId);
-			}
+            }
 
 			return nodeId;
 

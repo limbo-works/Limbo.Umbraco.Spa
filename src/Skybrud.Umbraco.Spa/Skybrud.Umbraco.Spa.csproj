@@ -12,7 +12,7 @@
     <Company>Skybrud.dk a/s</Company>
     <Product>Skybrud.Umbraco.Spa</Product>
     <Authors>Anders Bjerner</Authors>
-    <Copyright>Copyright © 2018</Copyright>
+    <Copyright>Copyright © 2019</Copyright>
     <Description>SPA (single page application) package for Umbraco 7.</Description>
     <RepositoryUrl>https://github.com/skybrud/Skybrud.Umbraco.Spa</RepositoryUrl>
   </PropertyGroup>

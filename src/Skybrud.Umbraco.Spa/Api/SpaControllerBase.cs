@@ -16,7 +16,7 @@ using Umbraco.Web.WebApi;
 namespace Skybrud.Umbraco.Spa.Api {
 
     [JsonOnlyConfiguration]
-    public abstract class SpaApiControllerBase : UmbracoApiController {
+    public abstract class SpaControllerBase : UmbracoApiController {
 
         /// <summary>
         /// Virtual method for handling redirects.
@@ -24,13 +24,13 @@ namespace Skybrud.Umbraco.Spa.Api {
         /// <param name="request">The current SPA request.</param>
         /// <param name="response">The response.</param>
         /// <returns><c>true</c> if a matching redirect was found; otherwise <c>false</c>.</returns>
-        protected virtual bool HandleRedirects(SpaApiRequest request, out HttpResponseMessage response) {
+        protected virtual bool HandleRedirects(SpaRequest request, out HttpResponseMessage response) {
             if (HandleSkybrudRedirect(request, out response)) return true;
             if (HandleUmbracoRedirect(request, out response)) return true;
             return false;
         }
 
-        protected virtual bool HandleSkybrudRedirect(SpaApiRequest request, out HttpResponseMessage response) {
+        protected virtual bool HandleSkybrudRedirect(SpaRequest request, out HttpResponseMessage response) {
 
             response = null;
 
@@ -50,7 +50,7 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         }
         
-        protected virtual bool HandleUmbracoRedirect(SpaApiRequest request, out HttpResponseMessage response) {
+        protected virtual bool HandleUmbracoRedirect(SpaRequest request, out HttpResponseMessage response) {
 
             response = null;
 
@@ -75,15 +75,15 @@ namespace Skybrud.Umbraco.Spa.Api {
         //    //return CreateSpaResponse(JsonMetaResponse.GetError(HttpStatusCode.MovedPermanently, "Page has moved"));
         //}
 
-        protected virtual HttpResponseMessage ReturnRedirect(SpaApiRequest request, string destinationUrl) {
+        protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl) {
 		    return ReturnRedirect(request, destinationUrl, HttpStatusCode.MovedPermanently);
 	    }
 
-        protected virtual HttpResponseMessage ReturnRedirect(SpaApiRequest request, string destinationUrl, bool permanent) {
+        protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl, bool permanent) {
             return ReturnRedirect(request, destinationUrl, permanent ? HttpStatusCode.MovedPermanently : HttpStatusCode.TemporaryRedirect);
         }
 
-        protected virtual HttpResponseMessage ReturnRedirect(SpaApiRequest request, string destinationUrl, HttpStatusCode statusCode) {
+        protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl, HttpStatusCode statusCode) {
 
             // Initialize the "data" object for the response
             var body = new {
@@ -151,7 +151,7 @@ namespace Skybrud.Umbraco.Spa.Api {
         /// <param name="request">The request.</param>
         /// <param name="response">The response.</param>
         /// <returns><c>true</c> if the method provides a response, otherwise <c>false</c>.</returns>
-        protected virtual bool BeforeSetup(SpaApiRequest request, out HttpResponseMessage response) {
+        protected virtual bool BeforeSetup(SpaRequest request, out HttpResponseMessage response) {
             response = null;
             return false;
         }
@@ -168,7 +168,7 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         #region Abstract methods
 
-        protected abstract int GetCultureIdFromUrl(SpaApiRequest request);
+        protected abstract int GetCultureIdFromUrl(SpaRequest request);
 
         #endregion
 

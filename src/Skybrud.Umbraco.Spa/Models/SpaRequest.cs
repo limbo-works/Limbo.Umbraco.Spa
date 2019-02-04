@@ -6,7 +6,7 @@ using Umbraco.Core.Models;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
-    public class SpaApiRequest {
+    public class SpaRequest {
 
         #region Properties
 
@@ -67,34 +67,34 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// Initializes a new a instance with default options.
         /// </summary>
         [JsonConstructor]
-        public SpaApiRequest() { }
+        public SpaRequest() { }
 
         /// <summary>
         /// Intializes a new instance for the site with the specified <paramref name="siteId"/>.
         /// </summary>
         /// <param name="siteId">The ID of the site.</param>
-        public SpaApiRequest(int siteId) {
+        public SpaRequest(int siteId) {
             SiteId = siteId;
             Url = "";
             IsPreview = false;
             Parts = GetParts();
         }
 
-        public SpaApiRequest(int siteId, string url) {
+        public SpaRequest(int siteId, string url) {
             SiteId = siteId;
             Url = url;
             IsPreview = url.IsPreviewUrl();
             Parts = GetParts();
         }
 
-        public SpaApiRequest(int siteId, string url, string parts) {
+        public SpaRequest(int siteId, string url, string parts) {
             SiteId = siteId;
             Url = String.IsNullOrWhiteSpace(url) ? "/" : url;
             IsPreview = Url.IsPreviewUrl();
             Parts = GetParts(parts);
         }
 
-        public SpaApiRequest(int siteId, IPublishedContent site, string url, string parts) {
+        public SpaRequest(int siteId, IPublishedContent site, string url, string parts) {
             SiteId = siteId;
             Site = site;
             Url = String.IsNullOrWhiteSpace(url) ? "/" : url;

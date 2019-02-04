@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Skybrud.Umbraco.Spa.Models.Meta;
@@ -26,27 +27,28 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
             AddMetaContent(meta, "og:description", data.OpenGraphDescription);
             AddMetaContent(meta, "og:site_name", data.OpenGraphSiteName);
             AddMetaContent(meta, "og:url", data.OpenGraphUrl);
-
+            
             foreach (SpaOpenGraphImage image in data.OpenGraphImages) {
                 AddMetaContent(meta, "og:image", image.Url);
                 if (image.Width > 0) AddMetaContent(meta, "og:image:width", image.Width + "");
                 if (image.Height > 0) AddMetaContent(meta, "og:image:height", image.Height + "");
             }
 
-            if (data.Scripts.Count > 0) {
-                obj.Add("script", JArray.FromObject(data.Scripts));
-            } 
+            if (data.Links.Count > 0) obj.Add("link", JArray.FromObject(data.Links.Where(x => x.IsValid)));
+            if (data.Scripts.Count > 0) obj.Add("script", JArray.FromObject(data.Scripts));
+
+            obj.Add("__dangerouslyDisableSanitizers", new JArray(from str in data.DangerouslyDisableSanitizers select str));
 
             obj.WriteTo(writer);
 
         }
 
-        private void AddMetaContent(JArray meta, string name, string content, bool mandatory = false) {
+        protected void AddMetaContent(JArray meta, string name, string content, bool mandatory = false) {
             if (String.IsNullOrWhiteSpace(content) && mandatory == false) return;
             meta.Add(new JObject { { "name", name }, { "content", content ?? String.Empty } });
         }
 
-        private void AddMetaProperty(JArray meta, string name, string property, bool mandatory = false) {
+        protected void AddMetaProperty(JArray meta, string name, string property, bool mandatory = false) {
             if (String.IsNullOrWhiteSpace(property) && mandatory == false) return;
             meta.Add(new JObject { { "name", name }, { "property", property ?? String.Empty } });
         }

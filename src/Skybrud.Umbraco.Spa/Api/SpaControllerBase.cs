@@ -166,9 +166,41 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         }
 
+        protected virtual bool BeforeSetupCulture(SpaRequest request, out HttpResponseMessage response) {
+            response = null;
+            return false;
+        }
+        
+        protected virtual bool SetupCulture(SpaRequest request, out HttpResponseMessage response) {
+            response = null;
+            return false;
+        }
+        
+        protected virtual bool AfterSetupCulture(SpaRequest request, out HttpResponseMessage response) {
+            response = null;
+            return false;
+        }
+
+        protected virtual bool InitSiteModel(SpaRequest request, out HttpResponseMessage response) {
+            response = null;
+            return false;
+        }
+
+        protected virtual bool HandleNotFound(SpaRequest request, out HttpResponseMessage response, ref HttpStatusCode statusCode) {
+            response = null;
+            return false;
+        }
+
+        protected virtual bool HandleOutboundRedirects(SpaRequest request, out HttpResponseMessage response) {
+            response = null;
+            return false;
+        }
+
         #region Abstract methods
 
         protected abstract int GetCultureIdFromUrl(SpaRequest request);
+
+        protected abstract SpaDataModel InitDataModel(SpaRequest request);
 
         #endregion
 

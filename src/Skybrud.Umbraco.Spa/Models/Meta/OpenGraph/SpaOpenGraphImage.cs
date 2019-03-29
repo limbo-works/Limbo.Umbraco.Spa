@@ -13,6 +13,10 @@ namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
         [JsonProperty("height")]
         public int Height { get; set; }
 
+        public SpaOpenGraphImage(string url) {
+            Url = url;
+        }
+
         public SpaOpenGraphImage(string url, int width, int height) {
             Url = url;
             Width = width;

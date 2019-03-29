@@ -15,6 +15,8 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
 
         #region Properties
 
+        protected IPublishedContent Content { get; }
+
         /// <summary>
         /// Gets or sets the canonical URL of the current page.
         /// </summary>
@@ -48,34 +50,9 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         public string Robots { get; set; }
 
         /// <summary>
-        /// Gets the Open Graph title for the current page.
+        /// Gets a collection of Open Graph properties for the current page.
         /// </summary>
-        [JsonProperty("og:title")]
-        public string OpenGraphTitle { get; set; }
-
-        /// <summary>
-        /// Gets the Open Graph description for the current page.
-        /// </summary>
-        [JsonProperty("og:description")]
-        public string OpenGraphDescription { get; set; }
-
-        /// <summary>
-        /// Gets the Open Graph site name.
-        /// </summary>
-        [JsonProperty("og:site_name")]
-        public string OpenGraphSiteName { get; set; }
-
-        /// <summary>
-        /// Gets the Open Graph URL for the current page.
-        /// </summary>
-        [JsonProperty("og:url")]
-        public string OpenGraphUrl { get; set; }
-
-        /// <summary>
-        /// Gets a collection of Open Graph images for the current page.
-        /// </summary>
-        [JsonProperty("og:image")]
-        public List<SpaOpenGraphImage> OpenGraphImages { get; set; }
+        public SpaOpenGraphProperties OpenGraph => GetOpenGraph();
 
         public List<SpaMetaLink> Links { get; set; }
 
@@ -89,7 +66,8 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
 
         public SpaMetaData(SpaSiteModel site, IPublishedContent content) {
 
-            OpenGraphImages = new List<SpaOpenGraphImage>();
+            Content = content;
+
             Links = new List<SpaMetaLink>();
             Scripts = new List<SpaMetaScript>();
 
@@ -102,6 +80,10 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         #endregion
 
         #region Member methods
+
+        protected virtual SpaOpenGraphProperties GetOpenGraph() {
+            return new SpaOpenGraphProperties(Content);
+        }
 
         public SpaMetaLink AddLink(string href, string rel = null, string type = null, string media = null, string sizes = null) {
             return AddLink(new SpaMetaLink {

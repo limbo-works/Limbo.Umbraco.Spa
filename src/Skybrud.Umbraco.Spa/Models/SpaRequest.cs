@@ -41,6 +41,12 @@ namespace Skybrud.Umbraco.Spa.Models {
         public SpaSiteModel SiteModel { get; set; }
 
         /// <summary>
+        /// Gets a reference to the <see cref="IPublishedContent"/> representing the culture node.
+        /// </summary>
+        [JsonIgnore]
+        public IPublishedContent Culture { get; set; }
+
+        /// <summary>
         /// Gets the URL of the current page.
         /// </summary>
         [JsonProperty("url")]

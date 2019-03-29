@@ -23,15 +23,20 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
 
             AddMetaContent(meta, "description", data.MetaDescription, true);
             AddMetaContent(meta, "robots", data.Robots);
-            AddMetaContent(meta, "og:title", data.OpenGraphTitle);
-            AddMetaContent(meta, "og:description", data.OpenGraphDescription);
-            AddMetaContent(meta, "og:site_name", data.OpenGraphSiteName);
-            AddMetaContent(meta, "og:url", data.OpenGraphUrl);
-            
-            foreach (SpaOpenGraphImage image in data.OpenGraphImages) {
-                AddMetaContent(meta, "og:image", image.Url);
-                if (image.Width > 0) AddMetaContent(meta, "og:image:width", image.Width + "");
-                if (image.Height > 0) AddMetaContent(meta, "og:image:height", image.Height + "");
+
+            if (data.OpenGraph != null) {
+
+                AddMetaProperty(meta, "og:title", data.OpenGraph.Title);
+                AddMetaProperty(meta, "og:description", data.OpenGraph.Description);
+                AddMetaProperty(meta, "og:site_name", data.OpenGraph.SiteName);
+                AddMetaProperty(meta, "og:url", data.OpenGraph.Url);
+
+                foreach (SpaOpenGraphImage image in data.OpenGraph.Images) {
+                    AddMetaProperty(meta, "og:image", image.Url);
+                    if (image.Width > 0) AddMetaProperty(meta, "og:image:width", image.Width + String.Empty);
+                    if (image.Height > 0) AddMetaProperty(meta, "og:image:height", image.Height + String.Empty);
+                }
+
             }
 
             if (data.Links.Count > 0) obj.Add("link", JArray.FromObject(data.Links.Where(x => x.IsValid)));
@@ -48,9 +53,9 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
             meta.Add(new JObject { { "name", name }, { "content", content ?? String.Empty } });
         }
 
-        protected void AddMetaProperty(JArray meta, string name, string property, bool mandatory = false) {
+        protected void AddMetaProperty(JArray meta, string property, string content, bool mandatory = false) {
             if (String.IsNullOrWhiteSpace(property) && mandatory == false) return;
-            meta.Add(new JObject { { "name", name }, { "property", property ?? String.Empty } });
+            meta.Add(new JObject { { "property", property }, { "content", content ?? String.Empty } });
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {

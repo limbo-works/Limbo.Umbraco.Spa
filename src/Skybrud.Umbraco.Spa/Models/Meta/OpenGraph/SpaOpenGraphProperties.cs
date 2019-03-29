@@ -50,7 +50,7 @@ namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
         }
 
         public SpaOpenGraphProperties(IPublishedContent baseNode) {
-            BaseUrl = String.Join("/", baseNode.UrlWithDomain().Split('/').Take(3));
+            BaseUrl = String.Join("/", baseNode.UrlAbsolute().Split('/').Take(3));
             Images = new List<SpaOpenGraphImage>();
         }
 

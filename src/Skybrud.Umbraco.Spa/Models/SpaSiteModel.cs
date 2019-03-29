@@ -1,6 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
-using Umbraco.Core.Models;
+using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Spa.Models {
@@ -66,7 +66,7 @@ namespace Skybrud.Umbraco.Spa.Models {
             // Site
             Site = site ?? throw new ArgumentNullException(nameof(site));
             Id = site.Id;
-            Name = site.GetPropertyValue<string>("siteName");
+            Name = site.Value<string>("siteName");
             Url = site.Url;
 
         }
@@ -86,7 +86,7 @@ namespace Skybrud.Umbraco.Spa.Models {
 
             // Culture
             Culture = culture ?? throw new ArgumentNullException(nameof(culture));
-            Name = culture.GetPropertyValue<string>("siteName");
+            Name = culture.Value<string>("siteName");
             Url = culture.Url;
 
         }

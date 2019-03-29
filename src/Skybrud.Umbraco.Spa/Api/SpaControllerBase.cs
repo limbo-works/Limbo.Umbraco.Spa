@@ -1,15 +1,15 @@
 ﻿using System.Net;
 using System.Net.Http;
 using System.Text;
-using System.Web;
 using Newtonsoft.Json;
-using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Json.Resolvers;
 using Skybrud.Umbraco.Spa.Models;
 using Skybrud.WebApi.Json;
 using Skybrud.WebApi.Json.Meta;
+using Umbraco.Core.Composing;
 using Umbraco.Core.Models;
+using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Core.Services;
 using Umbraco.Web.WebApi;
 
@@ -34,19 +34,21 @@ namespace Skybrud.Umbraco.Spa.Api {
 
             response = null;
 
-            // Look for a global Skybrud redirect
-            RedirectItem redirect = RedirectsRepository.Current.GetRedirectByUrl(0, HttpUtility.UrlDecode(request.Url));
+            return false;
 
-            // If nothing is found at this point, look for a site specific Skybrud redirect
-            if (request.SiteId > 0 && redirect == null) {
-                redirect = RedirectsRepository.Current.GetRedirectByUrl(request.SiteId, HttpUtility.UrlDecode(request.Url));
-            }
+            //// Look for a global Skybrud redirect
+            //RedirectItem redirect = RedirectsRepository.Current.GetRedirectByUrl(0, HttpUtility.UrlDecode(request.Url));
 
-            if (redirect == null) return false;
+            //// If nothing is found at this point, look for a site specific Skybrud redirect
+            //if (request.SiteId > 0 && redirect == null) {
+            //    redirect = RedirectsRepository.Current.GetRedirectByUrl(request.SiteId, HttpUtility.UrlDecode(request.Url));
+            //}
 
-            // Return a redirect response based on the Skybrud redirect
-            response = ReturnRedirect(request, redirect.LinkUrl, redirect.IsPermanent);
-            return true;
+            //if (redirect == null) return false;
+
+            //// Return a redirect response based on the Skybrud redirect
+            //response = ReturnRedirect(request, redirect.LinkUrl, redirect.IsPermanent);
+            //return true;
 
         }
         
@@ -55,7 +57,7 @@ namespace Skybrud.Umbraco.Spa.Api {
             response = null;
 
             // Get a reference to Umbraco's redirect URL service
-            IRedirectUrlService service = UmbracoContext.Application.Services.RedirectUrlService;
+            IRedirectUrlService service = Current.Services.RedirectUrlService;
 
             // Look for a matching redirect
             IRedirectUrl umbRedirect = service.GetMostRecentRedirectUrl(request.SiteId + request.Url.TrimEnd('/'));

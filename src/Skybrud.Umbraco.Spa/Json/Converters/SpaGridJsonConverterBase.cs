@@ -6,6 +6,7 @@ using Skybrud.Umbraco.GridData;
 using Skybrud.Umbraco.GridData.Values;
 using Skybrud.Umbraco.Spa.Models.Grid;
 using Umbraco.Web;
+using Umbraco.Web.Composing;
 using Umbraco.Web.Templates;
 
 namespace Skybrud.Umbraco.Spa.Json.Converters {
@@ -111,7 +112,7 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
             return new SpaGridEditor(editor.Alias);
         }
         protected virtual string GetRteParsedValue(GridControlRichTextValue value) {
-            return value == null ? null : TemplateUtilities.ParseInternalLinks(value.Value, UmbracoContext.Current.UrlProvider);
+            return value == null ? null : TemplateUtilities.ParseInternalLinks(value.Value, Current.UmbracoContext.UrlProvider);
         }
 
         #endregion

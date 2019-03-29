@@ -1,19 +1,19 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net45;net46;net47</TargetFrameworks>
+    <TargetFrameworks>net472</TargetFrameworks>
     <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
     <RunBuildTargets>true</RunBuildTargets>
   </PropertyGroup>
 
   <PropertyGroup>
     <RootNamespace>Skybrud.Umbraco.Spa</RootNamespace>
-    <Version>2.0.0</Version>
+    <Version>3.0.0</Version>
     <Company>Skybrud.dk a/s</Company>
     <Product>Skybrud.Umbraco.Spa</Product>
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © 2019</Copyright>
-    <Description>SPA (single page application) package for Umbraco 7.</Description>
+    <Description>SPA (single page application) package for Umbraco 8.</Description>
     <RepositoryUrl>https://github.com/skybrud/Skybrud.Umbraco.Spa</RepositoryUrl>
   </PropertyGroup>
 
@@ -23,24 +23,22 @@
     <PackageProjectUrl>https://github.com/skybrud/Skybrud.Umbraco.Spa</PackageProjectUrl>
     <PackageIconUrl>https://www.skybrud.dk/img/5431sk/icon/favicon.ico</PackageIconUrl>
   </PropertyGroup>
-
-  <PropertyGroup Condition="'$(TargetFramework)'=='net45' OR '$(TargetFramework)'=='net46' OR '$(TargetFramework)'=='net47'">
-    <DefineConstants>NET_FRAMEWORK</DefineConstants>
-  </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Skybrud.Essentials" Version="1.1.6" />
-    <PackageReference Include="Skybrud.Umbraco.GridData" Version="2.0.6" />
-    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="0.3.4" />
-    <PackageReference Include="UmbracoCms.Core" Version="7.7.0" />
+    <PackageReference Include="Skybrud.Essentials" Version="1.1.9" />
+    <PackageReference Include="Skybrud.Umbraco.GridData" Version="3.0.0-beta001" />
+    <PackageReference Include="Skybrud.WebApi.Json" Version="1.0.4" />
+    <!--<PackageReference Include="Skybrud.Umbraco.Redirects" Version="0.3.4" />-->
+    <PackageReference Include="UmbracoCms.Core" Version="8.0.0" />
+    <PackageReference Include="UmbracoCms.Web" Version="8.0.0" />
   </ItemGroup>
 
   <!--<PropertyGroup>
-    <DocumentationFile>bin\$(ConfigurationName)\$(TargetFramework)\Skybrud.Essentials.Http.xml</DocumentationFile>
+    <DocumentationFile>bin\$(ConfigurationName)\$(TargetFramework)\Skybrud.Umbraco.Spa.xml</DocumentationFile>
   </PropertyGroup>-->
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
     <Exec Command="mkdir $(ProjectDir)bin\Dev\$(TargetFramework)&#xD;&#xA;xcopy $(ProjectDir)bin\$(ConfigurationName)\$(TargetFramework)\$(TargetName).* $(ProjectDir)bin\Dev\$(TargetFramework)\ /y&#xD;&#xA;&quot;$(ProjectDir)..\build\UpdateAssemblyInfoJson.exe&quot; &quot;$(ProjectPath)&quot; &quot;$(TargetPath)&quot;" />
-  </Target>
+  </Target>-->
 
 </Project>

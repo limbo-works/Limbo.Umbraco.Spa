@@ -4,7 +4,7 @@ using System.Web;
 using Newtonsoft.Json;
 using Skybrud.Essentials.Enums;
 using Skybrud.Umbraco.Spa.Extensions;
-using Umbraco.Core.Models;
+using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Spa.Models {

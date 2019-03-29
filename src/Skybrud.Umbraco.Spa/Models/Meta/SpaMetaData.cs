@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Models.Meta.OpenGraph;
-using Umbraco.Core.Models;
+using Umbraco.Core.Models.PublishedContent;
 
 // ReSharper disable UnusedParameter.Local
 

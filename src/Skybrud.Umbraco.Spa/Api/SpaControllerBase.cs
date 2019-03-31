@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Text;
 using Newtonsoft.Json;
+using Skybrud.Umbraco.Spa.Attributes;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Json.Resolvers;
 using Skybrud.Umbraco.Spa.Models;
@@ -16,6 +17,7 @@ using Umbraco.Web.WebApi;
 namespace Skybrud.Umbraco.Spa.Api {
 
     [JsonOnlyConfiguration]
+    [AccessControlAllowOrigin]
     public abstract class SpaControllerBase : UmbracoApiController {
 
         /// <summary>

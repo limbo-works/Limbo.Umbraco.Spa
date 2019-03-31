@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Web;
 using Skybrud.Essentials.Enums;
+using Skybrud.Essentials.Strings;
+using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Spa.Extensions;
 
 namespace Skybrud.Umbraco.Spa.Models {
@@ -8,6 +11,8 @@ namespace Skybrud.Umbraco.Spa.Models {
     public class SpaRequestOptions {
 
         #region Properties
+
+        public int PageId { get; set; }
 
         public int SiteId { get; set; }
 
@@ -21,11 +26,37 @@ namespace Skybrud.Umbraco.Spa.Models {
 
         public string HostName { get; set; }
 
+        public int NavLevels { get; set; }
+
+        public bool NavContext { get; set; }
+
         #endregion
 
         #region Constructors
 
         public SpaRequestOptions() { }
+
+        public SpaRequestOptions(HttpRequest request) {
+
+            string appHost = request.QueryString["appHost"];
+
+            string appProtocol = request.QueryString["appProtocol"];
+
+            // Use the current URL as fallback for "appHost" and "appProtocol"
+            HostName = String.IsNullOrWhiteSpace(appHost) ? request.Url.Host : appHost;
+            Protocol = String.IsNullOrWhiteSpace(appProtocol) ? request.Url.Scheme : appProtocol;
+
+            NavLevels = request.QueryString["navLevels"].ToInt32(1);
+            NavContext = StringUtils.ParseBoolean(request.QueryString["navContext"]);
+
+            Parts = GetParts(request.QueryString["parys"]);
+
+            Url = request.QueryString["url"];
+
+            SiteId = Math.Max(request.QueryString["siteId"].ToInt32(-1), request.QueryString["appSiteId"].ToInt32(-1));
+            PageId = Math.Max(request.QueryString["pageId"].ToInt32(-1), request.QueryString["nodeId"].ToInt32(-1));
+
+        }
 
         public SpaRequestOptions(int siteId) {
             SiteId = siteId;

@@ -197,14 +197,14 @@ namespace Skybrud.Umbraco.Spa.Api {
             response = null;
             return false;
         }
+        
+        protected virtual int GetCultureIdFromUrl(SpaRequest request) {
+            return -1;
+        }
 
-        #region Abstract methods
-
-        protected abstract int GetCultureIdFromUrl(SpaRequest request);
-
-        protected abstract SpaDataModel InitDataModel(SpaRequest request);
-
-        #endregion
+        protected virtual SpaDataModel InitDataModel(SpaRequest request) {
+            return null;
+        }
 
     }
 

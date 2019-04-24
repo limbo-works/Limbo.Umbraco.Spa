@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.Web;
 using Skybrud.Essentials.Enums;
 using Skybrud.Essentials.Strings;
@@ -7,7 +8,7 @@ using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Spa.Extensions;
 
 namespace Skybrud.Umbraco.Spa.Models {
-        
+
     public class SpaRequestOptions {
 
         #region Properties
@@ -30,31 +31,44 @@ namespace Skybrud.Umbraco.Spa.Models {
 
         public bool NavContext { get; set; }
 
+        public string CacheKey => $"SpaMicroCache-{PageId}-{SiteId}-{Url}-{IsPreview}-{String.Join(",", Parts ?? new List<SpaApiPart>())}-{Protocol}-{HostName}-{NavLevels}-{NavContext}";
+
+        public NameValueCollection QueryString { get; set; }
+
+        public bool EnableCaching { get; set; }
+
         #endregion
 
         #region Constructors
 
-        public SpaRequestOptions() { }
 
-        public SpaRequestOptions(HttpRequest request) {
+        public SpaRequestOptions(SpaRequest request) : this(request.HttpContext) { }
 
-            string appHost = request.QueryString["appHost"];
+        public SpaRequestOptions(HttpContextBase context) {
 
-            string appProtocol = request.QueryString["appProtocol"];
+            HttpRequestBase r = context.Request;
+
+            EnableCaching = context.IsDebuggingEnabled == false && r.QueryString["cache"] != "false";
+
+            string appHost = r.QueryString["appHost"];
+
+            string appProtocol = r.QueryString["appProtocol"];
 
             // Use the current URL as fallback for "appHost" and "appProtocol"
-            HostName = String.IsNullOrWhiteSpace(appHost) ? request.Url.Host : appHost;
-            Protocol = String.IsNullOrWhiteSpace(appProtocol) ? request.Url.Scheme : appProtocol;
+            HostName = String.IsNullOrWhiteSpace(appHost) ? r.Url?.Host : appHost;
+            Protocol = String.IsNullOrWhiteSpace(appProtocol) ? r.Url?.Scheme : appProtocol;
 
-            NavLevels = request.QueryString["navLevels"].ToInt32(1);
-            NavContext = StringUtils.ParseBoolean(request.QueryString["navContext"]);
+            NavLevels = r.QueryString["navLevels"].ToInt32(1);
+            NavContext = StringUtils.ParseBoolean(r.QueryString["navContext"]);
 
-            Parts = GetParts(request.QueryString["parys"]);
+            Parts = GetParts(r.QueryString["parts"]);
 
-            Url = request.QueryString["url"];
+            Url = r.QueryString["url"];
 
-            SiteId = Math.Max(request.QueryString["siteId"].ToInt32(-1), request.QueryString["appSiteId"].ToInt32(-1));
-            PageId = Math.Max(request.QueryString["pageId"].ToInt32(-1), request.QueryString["nodeId"].ToInt32(-1));
+            SiteId = Math.Max(r.QueryString["siteId"].ToInt32(-1), r.QueryString["appSiteId"].ToInt32(-1));
+            PageId = Math.Max(r.QueryString["pageId"].ToInt32(-1), r.QueryString["nodeId"].ToInt32(-1));
+
+            QueryString = r.QueryString;
 
         }
 
@@ -80,7 +94,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         }
 
         #endregion
-
+        
         #region Private methods
 
         /// <summary>

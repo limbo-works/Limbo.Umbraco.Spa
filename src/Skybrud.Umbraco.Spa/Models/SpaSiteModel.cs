@@ -85,10 +85,18 @@ namespace Skybrud.Umbraco.Spa.Models {
             Id = site.Id;
 
             // Culture
-            Culture = culture ?? throw new ArgumentNullException(nameof(culture));
-            Name = culture.Value<string>("siteName");
-            Url = culture.Url;
+            Culture = culture ?? site;
+            Name = Culture.Value<string>("siteName");
+            Url = Culture.Url;
 
+        }
+
+        #endregion
+
+        #region Member methods
+
+        public virtual SpaNavigationModel GetNavigation() {
+            return new SpaNavigationModel();
         }
 
         #endregion

@@ -1,212 +1,141 @@
-﻿using System.Net;
+﻿using System;
 using System.Net.Http;
-using System.Text;
-using Newtonsoft.Json;
 using Skybrud.Umbraco.Spa.Attributes;
-using Skybrud.Umbraco.Spa.Json.Converters;
-using Skybrud.Umbraco.Spa.Json.Resolvers;
+using Skybrud.Umbraco.Spa.Exceptions;
 using Skybrud.Umbraco.Spa.Models;
+using Skybrud.Umbraco.Spa.Models.Flow;
 using Skybrud.WebApi.Json;
-using Skybrud.WebApi.Json.Meta;
+using Umbraco.Core.Cache;
 using Umbraco.Core.Composing;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Core.Services;
+using Umbraco.Web.PublishedCache;
 using Umbraco.Web.WebApi;
 
 namespace Skybrud.Umbraco.Spa.Api {
 
     [JsonOnlyConfiguration]
     [AccessControlAllowOrigin]
-    public abstract class SpaControllerBase : UmbracoApiController {
+    public abstract partial class SpaControllerBase : UmbracoApiController {
+
+        #region Properties
 
         /// <summary>
-        /// Virtual method for handling redirects.
+        /// Gets a reference to the arguments of the current SPA request. 
+        /// </summary>
+        protected SpaRequestOptions Arguments => SpaRequest.Current.Arguments;
+
+        /// <summary>
+        /// Gets a reference to Umbraco's content cache.
+        /// </summary>
+        protected IPublishedContentCache ContentCache => global::Umbraco.Web.Composing.Current.UmbracoContext.ContentCache;
+
+        /// <summary>
+        /// Gets a reference to Umbraco's media cache.
+        /// </summary>
+        protected IPublishedMediaCache MediaCache => global::Umbraco.Web.Composing.Current.UmbracoContext.MediaCache;
+
+        /// <summary>
+        /// Gets a reference to Umbraco's runtime cache.
+        /// </summary>
+        protected IAppPolicyCache RuntimeCache => Current.AppCaches.RuntimeCache;
+
+        #endregion
+
+        #region Member methods
+
+        /// <summary>
+        /// Virtual method defining the actions groups required for a successful SPA request. 
         /// </summary>
         /// <param name="request">The current SPA request.</param>
-        /// <param name="response">The response.</param>
-        /// <returns><c>true</c> if a matching redirect was found; otherwise <c>false</c>.</returns>
-        protected virtual bool HandleRedirects(SpaRequest request, out HttpResponseMessage response) {
-            if (HandleSkybrudRedirect(request, out response)) return true;
-            if (HandleUmbracoRedirect(request, out response)) return true;
-            return false;
-        }
+        /// <returns>An array of <see cref="SpaActionGroup"/>.</returns>
+        protected virtual SpaActionGroup[] GetActionGroups(SpaRequest request) {
 
-        protected virtual bool HandleSkybrudRedirect(SpaRequest request, out HttpResponseMessage response) {
+            // Declare an array of action groups to be executed. Each group features a lambda
+            // expression to determine whether that particular group should be executed
+            return new [] {
 
-            response = null;
+                // First group - should always be executed
+                new SpaActionGroup(r => true, InitArguments, ReadFromCache),
 
-            return false;
+                // Second group - not executed if we already have a data model (eg. from the cache)
+                new SpaActionGroup(
 
-            //// Look for a global Skybrud redirect
-            //RedirectItem redirect = RedirectsRepository.Current.GetRedirectByUrl(0, HttpUtility.UrlDecode(request.Url));
+                    // Continue if we don't have a model yet
+                    r => r.DataModel == null,
 
-            //// If nothing is found at this point, look for a site specific Skybrud redirect
-            //if (request.SiteId > 0 && redirect == null) {
-            //    redirect = RedirectsRepository.Current.GetRedirectByUrl(request.SiteId, HttpUtility.UrlDecode(request.Url));
-            //}
+                    InitSite,
 
-            //if (redirect == null) return false;
+                    PreContentLookup,
+                    ContentLookup,
+                    PostContentLookup,
 
-            //// Return a redirect response based on the Skybrud redirect
-            //response = ReturnRedirect(request, redirect.LinkUrl, redirect.IsPermanent);
-            //return true;
+                    PreSetupCulture,
+                    SetupCulture,
+                    PostSetupCulture,
 
-        }
-        
-        protected virtual bool HandleUmbracoRedirect(SpaRequest request, out HttpResponseMessage response) {
+                    InitSiteModel,
 
-            response = null;
+                    HandleNotFound,
 
-            // Get a reference to Umbraco's redirect URL service
-            IRedirectUrlService service = Current.Services.RedirectUrlService;
+                    InitContentModel,
+                    InitDataModel,
+                    InitNavigationModel,
 
-            // Look for a matching redirect
-            IRedirectUrl umbRedirect = service.GetMostRecentRedirectUrl(request.SiteId + request.Url.TrimEnd('/'));
-            if (umbRedirect == null) return false;
+                    PrePushToCache,
+                    PushToCache
 
-            // Get the destination page from the content cache
-            IPublishedContent newContent = UmbracoContext.ContentCache.GetById(umbRedirect.ContentId);
-            if (newContent == null) return false;
+                ),
 
-            // Send a redirect response if a page was found
-            response = ReturnRedirect(request, newContent.Url, true);
-            return true;
+                // Third group - always executed
+                new SpaActionGroup(r => true, RaisinInTheSausageEnd),
 
-        }
-
-        //protected virtual HttpResponseMessage ReturnRedirect(string url) {
-        //    //return CreateSpaResponse(JsonMetaResponse.GetError(HttpStatusCode.MovedPermanently, "Page has moved"));
-        //}
-
-        protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl) {
-		    return ReturnRedirect(request, destinationUrl, HttpStatusCode.MovedPermanently);
-	    }
-
-        protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl, bool permanent) {
-            return ReturnRedirect(request, destinationUrl, permanent ? HttpStatusCode.MovedPermanently : HttpStatusCode.TemporaryRedirect);
-        }
-
-        protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl, HttpStatusCode statusCode) {
-
-            // Initialize the "data" object for the response
-            var body = new {
-                url = destinationUrl
             };
 
-            // Append scheme/protocol and host name if not already present
-            if (destinationUrl.StartsWith("/")) {
-                destinationUrl = $"{request.Protocol}://{request.HostName}{destinationUrl}";
+        }
+
+        /// <summary>
+        /// Virtual method responsible for building the SPA response.
+        /// </summary>
+        /// <param name="request">The current SPA request.</param>
+        /// <returns></returns>
+        protected virtual HttpResponseMessage GetResponse(SpaRequest request) {
+
+            // Iterate through the different methods in the page flow
+            foreach (SpaActionGroup group in GetActionGroups(request)) {
+
+                // Should the group be executed?
+                if (group.Run(request) == false) continue;
+
+                // Iterate over and execute the actions of the group
+                foreach (Action<SpaRequest> method in group.Actions) {
+
+                    // Call the current flow method
+                    try {
+                        method(request);
+                    } catch (Exception ex) {
+                        throw new SpaActionException(request, group, method.Method, ex);
+                    }
+
+                    // Break the loop if we already have a response
+                    if (request.Response != null) break;
+
+                }
+
+                // Break the loop if we already have a response
+                if (request.Response != null) break;
+
             }
 
-            // Generate the response
-            return CreateSpaResponse(JsonMetaResponse.GetError(statusCode, "Page has moved", body));
+            // Generate a successful response
+            if (request.Response == null && request.DataModel != null) {
+                request.Response = CreateSpaResponse(request.DataModel);
+            }
+
+            // Generate a fallback error response
+            return request.Response ?? ReturnError("Næh");
 
         }
 
-        /// <summary>
-        /// Returns an instance of <see cref="HttpResponseMessage"/> representing a server error.
-        /// </summary>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage ReturnServerError() {
-            return CreateSpaResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, "Internal server error"));
-        }
-
-        /// <summary>
-        /// Returns a new JSON based instance of <see cref="HttpResponseMessage"/> for the specified
-        /// <paramref name="data"/>. <paramref name="statusCode"/> is used as the status code in the response.
-        /// </summary>
-        /// <param name="statusCode">The status code to be used for the response.</param>
-        /// <param name="data">The data to be serialized to JSON and returned as the response body.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage CreateSpaResponse(HttpStatusCode statusCode, object data) {
-            return new HttpResponseMessage(statusCode) {
-                Content = new StringContent(Serialize(data), Encoding.UTF8, "application/json")
-            };
-        }
-
-        /// <summary>
-        /// Returns a new JSON based instance of <see cref="HttpResponseMessage"/> for the specified
-        /// <paramref name="data"/>.
-        /// 
-        /// If <paramref name="data"/> is an instance of <see cref="JsonMetaResponse"/>, the status code will be
-        /// inherited from the <see cref="JsonMetaData.Code"/> property. In any other cases, the status code will be
-        /// <see cref="HttpStatusCode.OK"/>.
-        /// </summary>
-        /// <param name="data">The data to be serialized to JSON and returned as the response body.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage CreateSpaResponse(object data) {
-            JsonMetaResponse meta = data as JsonMetaResponse;
-            return meta != null ? CreateSpaResponse(meta.Meta.Code, meta) : CreateSpaResponse(HttpStatusCode.OK, data);
-        }
-
-        
-        protected virtual IPublishedContent GetContentFromInput(IPublishedContent site, int nodeId, string url) {
-            
-            // Attempt to find the content item by it's route
-            return UmbracoContext.ContentCache.GetByRoute(site.Id + url);
-
-        }
-
-        /// <summary>
-        /// Virtual method called before the setup state of a SPA API request. Returns <c>true</c> if the method
-        /// provides a response (through the <paramref name="response"/> parameter), otherwise <c>false</c>.
-        /// </summary>
-        /// <param name="request">The request.</param>
-        /// <param name="response">The response.</param>
-        /// <returns><c>true</c> if the method provides a response, otherwise <c>false</c>.</returns>
-        protected virtual bool BeforeSetup(SpaRequest request, out HttpResponseMessage response) {
-            response = null;
-            return false;
-        }
-
-        protected virtual string Serialize(object data) {
-
-            SpaGridJsonConverterBase gridConverter = new SpaGridJsonConverterBase();
-
-            return JsonConvert.SerializeObject(data, Formatting.None, new JsonSerializerSettings {
-                ContractResolver = new SpaPublishedContentContractResolver(gridConverter)
-            });
-
-        }
-
-        protected virtual bool BeforeSetupCulture(SpaRequest request, out HttpResponseMessage response) {
-            response = null;
-            return false;
-        }
-        
-        protected virtual bool SetupCulture(SpaRequest request, out HttpResponseMessage response) {
-            response = null;
-            return false;
-        }
-        
-        protected virtual bool AfterSetupCulture(SpaRequest request, out HttpResponseMessage response) {
-            response = null;
-            return false;
-        }
-
-        protected virtual bool InitSiteModel(SpaRequest request, out HttpResponseMessage response) {
-            response = null;
-            return false;
-        }
-
-        protected virtual bool HandleNotFound(SpaRequest request, out HttpResponseMessage response, ref HttpStatusCode statusCode) {
-            response = null;
-            return false;
-        }
-
-        protected virtual bool HandleOutboundRedirects(SpaRequest request, out HttpResponseMessage response) {
-            response = null;
-            return false;
-        }
-        
-        protected virtual int GetCultureIdFromUrl(SpaRequest request) {
-            return -1;
-        }
-
-        protected virtual SpaDataModel InitDataModel(SpaRequest request) {
-            return null;
-        }
+        #endregion
 
     }
 

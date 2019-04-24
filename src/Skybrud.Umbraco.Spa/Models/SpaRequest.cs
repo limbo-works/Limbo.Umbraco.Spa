@@ -1,11 +1,10 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Globalization;
+using System.Net.Http;
 using System.Web;
 using Newtonsoft.Json;
-using Skybrud.Essentials.Enums;
-using Skybrud.Umbraco.Spa.Extensions;
 using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
@@ -13,6 +12,9 @@ namespace Skybrud.Umbraco.Spa.Models {
 
         #region Properties
 
+        /// <summary>
+        /// Gets a reference to the current SPA API request.
+        /// </summary>
         public static SpaRequest Current {
             get {
                 if (System.Web.HttpContext.Current == null) return null;
@@ -27,9 +29,13 @@ namespace Skybrud.Umbraco.Spa.Models {
         public HttpContextBase HttpContext { get; }
 
         /// <summary>
+        /// Gets the options/arguments determined from the current request.
+        /// </summary>
+        public SpaRequestOptions Arguments { get; }
+
+        /// <summary>
         /// Gets or sets the ID of the site.
         /// </summary>
-        [JsonProperty("id")]
         public int SiteId { get; set; }
 
         /// <summary>
@@ -38,6 +44,9 @@ namespace Skybrud.Umbraco.Spa.Models {
         [JsonIgnore]
         public IPublishedContent Site { get; set; }
 
+        /// <summary>
+        /// Gets or sets an instance of <see cref="SpaSiteModel"/> representing the site model.
+        /// </summary>
         public SpaSiteModel SiteModel { get; set; }
 
         /// <summary>
@@ -50,36 +59,36 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// Gets the URL of the current page.
         /// </summary>
         [JsonProperty("url")]
-        public string Url { get; set; }
+        public string Url => Arguments.Url;
 
         /// <summary>
         /// Gets whether the user is currently in preview mode.
         /// </summary>
         [JsonProperty("isPreview")]
-        public bool IsPreview { get; set; }
+        public bool IsPreview => Arguments.IsPreview;
 
         /// <summary>
         /// Gets a collection of the parts being requested.
         /// </summary>
         [JsonProperty("parts")]
-        public SpaApiPart[] Parts { get; set; }
+        public SpaApiPart[] Parts => Arguments.Parts.ToArray();
 
         /// <summary>
         /// Gets the protocol of the current request.
         /// </summary>
-        public string Protocol { get; set; }
+        public string Protocol => Arguments.Protocol;
 
         /// <summary>
         /// Gets the host name of the current request.
         /// </summary>
-        public string HostName { get; set; }
+        public string HostName => Arguments.HostName;
 
         /// <summary>
         /// Gets or sets the content item of the request.
         /// </summary>
         public IPublishedContent Content { get; set; }
 
-        public object ContentModel { get; set; }
+        public SpaContentModel ContentModel { get; set; }
 
         /// <summary>
         /// Gets the virtual parent if present; otherwise <c>null</c>.
@@ -99,6 +108,12 @@ namespace Skybrud.Umbraco.Spa.Models {
 
         public bool IsEnglish => CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en";
 
+        public SpaDataModel DataModel { get; set; }
+
+        public HttpResponseMessage Response { get; set; }
+
+        public Stopwatch Stopwatch { get; }
+
         #endregion
 
         #region Constructors
@@ -109,70 +124,19 @@ namespace Skybrud.Umbraco.Spa.Models {
         [JsonConstructor]
         public SpaRequest() {
             HttpContext = new HttpContextWrapper(System.Web.HttpContext.Current);
+            Arguments = new SpaRequestOptions(this);
+            Stopwatch = Stopwatch.StartNew();
         }
 
-        /// <summary>
-        /// Intializes a new instance for the site with the specified <paramref name="siteId"/>.
-        /// </summary>
-        /// <param name="siteId">The ID of the site.</param>
-        public SpaRequest(int siteId) {
-            SiteId = siteId;
-            Url = "";
-            IsPreview = false;
-            Parts = GetParts();
-            HttpContext = new HttpContextWrapper(System.Web.HttpContext.Current);
+        public SpaRequest(HttpContext context) {
+            if (context == null) throw new ArgumentNullException(nameof(context));
+            HttpContext = new HttpContextWrapper(context);
+            Arguments = new SpaRequestOptions(this);
+            Stopwatch = Stopwatch.StartNew();
         }
-
-        public SpaRequest(int siteId, string url) {
-            SiteId = siteId;
-            Url = url;
-            IsPreview = url.IsPreviewUrl();
-            Parts = GetParts();
-            HttpContext = new HttpContextWrapper(System.Web.HttpContext.Current);
-        }
-
-        public SpaRequest(int siteId, string url, string parts) {
-            SiteId = siteId;
-            Url = String.IsNullOrWhiteSpace(url) ? "/" : url;
-            IsPreview = Url.IsPreviewUrl();
-            Parts = GetParts(parts);
-            HttpContext = new HttpContextWrapper(System.Web.HttpContext.Current);
-        }
-
-        public SpaRequest(int siteId, IPublishedContent site, string url, string parts) {
-            SiteId = siteId;
-            Site = site;
-            Url = String.IsNullOrWhiteSpace(url) ? "/" : url;
-            IsPreview = Url.IsPreviewUrl();
-            Parts = GetParts(parts);
-            HttpContext = new HttpContextWrapper(System.Web.HttpContext.Current);
-        }
-
-        public SpaRequest(UmbracoContext umbraco, int siteId, IPublishedContent site, string url, string parts) {
-            SiteId = siteId;
-            Site = site;
-            Url = String.IsNullOrWhiteSpace(url) ? "/" : url;
-            IsPreview = Url.IsPreviewUrl();
-            Parts = GetParts(parts);
-            HttpContext = umbraco.HttpContext;
-        }
-
+        
         #endregion
 
-        #region Private methods
-
-        /// <summary>
-        /// Converts <paramref name="parts"/> to an array of <see cref="SpaApiPart"/>. If <paramref name="parts"/> is
-        /// <c>null</c> or empty, an array will all parts will be returned.
-        /// </summary>
-        /// <param name="parts">The string with the parts to be parsed.</param>
-        /// <returns>An array of <see cref="SpaApiPart"/>.</returns>
-        private static SpaApiPart[] GetParts(string parts = "") {
-            if (String.IsNullOrWhiteSpace(parts)) return new [] { SpaApiPart.Content, SpaApiPart.Navigation, SpaApiPart.Site };
-            return EnumUtils.ParseEnumArray<SpaApiPart>(parts);
-        }
-
-        #endregion
     }
 
 }

@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
 using Skybrud.Essentials.Strings.Extensions;
+using Umbraco.Core.Models.PublishedContent;
 
 namespace Skybrud.Umbraco.Spa.Extensions {
 
@@ -26,6 +29,19 @@ namespace Skybrud.Umbraco.Spa.Extensions {
             }
 
 			return nodeId;
+
+        }
+
+        public static CultureInfo GetCultureInfo(this IPublishedContent content) {
+
+            // Umbraco 8 doesn't support getting the culture of an invariant node, so we're
+            // currently just looking at the first segment of the URL
+            //
+            // This should be fixed in Umbraco 8.1: https://github.com/umbraco/Umbraco-CMS/issues/5170#issuecomment-485667483
+
+            string cultureSegment = (content?.Url ?? string.Empty).Split('/').Skip(1).FirstOrDefault();
+
+            return cultureSegment == "en" ? new CultureInfo("en-US") : new CultureInfo("da-DK");
 
         }
 

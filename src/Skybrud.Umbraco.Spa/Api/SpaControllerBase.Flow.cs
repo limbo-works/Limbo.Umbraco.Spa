@@ -113,6 +113,9 @@ namespace Skybrud.Umbraco.Spa.Api {
         }
 
         protected virtual void HandleNotFound(SpaRequest request) {
+
+            // Return now if we already have a content item
+            if (request.Content != null) return; 
             
             // Make sure to set the status as 404
             request.ResponseStatusCode = HttpStatusCode.NotFound;

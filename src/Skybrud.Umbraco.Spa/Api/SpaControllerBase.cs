@@ -127,7 +127,7 @@ namespace Skybrud.Umbraco.Spa.Api {
 
             // Generate a successful response
             if (request.Response == null && request.DataModel != null) {
-                request.Response = CreateSpaResponse(request.DataModel);
+                request.Response = CreateSpaResponse(request.ResponseStatusCode, request.DataModel);
             }
 
             // Generate a fallback error response

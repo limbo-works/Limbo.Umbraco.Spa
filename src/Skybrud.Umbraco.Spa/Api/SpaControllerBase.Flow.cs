@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Net;
+using System.Net.Http;
 using Skybrud.Umbraco.Spa.Models;
 using Umbraco.Core;
 using Umbraco.Core.Models;
@@ -110,7 +112,15 @@ namespace Skybrud.Umbraco.Spa.Api {
             request.SiteModel = new SpaSiteModel(request.Site, request.Culture);
         }
 
-        protected virtual void HandleNotFound(SpaRequest request) { }
+        protected virtual void HandleNotFound(SpaRequest request) {
+            
+            // Make sure to set the status as 404
+            request.ResponseStatusCode = HttpStatusCode.NotFound;
+
+            // Set "content" to the not found page
+            request.Content = request.SiteModel?.NotFoundPage;
+
+        }
 
         /// <summary>
         /// Virtual method for initializing the <see cref="SpaContentModel"/> representing the requested page.

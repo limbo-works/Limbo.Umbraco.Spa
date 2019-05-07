@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Globalization;
+using System.Net;
 using System.Net.Http;
 using System.Web;
 using Newtonsoft.Json;
@@ -109,6 +110,11 @@ namespace Skybrud.Umbraco.Spa.Models {
         public bool IsEnglish => CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en";
 
         public SpaDataModel DataModel { get; set; }
+
+        /// <summary>
+        /// Gets or sets the status code of the response.
+        /// </summary>
+        public HttpStatusCode ResponseStatusCode { get; set; } = HttpStatusCode.OK;
 
         public HttpResponseMessage Response { get; set; }
 

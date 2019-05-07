@@ -51,6 +51,12 @@ namespace Skybrud.Umbraco.Spa.Models {
         [JsonProperty("url", Order = -90)]
         public string Url { get; protected set; }
 
+        [JsonIgnore]
+        public IPublishedContent NotFoundPage { get; protected set; }
+
+        [JsonIgnore]
+        public bool HasNotFoundPage => NotFoundPage != null;
+
         #endregion
 
         #region Constructors

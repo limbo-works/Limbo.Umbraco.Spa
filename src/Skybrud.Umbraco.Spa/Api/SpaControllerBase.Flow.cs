@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Net;
+using System.Net.Http;
+using System.Web;
+using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Spa.Extensions;
 using Skybrud.Umbraco.Spa.Models;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.PublishedContent;
+using Umbraco.Core.Services;
 using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Spa.Api {
@@ -185,13 +189,57 @@ namespace Skybrud.Umbraco.Spa.Api {
         protected virtual void HandleNotFound(SpaRequest request) {
 
             // Return now if we already have a content item
-            if (request.Content != null) return; 
+            if (request.Content != null) return;
+
+            HandleInboundRedirects(request);
             
             // Make sure to set the status as 404
             request.ResponseStatusCode = HttpStatusCode.NotFound;
 
             // Set "content" to the not found page
             request.Content = request.SiteModel?.NotFoundPage;
+
+        }
+
+        protected virtual bool HandleInboundRedirects(SpaRequest request) {
+            if (HandleSkybrudRedirect(request)) return true;
+            if (HandleUmbracoRedirect(request)) return true;
+            return false;
+
+        }
+        
+        protected virtual bool HandleSkybrudRedirect(SpaRequest request) {
+
+            // Look for a global Skybrud redirect
+            RedirectItem redirect = Redirects.GetRedirectByUrl(0, HttpUtility.UrlDecode(request.Url));
+
+            // If nothing is found at this point, look for a site specific Skybrud redirect
+            if (request.SiteId > 0 && redirect == null) {
+                redirect = Redirects.GetRedirectByUrl(request.SiteId, HttpUtility.UrlDecode(request.Url));
+            }
+
+            if (redirect == null) return false;
+
+            // Return a redirect response based on the Skybrud redirect
+            request.Response = ReturnRedirect(request, redirect.LinkUrl, redirect.IsPermanent);
+            
+            return true;
+
+        }
+
+        protected virtual bool HandleUmbracoRedirect(SpaRequest request) {
+
+            // Look for a matching redirect
+            IRedirectUrl umbRedirect = Services.RedirectUrlService.GetMostRecentRedirectUrl(request.SiteId + request.Url.TrimEnd('/'));
+            if (umbRedirect == null) return false;
+
+            // Get the destination page from the content cache
+            IPublishedContent newContent = UmbracoContext.Content.GetById(umbRedirect.ContentId);
+            if (newContent == null) return false;
+
+            // Send a redirect response if a page was found
+            request.Response = ReturnRedirect(request, newContent.Url, true);
+            return true;
 
         }
 

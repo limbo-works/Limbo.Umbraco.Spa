@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Net.Http;
+using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Spa.Attributes;
 using Skybrud.Umbraco.Spa.Exceptions;
 using Skybrud.Umbraco.Spa.Models;
 using Skybrud.Umbraco.Spa.Models.Flow;
 using Skybrud.WebApi.Json;
 using Umbraco.Core.Cache;
-using Umbraco.Core.Composing;
+using Umbraco.Web.Composing;
 using Umbraco.Web.PublishedCache;
 using Umbraco.Web.WebApi;
 
@@ -26,17 +27,51 @@ namespace Skybrud.Umbraco.Spa.Api {
         /// <summary>
         /// Gets a reference to Umbraco's content cache.
         /// </summary>
-        protected IPublishedContentCache ContentCache => global::Umbraco.Web.Composing.Current.UmbracoContext.ContentCache;
+        protected IPublishedContentCache ContentCache { get; }
 
         /// <summary>
         /// Gets a reference to Umbraco's media cache.
         /// </summary>
-        protected IPublishedMediaCache MediaCache => global::Umbraco.Web.Composing.Current.UmbracoContext.MediaCache;
+        protected IPublishedMediaCache MediaCache { get; }
 
         /// <summary>
         /// Gets a reference to Umbraco's runtime cache.
         /// </summary>
-        protected IAppPolicyCache RuntimeCache => Current.AppCaches.RuntimeCache;
+        protected IAppPolicyCache RuntimeCache { get; }
+
+        /// <summary>
+        /// Gets a reference to the redirects service.
+        /// </summary>
+        protected IRedirectsService Redirects { get; }
+
+        #endregion
+
+        #region Constructors
+
+        protected SpaControllerBase() {
+            ContentCache = base.UmbracoContext.Content;
+            MediaCache = base.UmbracoContext.Media;
+            RuntimeCache = AppCaches.RuntimeCache;
+            Redirects = new RedirectsService(Current.ScopeProvider, Current.Services.DomainService, Logger);
+        }
+
+        #endregion
+
+        #region Constructors
+
+        /// <summary>
+        /// Initializes a new instance.
+        /// </summary>
+        /// <param name="contentCache">A reference to the content cache.</param>
+        /// <param name="mediaCache">A reference to the media caches.</param>
+        /// <param name="caches">A reference to the application caches.</param>
+        /// <param name="redirects">A reference to the redirects service.</param>
+        protected SpaControllerBase(IPublishedContentCache contentCache, IPublishedMediaCache mediaCache, AppCaches caches, IRedirectsService redirects) {
+            ContentCache = contentCache;
+            MediaCache = mediaCache;
+            RuntimeCache = caches.RuntimeCache;
+            Redirects = redirects;
+        }
 
         #endregion
 
@@ -63,6 +98,7 @@ namespace Skybrud.Umbraco.Spa.Api {
                     r => r.DataModel == null,
 
                     InitSite,
+                    PostInitSite,
 
                     PreContentLookup,
                     ContentLookup,

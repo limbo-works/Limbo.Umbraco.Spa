@@ -46,6 +46,10 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         }
 
+        private void PostInitSite(SpaRequest request) {
+            request.SiteId = request.Site?.Id ?? request.SiteId;
+        } 
+
         /// <summary>
         /// Virtual method called before the controller will attempt to look up the <see cref="IPublishedContent"/> representing the requested page.
         /// </summary>

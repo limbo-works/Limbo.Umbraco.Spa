@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Net;
-using System.Net.Http;
+using Skybrud.Umbraco.Spa.Extensions;
 using Skybrud.Umbraco.Spa.Models;
 using Umbraco.Core;
 using Umbraco.Core.Models;
@@ -13,8 +13,8 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         /// <summary>
         /// SPA request event method responsible for initializing the arguments of the request. Most arguments are
-        /// determined directly from the request (eg. from the query), while some information is determined while the
-        /// request is processed.
+        /// determined directly from the request (eg. from the query string), while some information is determined
+        /// while the request is processed.
         /// </summary>
         /// <param name="request">The current SPA request.</param>
         protected virtual void InitArguments(SpaRequest request) {
@@ -54,6 +54,8 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         /// <summary>
         /// Virtual method for looking up the <see cref="IPublishedContent"/> representing the requested page.
+        ///
+        /// This method will automatically handle the <c>umbracoInternalRedirectId</c> property when present.
         /// </summary>
         /// <param name="request">The current SPA request.</param>
         protected virtual void ContentLookup(SpaRequest request) {
@@ -62,10 +64,20 @@ namespace Skybrud.Umbraco.Spa.Api {
             if (request.Content != null) return;
 
             // We should probably handle preview mode
-            if (request.IsPreview) throw new NotImplementedException("Preview is overrated!!!");
+            if (request.IsPreview) {
 
-            // Get a reference to the current page (fetched regardless of "parts" as the URL determines the culture)
-            request.Content = GetContentFromInput(request.Site, Arguments.PageId, Arguments.Url);
+                // Get the ID from the request
+                int id = request.Url.GetPreviewId();
+
+                // Get a reference to the current page (fetched regardless of "parts" as the URL determines the culture)
+                request.Content = global::Umbraco.Web.Composing.Current.UmbracoContext.ContentCache.GetById(true, id);
+
+            } else {
+
+                // Get a reference to the current page (fetched regardless of "parts" as the URL determines the culture)
+                request.Content = GetContentFromInput(request.Site, Arguments.PageId, Arguments.Url);
+
+            }
 
             // Handle "umbracoInternalRedirectId" when present
             if (request.Content != null && request.Content.HasValue(Constants.Conventions.Content.InternalRedirectId)) {
@@ -75,8 +87,29 @@ namespace Skybrud.Umbraco.Spa.Api {
 	    }
 
         /// <summary>
-        /// Virtual method called after the controller will attempt to look up the <see cref="IPublishedContent"/> representing the requested page.
+        /// Virtual method called after the controller will attempt to look up the <see cref="IPublishedContent"/>
+        /// representing the requested page.
         /// </summary>
+        /// <example>
+        /// This method can be used for creating custom internal redirects (showing another page than the one that was
+        /// actually requested). In our typical site setup, we have a culture node with settings for that particular
+        /// culture - eg. site name and similar. The culture node mostly a settings node, and as such it doesn't have
+        /// any content. So when a user requests the culture node (eg. with an URL such as <c>/da/</c> or <c>/en/</c>),
+        /// we set the current page as the frontpage of the culture instead:
+        /// <code>
+        /// protected override void PostContentLookup(SpaRequest request) {
+        /// 
+        ///     // Skip if we don't have a content item
+        ///     if (request.Content == null) return;
+        /// 
+        ///     // If "content" matches the culture node, we get the content of the front page instead
+        ///     if (request.Content.ContentType.Alias == SkyConstants.DocumentTypes.Culture) {
+        ///         request.Content = request.Content.FirstChild(SkyConstants.DocumentTypes.FrontPage) ?? request.Content;
+        ///     }
+        /// 
+        /// }
+        /// </code>
+        /// </example>
         /// <param name="request">The current SPA request.</param>
         protected virtual void PostContentLookup(SpaRequest request) { }
 
@@ -106,12 +139,45 @@ namespace Skybrud.Umbraco.Spa.Api {
         /// 
         /// The site model is an instance of <see cref="SpaSiteModel"/> (or it may be a subclass thereof if <see cref="InitSiteModel"/> is overridden).
         /// </summary>
+        /// <example>
+        /// You use your own site model by overriding the method similar to as shown below. Notice that your site model must extend the <see cref="SpaSiteModel"/> class.
+        /// <code>
+        /// protected override void InitSiteModel(SpaRequest request) {
+        /// 	if (request.Site == null) return;
+        /// 	request.SiteModel = new VeggySiteModel(request.Site, request.Culture);
+        /// }
+        /// </code>
+        /// </example>
         /// <param name="request">The current request.</param>
         protected virtual void InitSiteModel(SpaRequest request) {
             if (request.Site == null) return;
             request.SiteModel = new SpaSiteModel(request.Site, request.Culture);
         }
 
+        /// <summary>
+        /// Virtual method used for handling 404 error pages. This method will automatically set
+        /// <see cref="SpaSiteModel.NotFoundPage"/> as the current page if present, and
+        /// <see cref="SpaRequest.Content"/> hasn't already been populated.
+        ///
+        /// Notice that the <see cref="SpaSiteModel.NotFoundPage"/> property will not automatically be populated as it
+        /// doesn't know how your site defines the 404 error page. You can set the property by creating your own site
+        /// model that extends the <see cref="SpaSiteModel"/> class.
+        /// </summary>
+        /// <example>
+        /// Example on how to populated the <see cref="SpaSiteModel.NotFoundPage"/> property:
+        /// <code>
+        /// public class MySiteModel : SpaSiteModel {
+        /// 
+        ///     public MySiteModel(IPublishedContent site) : this(site, null) { }
+        /// 
+        ///     public MySiteModel(IPublishedContent site, IPublishedContent culture) : base(site, culture) {
+        ///         NotFoundPage = Culture.TypedContent("skyNotFoundPage");
+        ///     }
+        /// 
+        /// }
+        /// </code>
+        /// </example>
+        /// <param name="request">The current request.</param>
         protected virtual void HandleNotFound(SpaRequest request) {
 
             // Return now if we already have a content item
@@ -127,7 +193,29 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         /// <summary>
         /// Virtual method for initializing the <see cref="SpaContentModel"/> representing the requested page.
+        ///
+        /// The default implementation is able to detect models from ModelsBuilder, in which case it may not be
+        /// neccessary to override this method. On the other hand, you can create your own implementation to get a
+        /// better control of the model returned for a given (type of) page.
         /// </summary>
+        /// <example>
+        /// For more control over the returned models, you can override the method as shown below.
+        /// <code>
+        /// protected override void InitContentModel(SpaRequest request) {
+        /// 
+        ///     if (request.Content == null || request.Arguments.Parts.Contains(SpaApiPart.Content) == false) return;
+        /// 
+        ///     switch (request.Content.ContentType.Alias) {
+        /// 
+        ///         case "myArticle":
+        ///             request.ContentModel = new MyArticle(request.Content);
+        ///             break;
+        ///         
+        ///     }
+        /// 
+        /// }
+        /// </code>
+        /// </example>
         /// <param name="request">The current SPA request.</param>
         protected virtual void InitContentModel(SpaRequest request) {
 

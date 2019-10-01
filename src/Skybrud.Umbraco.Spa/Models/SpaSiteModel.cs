@@ -51,9 +51,15 @@ namespace Skybrud.Umbraco.Spa.Models {
         [JsonProperty("url", Order = -90)]
         public string Url { get; protected set; }
 
+        /// <summary>
+        /// Gets a reference to the <see cref="IPublishedContent"/> representing the 404 page of the requested site (or culture).
+        /// </summary>
         [JsonIgnore]
         public IPublishedContent NotFoundPage { get; protected set; }
 
+        /// <summary>
+        /// Gets whether the site has a 404 page.
+        /// </summary>
         [JsonIgnore]
         public bool HasNotFoundPage => NotFoundPage != null;
 

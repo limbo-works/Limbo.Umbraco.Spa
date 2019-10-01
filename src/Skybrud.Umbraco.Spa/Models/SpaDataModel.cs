@@ -17,28 +17,40 @@ namespace Skybrud.Umbraco.Spa.Models {
         public int PageId { get; set; }
 
         /// <summary>
+        /// Gets the GUID key of the current page.
+        /// </summary>
+        [JsonProperty("pageKey", Order = -98)]
+        public Guid PageKey { get; set; }
+
+        /// <summary>
         /// Gets the ID of the current site.
         /// </summary>
-        [JsonProperty("siteId", Order = -98)]
+        [JsonProperty("siteId", Order = -97)]
         public int SiteId { get; set; }
+
+        /// <summary>
+        /// Gets the GUID key of the current site.
+        /// </summary>
+        [JsonProperty("siteKey", Order = -96)]
+        public Guid SiteKey { get; set; }
 
         /// <summary>
         /// Gets the current content GUID. When the frontend detects that this value has changed, it should do a page refresh.
         /// </summary>
-        [JsonProperty("contentGuid", Order = -97)]
+        [JsonProperty("contentGuid", Order = -95)]
         public Guid ContentGuid { get; set; }
 
         /// <summary>
         /// Gets or sets the execution time - that is the time used for processing the SPA request and initializing the
         /// data model. The time is specified in milliseconds.
         /// </summary>
-        [JsonProperty("executeTimeMs", Order = -96)]
+        [JsonProperty("executeTimeMs", Order = -94)]
         public long ExecuteTimeMs { get; set; }
 
         /// <summary>
         /// Gets or sets whether the current data model was loaded from the cache.
         /// </summary>
-        [JsonProperty("cached", Order = -95, DefaultValueHandling = DefaultValueHandling.Ignore)]
+        [JsonProperty("cached", Order = -93, DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool IsCached { get; set; }
 
         /// <summary>
@@ -81,7 +93,9 @@ namespace Skybrud.Umbraco.Spa.Models {
         public SpaDataModel(SpaRequest request) {
 
             PageId = request.Content?.Id ?? -1;
+            PageKey = request.Content?.Key ?? Guid.Empty;
             SiteId = request.Site?.Id ?? -1;
+            SiteKey = request.Site?.Key ?? Guid.Empty;
             ContentGuid = SpaEnvironment.ContentGuid;
 
             ExecuteTimeMs = -1;

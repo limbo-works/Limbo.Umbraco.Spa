@@ -13,62 +13,119 @@ namespace Skybrud.Umbraco.Spa.Models {
 
         #region Properties
 
+        /// <summary>
+        /// Gets or sets the ID of the requested page. The value may be initialized from either the <c>pageId</c> or <c>nodeId</c> parameters in the query string.
+        /// </summary>
         public int PageId { get; set; }
 
+        /// <summary>
+        /// Gets or sets the ID of the requested site. The value may be initialized from either the <c>siteId</c> or <c>appSiteId</c> parameters in the query string.
+        /// </summary>
         public int SiteId { get; set; }
-
+        
+        /// <summary>
+        /// Gets or sets the URL of the requested page.
+        /// </summary>
         public string Url { get; set; }
 
+        /// <summary>
+        /// Gets whether the current request is in preview mode.
+        /// </summary>
         public bool IsPreview { get; set; }
 
+        /// <summary>
+        /// Gets a list of the requested <see cref="SpaApiPart"/> based on the <c>parts</c> query string parameter. If
+        /// empty or not specified specified, all parts are assumed. 
+        /// </summary>
         public List<SpaApiPart> Parts { get; set; }
 
+        /// <summary>
+        /// Gets or sets the protocol of the current request. If specified, this value will be based on the
+        /// <c>appProtocol</c> query string parameter; otherwise it will come from the procotol of the current request.
+        /// </summary>
         public string Protocol { get; set; }
 
+        /// <summary>
+        /// Gets or sets the host name of the current request. If specified, this value will be based on the
+        /// <c>appHost</c> query string parameter; otherwise it will come from the host name of the current request.
+        /// </summary>
         public string HostName { get; set; }
 
+        /// <summary>
+        /// Gets the maximum amount of levels to be included in the <c>navigation</c> part. The value is based on the
+        /// <c>navLevels</c> query string parameter, but defaults to <c>1</c> if not specified.
+        /// </summary>
         public int NavLevels { get; set; }
 
         public bool NavContext { get; set; }
 
-        public string CacheKey => $"SpaMicroCache-{PageId}-{SiteId}-{Url}-{IsPreview}-{String.Join(",", Parts ?? new List<SpaApiPart>())}-{Protocol}-{HostName}-{NavLevels}-{NavContext}";
+        /// <summary>
+        /// Gets a unique key that identifies the current SPA API request. The key will be used for storing and retrieving the <c>data</c> part in the runtime cache.
+        ///
+        /// <strong>Notice:</strong> the default cache key does not take members into account. If your site has a members area with login, an identifier for the
+        /// member currently logged in should be a part of the cache key.
+        /// </summary>
+        public virtual string CacheKey => $"SpaMicroCache-{PageId}-{SiteId}-{Url}-{IsPreview}-{string.Join(",", Parts ?? new List<SpaApiPart>())}-{Protocol}-{HostName}-{NavLevels}-{NavContext}";
 
+        /// <summary>
+        /// Gets a reference to the query string of the current SPA API request.
+        /// </summary>
         public NameValueCollection QueryString { get; set; }
 
+        /// <summary>
+        /// Gets whether caching should be enabled for the current request.
+        ///
+        /// Caching is disabled by default when either of the following conditions are met:
+        /// <ul>
+        ///   <li>the site us running in compilation debug mode</li>
+        ///   <li>the <c>cache</c> query string parameter is set to <c>false</c> or <c>0</c></li>
+        ///   <li>the current request is in preview mode</li>
+        /// </ul>
+        /// </summary>
         public bool EnableCaching { get; set; }
 
         #endregion
 
         #region Constructors
 
-
         public SpaRequestOptions(SpaRequest request) : this(request.HttpContext) { }
 
         public SpaRequestOptions(HttpContextBase context) {
 
+            // Get a reference to the current request
             HttpRequestBase r = context.Request;
-
-            EnableCaching = context.IsDebuggingEnabled == false && r.QueryString["cache"] != "false";
-
+            
+            // Get the host name from the query
             string appHost = r.QueryString["appHost"];
 
+            // Get the protocol from the query
             string appProtocol = r.QueryString["appProtocol"];
 
             // Use the current URL as fallback for "appHost" and "appProtocol"
-            HostName = String.IsNullOrWhiteSpace(appHost) ? r.Url?.Host : appHost;
-            Protocol = String.IsNullOrWhiteSpace(appProtocol) ? r.Url?.Scheme : appProtocol;
+            HostName = string.IsNullOrWhiteSpace(appHost) ? r.Url?.Host : appHost;
+            Protocol = string.IsNullOrWhiteSpace(appProtocol) ? r.Url?.Scheme : appProtocol;
 
+            // Parse the "navLevels" and "navContext" parameters from the query string
             NavLevels = r.QueryString["navLevels"].ToInt32(1);
             NavContext = StringUtils.ParseBoolean(r.QueryString["navContext"]);
 
+            // Parse the requests "parts"
             Parts = GetParts(r.QueryString["parts"]);
 
+            // Get the URL of thr requested page
             Url = r.QueryString["url"];
 
+            // Parse the "siteId" and "pageId" parameters ("appSiteId" and "nodeId" are checked for legacy support)
             SiteId = Math.Max(r.QueryString["siteId"].ToInt32(-1), r.QueryString["appSiteId"].ToInt32(-1));
             PageId = Math.Max(r.QueryString["pageId"].ToInt32(-1), r.QueryString["nodeId"].ToInt32(-1));
 
             QueryString = r.QueryString;
+
+            // Determine whether the current request is in debug mode
+            IsPreview = Url?.IsPreviewUrl() ?? false;
+
+            // Determine whether caching should be enabled
+            EnableCaching = context.IsDebuggingEnabled == false && StringUtils.ParseBoolean(r.QueryString["cache"], true) && IsPreview == false;
 
         }
 

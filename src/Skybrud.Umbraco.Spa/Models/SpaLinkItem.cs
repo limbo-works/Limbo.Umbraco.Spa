@@ -17,7 +17,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         }
 
         protected SpaLinkItem(IPublishedContent content) {
-            Url = content.GetUrl();
+            Url = content.Url;
         }
 
         public static SpaLinkItem GetFromContent(IPublishedContent content) {

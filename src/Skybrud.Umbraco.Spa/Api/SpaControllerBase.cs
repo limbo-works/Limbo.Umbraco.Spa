@@ -96,7 +96,7 @@ namespace Skybrud.Umbraco.Spa.Api {
         /// Virtual method responsible for building the SPA response.
         /// </summary>
         /// <param name="request">The current SPA request.</param>
-        /// <returns></returns>
+        /// <returns>The response.</returns>
         protected virtual HttpResponseMessage GetResponse(SpaRequest request) {
 
             // Iterate through the different methods in the page flow

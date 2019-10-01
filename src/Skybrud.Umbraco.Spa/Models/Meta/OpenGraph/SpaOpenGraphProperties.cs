@@ -50,7 +50,7 @@ namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
         }
 
         public SpaOpenGraphProperties(IPublishedContent baseNode) {
-            BaseUrl = String.Join("/", baseNode.Url(mode: UrlMode.Absolute).Split('/').Take(3));
+            BaseUrl = string.Join("/", baseNode.Url(mode: UrlMode.Absolute).Split('/').Take(3));
             Images = new List<SpaOpenGraphImage>();
         }
 
@@ -59,13 +59,13 @@ namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
         #region Member methods
 
         public void AppendImage(string image) {
-            if (String.IsNullOrWhiteSpace(image)) return;
+            if (string.IsNullOrWhiteSpace(image)) return;
             image = image.StartsWith("/") ? BaseUrl + image : image;
             Images.Add(new SpaOpenGraphImage(image));
         }
 
         public void AppendImage(string image, int width, int height) {
-            if (String.IsNullOrWhiteSpace(image)) return;
+            if (string.IsNullOrWhiteSpace(image)) return;
             image = image.StartsWith("/") ? BaseUrl + image : image;
             Images.Add(new SpaOpenGraphImage(image, width, height));
         }

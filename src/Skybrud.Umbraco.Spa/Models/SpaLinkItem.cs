@@ -25,7 +25,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         }
 
         public static SpaLinkItem GetFromUrl(string url) {
-            return String.IsNullOrWhiteSpace(url) ? null : new SpaLinkItem(url);
+            return string.IsNullOrWhiteSpace(url) ? null : new SpaLinkItem(url);
         }
 
     }

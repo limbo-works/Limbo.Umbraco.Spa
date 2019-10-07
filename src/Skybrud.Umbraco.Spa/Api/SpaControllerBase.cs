@@ -8,7 +8,6 @@ using Skybrud.Umbraco.Spa.Models.Flow;
 using Skybrud.WebApi.Json;
 using Umbraco.Core.Cache;
 using Umbraco.Web.Composing;
-using Umbraco.Web.PublishedCache;
 using Umbraco.Web.WebApi;
 
 namespace Skybrud.Umbraco.Spa.Api {
@@ -25,16 +24,6 @@ namespace Skybrud.Umbraco.Spa.Api {
         protected SpaRequestOptions Arguments => SpaRequest.Current.Arguments;
 
         /// <summary>
-        /// Gets a reference to Umbraco's content cache.
-        /// </summary>
-        protected IPublishedContentCache ContentCache { get; }
-
-        /// <summary>
-        /// Gets a reference to Umbraco's media cache.
-        /// </summary>
-        protected IPublishedMediaCache MediaCache { get; }
-
-        /// <summary>
         /// Gets a reference to Umbraco's runtime cache.
         /// </summary>
         protected IAppPolicyCache RuntimeCache { get; }
@@ -49,8 +38,6 @@ namespace Skybrud.Umbraco.Spa.Api {
         #region Constructors
 
         protected SpaControllerBase() {
-            ContentCache = base.UmbracoContext.Content;
-            MediaCache = base.UmbracoContext.Media;
             RuntimeCache = AppCaches.RuntimeCache;
             Redirects = new RedirectsService(Current.ScopeProvider, Current.Services.DomainService, Logger);
         }
@@ -62,13 +49,9 @@ namespace Skybrud.Umbraco.Spa.Api {
         /// <summary>
         /// Initializes a new instance.
         /// </summary>
-        /// <param name="contentCache">A reference to the content cache.</param>
-        /// <param name="mediaCache">A reference to the media caches.</param>
         /// <param name="caches">A reference to the application caches.</param>
         /// <param name="redirects">A reference to the redirects service.</param>
-        protected SpaControllerBase(IPublishedContentCache contentCache, IPublishedMediaCache mediaCache, AppCaches caches, IRedirectsService redirects) {
-            ContentCache = contentCache;
-            MediaCache = mediaCache;
+        protected SpaControllerBase(AppCaches caches, IRedirectsService redirects) {
             RuntimeCache = caches.RuntimeCache;
             Redirects = redirects;
         }

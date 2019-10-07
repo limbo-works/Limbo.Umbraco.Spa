@@ -16,7 +16,7 @@ namespace Skybrud.Umbraco.Spa.Api {
             if (site == null) throw new ArgumentNullException(nameof(site));
 
             // Attempt to find the content item by it's route
-            return UmbracoContext.ContentCache.GetByRoute(site.Id + url);
+            return UmbracoContext.Content.GetByRoute(site.Id + url);
 
         }
 
@@ -26,7 +26,7 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         protected virtual IPublishedContent GetCultureFromUrl(SpaRequest request) {
             int contentId = GetCultureIdFromUrl(request);
-            return contentId > 0 ? UmbracoContext.ContentCache.GetById(contentId) : null;
+            return contentId > 0 ? UmbracoContext.Content.GetById(contentId) : null;
         }
 
         protected virtual bool TryGetDomain(string domainName, out IDomain domain) {

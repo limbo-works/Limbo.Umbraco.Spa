@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Net;
-using System.Net.Http;
 using System.Web;
 using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Spa.Extensions;
@@ -8,7 +7,6 @@ using Skybrud.Umbraco.Spa.Models;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Core.Services;
 using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Spa.Api {
@@ -25,7 +23,7 @@ namespace Skybrud.Umbraco.Spa.Api {
 
             // If "pageId" or "nodeId" exists, prefer content from that node
             if (Arguments.PageId > 0) {
-	            IPublishedContent c = UmbracoContext.ContentCache.GetById(request.Arguments.PageId);
+	            IPublishedContent c = UmbracoContext.Content.GetById(request.Arguments.PageId);
 	            if (c != null) Arguments.Url = c.Url;
 	        }
 
@@ -43,7 +41,7 @@ namespace Skybrud.Umbraco.Spa.Api {
         protected virtual void InitSite(SpaRequest request) {
 
             // Get a reference to the site node
-            request.Site = UmbracoContext.ContentCache.GetById(Arguments.SiteId);
+            request.Site = UmbracoContext.Content.GetById(Arguments.SiteId);
 
             // Trigger an error response if the site node wasn't found (NULL means OK)
             if (request.Site == null) request.Response = ReturnError("Unable to determine site node from request.");
@@ -78,7 +76,7 @@ namespace Skybrud.Umbraco.Spa.Api {
                 int id = request.Url.GetPreviewId();
 
                 // Get a reference to the current page (fetched regardless of "parts" as the URL determines the culture)
-                request.Content = global::Umbraco.Web.Composing.Current.UmbracoContext.ContentCache.GetById(true, id);
+                request.Content = UmbracoContext.Content.GetById(true, id);
 
             } else {
 

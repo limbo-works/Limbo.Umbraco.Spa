@@ -5,7 +5,6 @@ using Newtonsoft.Json.Linq;
 using Skybrud.Umbraco.GridData;
 using Skybrud.Umbraco.GridData.Values;
 using Skybrud.Umbraco.Spa.Models.Grid;
-using Umbraco.Web;
 using Umbraco.Web.Composing;
 using Umbraco.Web.Templates;
 
@@ -35,8 +34,7 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
 
-            GridDataModel grid = value as GridDataModel;
-            if (grid == null) return;
+            if (!(value is GridDataModel grid)) return;
 
             List<SpaGridSection> sections = new List<SpaGridSection>();
 

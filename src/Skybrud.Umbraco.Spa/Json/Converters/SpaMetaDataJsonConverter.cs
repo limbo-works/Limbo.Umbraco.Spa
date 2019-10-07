@@ -18,7 +18,7 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
             JObject obj = new JObject();
             JArray meta = new JArray();
 
-            obj["title"] = data.MetaTitle ?? String.Empty;
+            obj["title"] = data.MetaTitle ?? string.Empty;
             obj["meta"] = meta;
 
             AddMetaContent(meta, "description", data.MetaDescription, true);
@@ -33,8 +33,8 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
 
                 foreach (SpaOpenGraphImage image in data.OpenGraph.Images) {
                     AddMetaProperty(meta, "og:image", image.Url);
-                    if (image.Width > 0) AddMetaProperty(meta, "og:image:width", image.Width + String.Empty);
-                    if (image.Height > 0) AddMetaProperty(meta, "og:image:height", image.Height + String.Empty);
+                    if (image.Width > 0) AddMetaProperty(meta, "og:image:width", image.Width + string.Empty);
+                    if (image.Height > 0) AddMetaProperty(meta, "og:image:height", image.Height + string.Empty);
                 }
 
             }
@@ -49,13 +49,13 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
         }
 
         protected void AddMetaContent(JArray meta, string name, string content, bool mandatory = false) {
-            if (String.IsNullOrWhiteSpace(content) && mandatory == false) return;
-            meta.Add(new JObject { { "name", name }, { "content", content ?? String.Empty } });
+            if (string.IsNullOrWhiteSpace(content) && mandatory == false) return;
+            meta.Add(new JObject { { "name", name }, { "content", content ?? string.Empty } });
         }
 
         protected void AddMetaProperty(JArray meta, string property, string content, bool mandatory = false) {
-            if (String.IsNullOrWhiteSpace(property) && mandatory == false) return;
-            meta.Add(new JObject { { "property", property }, { "content", content ?? String.Empty } });
+            if (string.IsNullOrWhiteSpace(property) && mandatory == false) return;
+            meta.Add(new JObject { { "property", property }, { "content", content ?? string.Empty } });
         }
 
         public override object ReadJson(JsonReader reader, Type objectType, object existingValue, JsonSerializer serializer) {

@@ -29,7 +29,6 @@
     <PackageReference Include="Skybrud.Umbraco.GridData" Version="3.0.0-beta003" />
     <PackageReference Include="Skybrud.WebApi.Json" Version="1.0.4" />
     <PackageReference Include="Skybrud.Umbraco.Redirects" Version="2.0.0" />
-    <PackageReference Include="UmbracoCms.Core" Version="8.1.0" />
     <PackageReference Include="UmbracoCms.Web" Version="8.1.0" />
   </ItemGroup>
 

@@ -1,14 +1,12 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472</TargetFrameworks>
-    <GenerateAssemblyFileVersionAttribute>false</GenerateAssemblyFileVersionAttribute>
-    <RunBuildTargets>true</RunBuildTargets>
+    <TargetFramework>net472</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
     <RootNamespace>Skybrud.Umbraco.Spa</RootNamespace>
-    <Version>3.0.0</Version>
+    <Version>3.0.0-beta001</Version>
     <Company>Skybrud.dk a/s</Company>
     <Product>Skybrud.Umbraco.Spa</Product>
     <Authors>Anders Bjerner</Authors>
@@ -19,7 +17,7 @@
 
   <PropertyGroup>
     <PackageTags>Skybrud, Umbraco, SPA, Headless</PackageTags>
-    <PackageLicenseUrl>https://github.com/skybrud/Skybrud.Umbraco.Spa/blob/master/LICENSE.md</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/skybrud/Skybrud.Umbraco.Spa</PackageProjectUrl>
     <PackageIconUrl>https://www.skybrud.dk/img/5431sk/icon/favicon.ico</PackageIconUrl>
   </PropertyGroup>
@@ -29,15 +27,17 @@
     <PackageReference Include="Skybrud.Umbraco.GridData" Version="3.0.0-beta003" />
     <PackageReference Include="Skybrud.WebApi.Json" Version="1.0.4" />
     <PackageReference Include="Skybrud.Umbraco.Redirects" Version="2.0.0" />
-    <PackageReference Include="UmbracoCms.Web" Version="8.1.0" />
+    <PackageReference Include="UmbracoCms.Web" Version="8.1.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
 
-  <!--<PropertyGroup>
+  <PropertyGroup>
     <DocumentationFile>bin\$(ConfigurationName)\$(TargetFramework)\Skybrud.Umbraco.Spa.xml</DocumentationFile>
-  </PropertyGroup>-->
+  </PropertyGroup>
 
-  <!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-    <Exec Command="mkdir $(ProjectDir)bin\Dev\$(TargetFramework)&#xD;&#xA;xcopy $(ProjectDir)bin\$(ConfigurationName)\$(TargetFramework)\$(TargetName).* $(ProjectDir)bin\Dev\$(TargetFramework)\ /y&#xD;&#xA;&quot;$(ProjectDir)..\build\UpdateAssemblyInfoJson.exe&quot; &quot;$(ProjectPath)&quot; &quot;$(TargetPath)&quot;" />
-  </Target>-->
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(ConfigurationName)'=='Release' AND '$(BuildTools)'=='1'">
+    <Exec Command="&quot;$(ProjectDir)..\build\Skybrud.BuildTools.Tasks.exe&quot; &quot;postBuild&quot; &quot;$(ConfigurationName)&quot; &quot;$(ProjectPath)&quot; &quot;$(TargetPath)&quot;" />
+  </Target>
 
 </Project>

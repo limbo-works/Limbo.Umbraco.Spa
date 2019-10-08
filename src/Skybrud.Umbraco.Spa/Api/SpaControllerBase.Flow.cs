@@ -130,7 +130,7 @@ namespace Skybrud.Umbraco.Spa.Api {
         /// </summary>
         /// <param name="request">The current SPA request.</param>
         protected virtual void SetupCulture(SpaRequest request) {
-            if (request.Culture != null) return;
+            if (request.Site != null) return;
             request.Culture = request.Site;
         }
 

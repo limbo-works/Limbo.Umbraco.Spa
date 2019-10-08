@@ -19,7 +19,7 @@ namespace Skybrud.Umbraco.Spa.Extensions {
 
 			if (url.Contains("/umbraco/dialogs")) {
 				
-                Int32.TryParse(url.Split('=')[1], out nodeId);
+                int.TryParse(url.Split('=')[1], out nodeId);
 
             } else {
 

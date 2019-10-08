@@ -1,38 +1,28 @@
 ﻿using System;
 using System.Reflection;
-using System.Text;
-using Newtonsoft.Json;
 using Skybrud.Umbraco.Spa.Models;
 using Skybrud.Umbraco.Spa.Models.Flow;
 
 namespace Skybrud.Umbraco.Spa.Exceptions {
 
-    public class SpaActionException : Exception {
+    public class SpaActionException : SpaException {
 
-        public SpaRequest Request { get; }
-
+        #region Properties
+        
         public SpaActionGroup Group { get; }
 
         public string MethodName { get; }
 
-        public override string Message {
-            get {
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine("Failed executing SPA action " + MethodName);
-                sb.AppendLine();
-                sb.AppendLine(JsonConvert.SerializeObject(Request.Arguments, Formatting.Indented));
-                return sb.ToString();
-            }
-        }
+        public override string Message => "Failed executing SPA action " + MethodName;
 
-        public SpaActionException(SpaRequest request, SpaActionGroup actionGroup, MethodInfo method) {
-            Request = request;
+        #endregion
+
+        public SpaActionException(SpaRequest request, SpaActionGroup actionGroup, MethodInfo method) : base(request) {
             Group = actionGroup;
             MethodName = method.Name;
         }
 
-        public SpaActionException(SpaRequest request, SpaActionGroup actionGroup, MethodInfo method, Exception inner) : base(null, inner) {
-            Request = request;
+        public SpaActionException(SpaRequest request, SpaActionGroup actionGroup, MethodInfo method, Exception inner) : base(request, inner) {
             Group = actionGroup;
             MethodName = method.Name;
         }

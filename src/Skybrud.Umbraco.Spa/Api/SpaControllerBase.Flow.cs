@@ -2,6 +2,7 @@
 using System.Net;
 using System.Web;
 using Skybrud.Umbraco.Redirects.Models;
+using Skybrud.Umbraco.Spa.Exceptions;
 using Skybrud.Umbraco.Spa.Extensions;
 using Skybrud.Umbraco.Spa.Models;
 using Umbraco.Core;
@@ -43,8 +44,8 @@ namespace Skybrud.Umbraco.Spa.Api {
             // Get a reference to the site node
             request.Site = UmbracoContext.Content.GetById(Arguments.SiteId);
 
-            // Trigger an error response if the site node wasn't found (NULL means OK)
-            if (request.Site == null) request.Response = ReturnError("Unable to determine site node from request.");
+            // Throw an exception if we can't determine the site node
+            if (request.Site == null) throw new SpaSiteNotFoundException(request, "Unable to determine site node from request.");
 
         }
 

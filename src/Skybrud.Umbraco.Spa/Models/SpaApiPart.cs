@@ -1,8 +1,12 @@
-﻿namespace Skybrud.Umbraco.Spa.Models {
+﻿using Newtonsoft.Json;
+using Skybrud.Essentials.Json.Converters.Enums;
+
+namespace Skybrud.Umbraco.Spa.Models {
 
     /// <summary>
     /// Enums class representing the parts of a SPA response.
     /// </summary>
+    [JsonConverter(typeof(EnumStringConverter))]
     public enum SpaApiPart {
 
         /// <summary>

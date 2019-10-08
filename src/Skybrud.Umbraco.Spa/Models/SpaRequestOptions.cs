@@ -84,6 +84,18 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         public bool EnableCaching { get; set; }
 
+        /// <summary>
+        /// Gets or sets whether the SPA should return a HTML response with exception details should part of the SPA or underlying logic fail.
+        ///
+        /// By default HTML errors will be shown when the following criteria are met:
+        /// <ul>
+        ///   <li><see cref="HttpContextBase.IsDebuggingEnabled"/> is <c>true</c></li>
+        ///   <li><see cref="HttpContextBase.IsCustomErrorEnabled"/> is <c>false</c></li>
+        ///   <li>the <strong>Accept</strong> header of the current request contains <c>text/html</c></li>
+        /// </ul>
+        /// </summary>
+        public bool ShowHtmlErrors { get; set; }
+
         #endregion
 
         #region Constructors
@@ -126,6 +138,8 @@ namespace Skybrud.Umbraco.Spa.Models {
 
             // Determine whether caching should be enabled
             EnableCaching = context.IsDebuggingEnabled == false && StringUtils.ParseBoolean(r.QueryString["cache"], true) && IsPreview == false;
+
+            ShowHtmlErrors = context.IsDebuggingEnabled && context.IsCustomErrorEnabled == false && context.Request.Headers["Accept"].Contains("text/html");
 
         }
 

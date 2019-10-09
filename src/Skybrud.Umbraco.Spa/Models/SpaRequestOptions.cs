@@ -74,7 +74,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// <strong>Notice:</strong> the default cache key does not take members into account. If your site has a members area with login, an identifier for the
         /// member currently logged in should be a part of the cache key.
         /// </summary>
-        public virtual string CacheKey => $"SpaMicroCache-{PageId}-{SiteId}-{Url}-{IsPreview}-{string.Join(",", Parts ?? new List<SpaApiPart>())}-{Protocol}-{HostName}-{NavLevels}-{NavContext}";
+        public virtual string CacheKey => $"{SpaConstants.CachePrefix}{PageId}-{SiteId}-{Url}-{IsPreview}-{string.Join(",", Parts ?? new List<SpaApiPart>())}-{Protocol}-{HostName}-{NavLevels}-{NavContext}";
 
         /// <summary>
         /// Gets a reference to the query string of the current SPA API request.

@@ -10,8 +10,8 @@ using Skybrud.Umbraco.Spa.Extensions;
 namespace Skybrud.Umbraco.Spa.Models {
 
     /// <summary>
-    // Class representing the options of a SPA request. The options are initialized from arguments in the SPA request,
-    // but as the request is processed, some properties may be updated to reflect the progress.
+    /// Class representing the options of a SPA request. The options are initialized from arguments in the SPA request,
+    /// but as the request is processed, some properties may be updated to reflect the progress.
     /// </summary>
     public class SpaRequestOptions {
 

@@ -1,6 +1,8 @@
 ﻿using System.Collections.Generic;
 using Newtonsoft.Json;
+using Skybrud.Umbraco.Spa.Extensions;
 using Skybrud.Umbraco.Spa.Json.Converters;
+using Skybrud.Umbraco.Spa.Models.Meta.Attributes;
 using Skybrud.Umbraco.Spa.Models.Meta.OpenGraph;
 using Umbraco.Core.Models.PublishedContent;
 
@@ -27,6 +29,21 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         /// Gets a reference to the current page.
         /// </summary>
         protected IPublishedContent Content { get; }
+
+        /// <summary>
+        /// Gets or sets a list of attributes of the <c>html</c> element.
+        /// </summary>
+        public SpaMetaHtmlAttributeList HtmlAttributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of attributes of the <c>head</c> element.
+        /// </summary>
+        public SpaMetaAttributeList HeadAttributes { get; set; }
+
+        /// <summary>
+        /// Gets or sets a list of attributes of the <c>body</c> element.
+        /// </summary>
+        public SpaMetaAttributeList BodyAttributes { get; set; }
 
         /// <summary>
         /// Gets or sets the canonical URL of the current page.
@@ -78,6 +95,9 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         /// <summary>
         /// Gets or sets an array of properties where sanitizing should be disabled. 
         /// </summary>
+        /// <see>
+        ///     <cref>https://github.com/nuxt/vue-meta/tree/1.x#__dangerouslydisablesanitizers-string</cref>
+        /// </see>
         public string[] DangerouslyDisableSanitizers { get; set; }
 
         #endregion
@@ -92,6 +112,13 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         public SpaMetaData(SpaSiteModel site, IPublishedContent content) {
 
             Content = content;
+
+            HtmlAttributes = new SpaMetaHtmlAttributeList {
+                Language = content.GetCultureInfo().ToString()
+            };
+
+            HeadAttributes = new SpaMetaAttributeList();
+            BodyAttributes = new SpaMetaAttributeList();
 
             Links = new List<SpaMetaLink>();
             Scripts = new List<SpaMetaScript>();

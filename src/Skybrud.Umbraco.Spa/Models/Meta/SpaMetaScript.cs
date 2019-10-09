@@ -1,7 +1,13 @@
 ﻿using Newtonsoft.Json;
 
 namespace Skybrud.Umbraco.Spa.Models.Meta {
-
+    
+    /// <summary>
+    /// Represents a <c>script</c> HTML element.
+    /// </summary>
+    /// <see>
+    ///     <cref>https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script</cref>
+    /// </see>
     public class SpaMetaScript {
 
         #region Properties
@@ -15,7 +21,7 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         /// <summary>
         /// Gets or sets the <c>title</c> attribtue of the script element.
         /// 
-        /// A title attribute is typically not used for <c>scrippt</c> elements, but some integrations use it to pass
+        /// A title attribute is typically not used for <c>script</c> elements, but some integrations use it to pass
         /// on the title to a UI component.
         /// </summary>
         [JsonProperty("title", NullValueHandling = NullValueHandling.Ignore)]
@@ -45,9 +51,26 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         [JsonProperty("body", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool AppendToBody { get; set; }
 
+        /// <summary>
+        /// Gets or sets whether the script is meant to be executed after the document has been parsed, but before
+        /// firing the <c>DOMContentLoaded</c> event.
+        ///
+        /// Scripts with the <c>defer</c> attribute will prevent the <c>DOMContentLoaded</c> event from firing until
+        /// the script has loaded and finished evaluating.
+        /// </summary>
+        /// <see>
+        ///     <cref>https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#attr-defer</cref>
+        /// </see>
         [JsonProperty("defer", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool Defer { get; set; }
 
+        /// <summary>
+        /// Gets or sets whether the browser should, if possible, load the script asynchronously and then execute it as
+        /// soon as it’s downloaded.
+        /// </summary>
+        /// <see>
+        ///     <cref>https://developer.mozilla.org/en-US/docs/Web/HTML/Element/script#attr-async</cref>
+        /// </see>
         [JsonProperty("async", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool Async { get; set; }
 
@@ -55,6 +78,9 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new <c>script</c> element.
+        /// </summary>
         public SpaMetaScript() {
             Type = "text/javascript";
         }

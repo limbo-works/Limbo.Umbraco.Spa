@@ -9,17 +9,23 @@ using Skybrud.Umbraco.Spa.Extensions;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
+    /// <summary>
+    // Class representing the options of a SPA request. The options are initialized from arguments in the SPA request,
+    // but as the request is processed, some properties may be updated to reflect the progress.
+    /// </summary>
     public class SpaRequestOptions {
 
         #region Properties
 
         /// <summary>
-        /// Gets or sets the ID of the requested page. The value may be initialized from either the <c>pageId</c> or <c>nodeId</c> parameters in the query string.
+        /// Gets or sets the ID of the requested page. The value may be initialized from either the <c>pageId</c> or
+        /// <c>nodeId</c> parameters in the query string.
         /// </summary>
         public int PageId { get; set; }
 
         /// <summary>
-        /// Gets or sets the ID of the requested site. The value may be initialized from either the <c>siteId</c> or <c>appSiteId</c> parameters in the query string.
+        /// Gets or sets the ID of the requested site. The value may be initialized from either the <c>siteId</c> or
+        /// <c>appSiteId</c> parameters in the query string.
         /// </summary>
         public int SiteId { get; set; }
         
@@ -100,8 +106,16 @@ namespace Skybrud.Umbraco.Spa.Models {
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance based on the specified <paramref name="request"/>.
+        /// </summary>
+        /// <param name="request">A SPA request.</param>
         public SpaRequestOptions(SpaRequest request) : this(request.HttpContext) { }
 
+        /// <summary>
+        /// Initializes a new instance based on the specified <paramref name="context"/>.
+        /// </summary>
+        /// <param name="context">A HTTP context.</param>
         public SpaRequestOptions(HttpContextBase context) {
 
             // Get a reference to the current request
@@ -165,14 +179,14 @@ namespace Skybrud.Umbraco.Spa.Models {
         }
 
         #endregion
-        
+
         #region Private methods
 
         /// <summary>
-        /// Converts the specified string of <see cref="parts"/> to <see cref="List{SpaApiPart}"/>.
+        /// Converts the specified string of <paramref name="parts"/> to <see cref="List{SpaApiPart}"/>.
         /// </summary>
         /// <param name="parts">The string with the parts.</param>
-        /// <returns>An an instance of <see cref="List{SpaApiPart}"/> containing each <see cref="SpaApiPart"/> specified in <see cref="parts"/>.</returns>
+        /// <returns>An an instance of <see cref="List{SpaApiPart}"/> containing each <see cref="SpaApiPart"/> specified in <paramref name="parts"/>.</returns>
         private static List<SpaApiPart> GetParts(string parts = "") {
             
             // No parts means all parts

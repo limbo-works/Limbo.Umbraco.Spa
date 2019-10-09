@@ -8,6 +8,7 @@ using Skybrud.Umbraco.Spa.Models;
 using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.PublishedContent;
+using Umbraco.Core.Services;
 using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Spa.Api {
@@ -200,13 +201,24 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         }
 
+        /// <summary>
+        /// Virtual method for handling inbound redirects.
+        /// </summary>
+        /// <param name="request">The current request.</param>
+        /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
         protected virtual bool HandleInboundRedirects(SpaRequest request) {
             if (HandleSkybrudRedirect(request)) return true;
             if (HandleUmbracoRedirect(request)) return true;
             return false;
-
         }
-        
+
+        /// <summary>
+        /// Virtual method for handling inbound redirects created by editors through Skybrud's redirects package.
+        ///
+        /// The redirects handled by this method are the ones retrived through the <see cref="IRedirectsService"/> service.
+        /// </summary>
+        /// <param name="request">The current request.</param>
+        /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
         protected virtual bool HandleSkybrudRedirect(SpaRequest request) {
 
             // Look for a global Skybrud redirect
@@ -226,6 +238,11 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         }
 
+        /// <summary>
+        /// Virtual method for handling redirects created automatically by Umbraco when editors rename and move content. The redirects handled by this method are the ones retrived through the <see cref="IRedirectUrlService"/> service.
+        /// </summary>
+        /// <param name="request">The current request.</param>
+        /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
         protected virtual bool HandleUmbracoRedirect(SpaRequest request) {
 
             // Look for a matching redirect
@@ -361,7 +378,14 @@ namespace Skybrud.Umbraco.Spa.Api {
             RuntimeCache.Insert(Arguments.CacheKey, () => request.DataModel, TimeSpan.FromSeconds(60));
 
         }
-        
+
+        /// <summary>
+        /// Virtual method that is executed at the end of the page cycle. It doesn't really do anything by default, but
+        /// you can override it to customize the response before it is send to the client.
+        ///
+        /// Notice that this method is executed for both cached and non-cached responses.
+        /// </summary>
+        /// <param name="request">The current SPA request.</param>
         protected virtual void RaisinInTheSausageEnd(SpaRequest request) { }
 
     }

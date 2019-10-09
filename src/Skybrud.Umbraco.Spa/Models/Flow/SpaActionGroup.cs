@@ -2,6 +2,9 @@
 
 namespace Skybrud.Umbraco.Spa.Models.Flow {
 
+    /// <summary>
+    /// Class representing an action group in the SPA page life cycle.
+    /// </summary>
     public class SpaActionGroup {
 
         /// <summary>
@@ -14,11 +17,20 @@ namespace Skybrud.Umbraco.Spa.Models.Flow {
         /// </summary>
         public Action<SpaRequest>[] Actions { get; }
 
+        /// <summary>
+        /// Initializes a new action group from the specified array of <paramref name="actions"/>.
+        /// </summary>
+        /// <param name="actions">The actions that should make up the action group.</param>
         public SpaActionGroup(params Action<SpaRequest>[] actions) {
             Run = r => true;
             Actions = actions;
         }
 
+        /// <summary>
+        /// Initializes a new action group from the specified array of <paramref name="actions"/>.
+        /// </summary>
+        /// <param name="run">A predicate returning whether the action group should be executed.</param>
+        /// <param name="actions">The actions that should make up the action group.</param>
         public SpaActionGroup(Predicate<SpaRequest> run, params Action<SpaRequest>[] actions) {
             Run = run;
             Actions = actions;

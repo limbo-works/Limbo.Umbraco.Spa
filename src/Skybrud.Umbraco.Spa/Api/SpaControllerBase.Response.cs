@@ -12,14 +12,32 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         #region Text
 
+        /// <summary>
+        /// Initializes a new text response from the specified <paramref name="text"/>.
+        /// </summary>
+        /// <param name="text">The text representing the response body.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
         public HttpResponseMessage CreateTextResponse(string text) {
             return CreateTextResponse(HttpStatusCode.OK, text, Encoding.UTF8);
         }
 
+        /// <summary>
+        /// Initializes a new text response from the specified <paramref name="text"/> and <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="text">The text representing the response body.</param>
+        /// <param name="encoding">The encoding to be used for the response.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
         public HttpResponseMessage CreateTextResponse(string text, Encoding encoding) {
             return CreateTextResponse(HttpStatusCode.OK, text, encoding);
         }
 
+        /// <summary>
+        /// Initializes a new text response from the specified <paramref name="statusCode"/>, <paramref name="text"/> and <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="statusCode">The status code of the response.</param>
+        /// <param name="text">The text representing the response body.</param>
+        /// <param name="encoding">The encoding to be used for the response.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
         public HttpResponseMessage CreateTextResponse(HttpStatusCode statusCode, string text, Encoding encoding) {
             return new HttpResponseMessage {
                 StatusCode = statusCode,
@@ -30,23 +48,47 @@ namespace Skybrud.Umbraco.Spa.Api {
         #endregion
 
         #region HTML
-        
-        public HttpResponseMessage CreateHtmlResponse(string text) {
-            return CreateHtmlResponse(HttpStatusCode.OK, text, Encoding.UTF8);
+
+        /// <summary>
+        /// Creates a new HTMl based response from the specified <paramref name="html"/>.
+        /// </summary>
+        /// <param name="html">The HTML value representing the response body.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
+        public HttpResponseMessage CreateHtmlResponse(string html) {
+            return CreateHtmlResponse(HttpStatusCode.OK, html, Encoding.UTF8);
         }
 
-        public HttpResponseMessage CreateHtmlResponse(string text, Encoding encoding) {
-            return CreateHtmlResponse(HttpStatusCode.OK, text, encoding);
+        /// <summary>
+        /// Creates a new HTMl based response from the specified <paramref name="html"/> and <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="html">The HTML value representing the response body.</param>
+        /// <param name="encoding">The encoding to be used for the response.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
+        public HttpResponseMessage CreateHtmlResponse(string html, Encoding encoding) {
+            return CreateHtmlResponse(HttpStatusCode.OK, html, encoding);
         }
 
-        public HttpResponseMessage CreateHtmlResponse(HttpStatusCode statusCode, string text, Encoding encoding) {
+        /// <summary>
+        /// Creates a new HTMl based response from the specified <paramref name="statusCode"/>, <paramref name="html"/> and <paramref name="encoding"/>.
+        /// </summary>
+        /// <param name="statusCode">The status code of the response.</param>
+        /// <param name="html">The HTML value representing the response body.</param>
+        /// <param name="encoding">The encoding to be used for the response.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
+        public HttpResponseMessage CreateHtmlResponse(HttpStatusCode statusCode, string html, Encoding encoding) {
             return new HttpResponseMessage {
                 StatusCode = statusCode,
-                Content = new StringContent(text ?? string.Empty, encoding, "text/html")
+                Content = new StringContent(html ?? string.Empty, encoding, "text/html")
             };
         }
-        
-        protected HttpResponseMessage ReturnHtmlError(SpaRequest request, Exception ex) {
+
+        /// <summary>
+        /// Creates a new HTML based error response for the specified <paramref name="exception"/>.
+        /// </summary>
+        /// <param name="request">The current request.</param>
+        /// <param name="exception">The exception the response should be about.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
+        protected HttpResponseMessage ReturnHtmlError(SpaRequest request, Exception exception) {
 
             StringBuilder sb = new StringBuilder();
 
@@ -86,16 +128,16 @@ namespace Skybrud.Umbraco.Spa.Api {
             sb.AppendLine("<tr><th>IsCustomErrorEnabled</th><td>" + request.HttpContext.IsCustomErrorEnabled + "</td></tr>");
             sb.AppendLine("</table>");
 
-            while (ex != null) {
+            while (exception != null) {
 
                 sb.AppendLine("<h3>Exception</h3>");
                 sb.AppendLine("<table>\n");
-                sb.AppendLine("<tr><th>Type</th><td>" + ex.GetType() + "</td></tr>");
-                sb.AppendLine("<tr><th>Message</th><td>" + ex.Message + "</td></tr>");
-                sb.AppendLine("<tr><th>Stack trace</th><td><pre>" + ex.StackTrace + "</pre></td></tr>");
+                sb.AppendLine("<tr><th>Type</th><td>" + exception.GetType() + "</td></tr>");
+                sb.AppendLine("<tr><th>Message</th><td>" + exception.Message + "</td></tr>");
+                sb.AppendLine("<tr><th>Stack trace</th><td><pre>" + exception.StackTrace + "</pre></td></tr>");
                 sb.AppendLine("</table>");
 
-                ex = ex.InnerException;
+                exception = exception.InnerException;
 
             }
 
@@ -134,8 +176,7 @@ namespace Skybrud.Umbraco.Spa.Api {
         /// <param name="data">The data to be serialized to JSON and returned as the response body.</param>
         /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
         protected virtual HttpResponseMessage CreateSpaResponse(object data) {
-            JsonMetaResponse meta = data as JsonMetaResponse;
-            return meta != null ? CreateSpaResponse(meta.Meta.Code, meta) : CreateSpaResponse(HttpStatusCode.OK, data);
+            return data is JsonMetaResponse meta ? CreateSpaResponse(meta.Meta.Code, meta) : CreateSpaResponse(HttpStatusCode.OK, data);
         }
 
         #endregion
@@ -150,34 +191,77 @@ namespace Skybrud.Umbraco.Spa.Api {
             return CreateSpaResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, "Internal server error"));
         }
 
-        protected virtual HttpResponseMessage ReturnError(HttpStatusCode code) {
-            return CreateSpaResponse(JsonMetaResponse.GetError(code, null));
+        /// <summary>
+        /// Returns a new JSON based error response with the specified <paramref name="statusCode"/>.
+        /// </summary>
+        /// <param name="statusCode">The status code to be used for the response.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
+        protected virtual HttpResponseMessage ReturnError(HttpStatusCode statusCode) {
+            return CreateSpaResponse(JsonMetaResponse.GetError(statusCode, null));
         }
 
+        /// <summary>
+        /// Returns a new JSON based error response with the specified <paramref name="message"/>.
+        /// </summary>
+        /// <param name="message">The message of the error response.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
         protected virtual HttpResponseMessage ReturnError(string message) {
             return CreateSpaResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, message));
         }
 
-        protected virtual HttpResponseMessage ReturnError(HttpStatusCode code, string message) {
-            return CreateSpaResponse(JsonMetaResponse.GetError(code, message));
+        /// <summary>
+        /// Returns a new JSON based error response with the specified <paramref name="message"/> and <paramref name="message"/>.
+        /// </summary>
+        /// <param name="statusCode">The status code to be used for the response.</param>
+        /// <param name="message">The message of the error response.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
+        protected virtual HttpResponseMessage ReturnError(HttpStatusCode statusCode, string message) {
+            return CreateSpaResponse(JsonMetaResponse.GetError(statusCode, message));
         }
 
-        protected virtual HttpResponseMessage ReturnError(HttpStatusCode code, string message, object body) {
-            return CreateSpaResponse(JsonMetaResponse.GetError(code, message, body));
+        /// <summary>
+        /// Returns a new JSON based error response with the specified <paramref name="message"/>, <paramref name="message"/> and <paramref name="data"/>.
+        /// </summary>
+        /// <param name="statusCode">The status code to be used for the response.</param>
+        /// <param name="message">The message of the error response.</param>
+        /// <param name="data">The value of the <c>data</c> property in the JSON response.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
+        protected virtual HttpResponseMessage ReturnError(HttpStatusCode statusCode, string message, object data) {
+            return CreateSpaResponse(JsonMetaResponse.GetError(statusCode, message, data));
         }
 
         #endregion
 
         #region SPA/redirect
 
+        /// <summary>
+        /// Returns a JSON response for a permanent SPA redirect.
+        /// </summary>
+        /// <param name="request">The current request.</param>
+        /// <param name="destinationUrl">The destination URL of the redirect.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
         protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl) {
 		    return ReturnRedirect(request, destinationUrl, HttpStatusCode.MovedPermanently);
 	    }
 
+        /// <summary>
+        /// Returns a JSON response for a SPA redirect.
+        /// </summary>
+        /// <param name="request">The current request.</param>
+        /// <param name="destinationUrl">The destination URL of the redirect.</param>
+        /// <param name="permanent">Whether the redirect is permanent (<see cref="HttpStatusCode.MovedPermanently"/>) or temporary (<see cref="HttpStatusCode.TemporaryRedirect"/>).</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
         protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl, bool permanent) {
             return ReturnRedirect(request, destinationUrl, permanent ? HttpStatusCode.MovedPermanently : HttpStatusCode.TemporaryRedirect);
         }
 
+        /// <summary>
+        /// Returns a JSON response for a SPA redirect.
+        /// </summary>
+        /// <param name="request">The current request.</param>
+        /// <param name="destinationUrl">The destination URL of the redirect.</param>
+        /// <param name="statusCode">The status code of the response - eg. <see cref="HttpStatusCode.MovedPermanently"/>.</param>
+        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
         protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl, HttpStatusCode statusCode) {
 
             // Initialize the "data" object for the response

@@ -5,6 +5,9 @@ using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
+    /// <summary>
+    /// Class representing the base model of a SPA site.
+    /// </summary>
     public class SpaSiteModel {
 
         #region Properties
@@ -107,6 +110,10 @@ namespace Skybrud.Umbraco.Spa.Models {
 
         #region Member methods
 
+        /// <summary>
+        /// Gets the navigation model of this site.
+        /// </summary>
+        /// <returns>An instance of <see cref="SpaNavigationModel"/>.</returns>
         public virtual SpaNavigationModel GetNavigation() {
             return new SpaNavigationModel();
         }

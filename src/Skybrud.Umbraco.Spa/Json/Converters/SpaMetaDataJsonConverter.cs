@@ -5,6 +5,8 @@ using Newtonsoft.Json.Linq;
 using Skybrud.Umbraco.Spa.Models.Meta;
 using Skybrud.Umbraco.Spa.Models.Meta.OpenGraph;
 
+#pragma warning disable 1591
+
 namespace Skybrud.Umbraco.Spa.Json.Converters {
 
     public class SpaMetaDataJsonConverter : JsonConverter {

@@ -1,5 +1,4 @@
-﻿using System;
-using Newtonsoft.Json;
+﻿using Newtonsoft.Json;
 
 namespace Skybrud.Umbraco.Spa.Models.Meta {
     
@@ -64,15 +63,27 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         [JsonProperty("sizes", NullValueHandling = NullValueHandling.Ignore)]
         public string Sizes { get; set; }
 
+        /// <summary>
+        /// Gets whether this <c>link</c> element is valid.
+        /// </summary>
         [JsonIgnore]
-        public virtual bool IsValid => String.IsNullOrWhiteSpace(Href) == false;
+        public virtual bool IsValid => string.IsNullOrWhiteSpace(Href) == false;
 
         #endregion
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new <c>link</c> element with default options.
+        /// </summary>
         public SpaMetaLink() { }
 
+        /// <summary>
+        /// Initializes a new <c>link</c> element based on the specified <paramref name="href"/>, <paramref name="rel"/> and <paramref name="type"/>.
+        /// </summary>
+        /// <param name="href">The value of the <c>href</c> attribute.</param>
+        /// <param name="rel">The value of the <c>rel</c> attribute.</param>
+        /// <param name="type">The value of the <c>type</c> attribute.</param>
         public SpaMetaLink(string href, string rel = null, string type = null) {
             Href = href;
             Rel = rel;

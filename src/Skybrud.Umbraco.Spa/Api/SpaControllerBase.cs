@@ -12,6 +12,11 @@ using Umbraco.Web.WebApi;
 
 namespace Skybrud.Umbraco.Spa.Api {
 
+    /// <summary>
+    /// Base class for creating custom SPA API controllers.
+    ///
+    /// Server as a base class, most methods in this class have been marked as virtual, meaning your can override and tailor the controller to your needs.
+    /// </summary>
     [JsonOnlyConfiguration]
     [AccessControlAllowOrigin]
     public abstract partial class SpaControllerBase : UmbracoApiController {
@@ -37,14 +42,13 @@ namespace Skybrud.Umbraco.Spa.Api {
 
         #region Constructors
 
+        /// <summary>
+        /// Initializes a new instance.
+        /// </summary>
         protected SpaControllerBase() {
             RuntimeCache = AppCaches.RuntimeCache;
             Redirects = new RedirectsService(Current.ScopeProvider, Current.Services.DomainService, Logger);
         }
-
-        #endregion
-
-        #region Constructors
 
         /// <summary>
         /// Initializes a new instance.

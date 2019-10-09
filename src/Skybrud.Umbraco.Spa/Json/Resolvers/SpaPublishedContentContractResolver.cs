@@ -6,6 +6,8 @@ using Skybrud.Essentials.Strings;
 using Skybrud.Umbraco.GridData;
 using Skybrud.Umbraco.Spa.Json.Converters;
 
+#pragma warning disable 1591
+
 namespace Skybrud.Umbraco.Spa.Json.Resolvers {
 
     public class SpaPublishedContentContractResolver : DefaultContractResolver {

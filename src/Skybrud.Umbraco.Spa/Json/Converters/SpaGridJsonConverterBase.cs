@@ -8,6 +8,8 @@ using Skybrud.Umbraco.Spa.Models.Grid;
 using Umbraco.Web.Composing;
 using Umbraco.Web.Templates;
 
+#pragma warning disable 1591
+
 namespace Skybrud.Umbraco.Spa.Json.Converters {
 
     public class SpaGridJsonConverterBase : JsonConverter {

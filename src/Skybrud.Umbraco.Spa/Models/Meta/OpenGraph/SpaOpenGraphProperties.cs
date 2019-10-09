@@ -6,10 +6,16 @@ using Umbraco.Web;
 
 namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
 
+    /// <summary>
+    /// Class representing the Open Graph properties of a page.
+    /// </summary>
     public class SpaOpenGraphProperties {
 
         #region Properties
 
+        /// <summary>
+        /// Gets the base URL of the current request. The base URL will automatically be prepended to images whose URL starts with a forward slash.
+        /// </summary>
         public string BaseUrl { get; }
 
         /// <summary>
@@ -42,13 +48,21 @@ namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
 
         #region Constructors
         
+        /// <summary>
+        /// Initializes a new instance with the specified <paramref name="baseUrl"/>.
+        /// </summary>
+        /// <param name="baseUrl"></param>
         public SpaOpenGraphProperties(string baseUrl) {
             Images = new List<SpaOpenGraphImage>();
             BaseUrl = baseUrl;
         }
 
-        public SpaOpenGraphProperties(IPublishedContent baseNode) {
-            BaseUrl = string.Join("/", baseNode.Url(mode: UrlMode.Absolute).Split('/').Take(3));
+        /// <summary>
+        /// Initializes a new instance using the specified <paramref name="rootNode"/> to determine the base URL of the current request.
+        /// </summary>
+        /// <param name="rootNode">The root node.</param>
+        public SpaOpenGraphProperties(IPublishedContent rootNode) {
+            BaseUrl = string.Join("/", rootNode.Url(mode: UrlMode.Absolute).Split('/').Take(3));
             Images = new List<SpaOpenGraphImage>();
         }
 
@@ -56,25 +70,45 @@ namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
 
         #region Member methods
 
-        public void AppendImage(string image) {
-            if (string.IsNullOrWhiteSpace(image)) return;
-            image = image.StartsWith("/") ? BaseUrl + image : image;
-            Images.Add(new SpaOpenGraphImage(image));
+        /// <summary>
+        /// Appends an image with the specified <paramref name="url"/>.
+        ///
+        /// If <paramref name="url"/> starts with a forward slash, <see cref="BaseUrl"/> will automatically be
+        /// prepended to the URL.
+        /// </summary>
+        /// <param name="url">The URL of the image.</param>
+        public void AppendImage(string url) {
+            if (string.IsNullOrWhiteSpace(url)) return;
+            url = url.StartsWith("/") ? BaseUrl + url : url;
+            Images.Add(new SpaOpenGraphImage(url));
         }
 
-        public void AppendImage(string image, int width, int height) {
-            if (string.IsNullOrWhiteSpace(image)) return;
-            image = image.StartsWith("/") ? BaseUrl + image : image;
-            Images.Add(new SpaOpenGraphImage(image, width, height));
+        /// <summary>
+        /// Appends an image with the specified <paramref name="url"/>, <paramref name="width"/> and <paramref name="height"/>.
+        ///
+        /// If <paramref name="url"/> starts with a forward slash, <see cref="BaseUrl"/> will automatically be
+        /// prepended to the URL.
+        /// </summary>
+        /// <param name="url">The URL of the image.</param>
+        /// <param name="width">The width of the image.</param>
+        /// <param name="height">The height of the image.</param>
+        public void AppendImage(string url, int width, int height) {
+            if (string.IsNullOrWhiteSpace(url)) return;
+            url = url.StartsWith("/") ? BaseUrl + url : url;
+            Images.Add(new SpaOpenGraphImage(url, width, height));
         }
 
-        public void AppendImages(params string[] images) {
+        /// <summary>
+        /// Appends the images from the specified array of <paramref name="urls"/>.
+        /// </summary>
+        /// <param name="urls">The URLs of the images to append.</param>
+        public void AppendImages(params string[] urls) {
 
-            if (images == null || images.Length == 0) return;
+            if (urls == null || urls.Length == 0) return;
 
             List<SpaOpenGraphImage> temp = new List<SpaOpenGraphImage>();
 
-            foreach (string imageUrl in images) {
+            foreach (string imageUrl in urls) {
                 string url = imageUrl.StartsWith("/") ? BaseUrl + imageUrl : imageUrl;
                 temp.Add(new SpaOpenGraphImage(url));
             }
@@ -83,6 +117,10 @@ namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
 
         }
 
+        /// <summary>
+        /// Appends the specified <paramref name="images"/>.
+        /// </summary>
+        /// <param name="images">An array of <see cref="IPublishedContent"/> representing the images to be appended.</param>
         public void AppendImages(params IPublishedContent[] images) {
 
             if (images == null || images.Length == 0) return;
@@ -95,21 +133,6 @@ namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
             }
 
             Images.AddRange(temp);
-
-        }
-
-        public void PrependImages(PublishedContentModel content, params IPublishedContent[] images) {
-
-            if (images == null || images.Length == 0) return;
-
-            List<SpaOpenGraphImage> temp = new List<SpaOpenGraphImage>();
-
-            foreach (IPublishedContent image in images) {
-                string url = BaseUrl + image.GetCropUrl(1200, 630);
-                temp.Add(new SpaOpenGraphImage(url, 1200, 630));
-            }
-
-            Images.InsertRange(0, temp);
 
         }
 

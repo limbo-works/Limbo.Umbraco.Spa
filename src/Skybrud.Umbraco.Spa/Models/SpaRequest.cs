@@ -9,6 +9,9 @@ using Umbraco.Core.Models.PublishedContent;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
+    /// <summary>
+    /// Class representing a request via the <c>GetData</c> endpoint in the SPA API.
+    /// </summary>
     public class SpaRequest {
 
         #region Properties
@@ -89,6 +92,9 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         public IPublishedContent Content { get; set; }
 
+        /// <summary>
+        /// Gets or sets the content model.
+        /// </summary>
         public SpaContentModel ContentModel { get; set; }
 
         /// <summary>
@@ -105,10 +111,19 @@ namespace Skybrud.Umbraco.Spa.Models {
         [JsonIgnore]
         public bool HasVirtualParent => VirtualParent != null;
 
+        /// <summary>
+        /// Gets whether the request uses a Danish culture.
+        /// </summary>
         public bool IsDanish => CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "da";
 
+        /// <summary>
+        /// Gets whether the request uses an English culture.
+        /// </summary>
         public bool IsEnglish => CultureInfo.CurrentCulture.TwoLetterISOLanguageName == "en";
 
+        /// <summary>
+        /// Gets or sets the data model.
+        /// </summary>
         public SpaDataModel DataModel { get; set; }
 
         /// <summary>
@@ -116,8 +131,14 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         public HttpStatusCode ResponseStatusCode { get; set; } = HttpStatusCode.OK;
 
+        /// <summary>
+        /// Gets or sets the response.
+        /// </summary>
         public HttpResponseMessage Response { get; set; }
 
+        /// <summary>
+        /// Gets the <see cref="Stopwatch"/> used for measuring the duration of the request.
+        /// </summary>
         public Stopwatch Stopwatch { get; }
 
         #endregion
@@ -134,6 +155,10 @@ namespace Skybrud.Umbraco.Spa.Models {
             Stopwatch = Stopwatch.StartNew();
         }
 
+        /// <summary>
+        /// Initializes a new a instance based on the specified <paramref name="context"/>.
+        /// </summary>
+        /// <param name="context">The HTTP context of the current request.</param>
         public SpaRequest(HttpContext context) {
             if (context == null) throw new ArgumentNullException(nameof(context));
             HttpContext = new HttpContextWrapper(context);

@@ -7,6 +7,7 @@ using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Models.Meta.Attributes;
 using Skybrud.Umbraco.Spa.Models.Meta.OpenGraph;
 using Skybrud.Umbraco.Spa.Models.Meta.Twitter;
+using Umbraco.Core;
 using Umbraco.Core.Models.PublishedContent;
 
 // ReSharper disable UnusedParameter.Local
@@ -238,8 +239,8 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
             // Append the <html> attributes (if any)
             if (HtmlAttributes != null && HtmlAttributes.Count > 0) {
                 JObject htmlAttrs = new JObject();
-                foreach (var attr in HtmlAttributes) {
-                    htmlAttrs.Add(attr.Key, attr.Value);
+                foreach (var (key, value) in HtmlAttributes) {
+                    htmlAttrs.Add(key, value);
                 }
                 obj["htmlAttrs"] = htmlAttrs;
             }
@@ -247,8 +248,8 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
             // Append the <head> attributes (if any)
             if (HeadAttributes != null && HeadAttributes.Count > 0) {
                 JObject headAttrs = new JObject();
-                foreach (var attr in HeadAttributes) {
-                    headAttrs.Add(attr.Key, attr.Value);
+                foreach (var (key, value) in HeadAttributes) {
+                    headAttrs.Add(key, value);
                 }
                 obj["headAttrs"] = headAttrs;
             }
@@ -256,8 +257,8 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
             // Append the <body> attributes (if any)
             if (BodyAttributes != null && BodyAttributes.Count > 0) {
                 JObject bodyAttrs = new JObject();
-                foreach (var attr in BodyAttributes) {
-                    bodyAttrs.Add(attr.Key, attr.Value);
+                foreach (var (key, value) in BodyAttributes) {
+                    bodyAttrs.Add(key, value);
                 }
                 obj["bodyAttrs"] = bodyAttrs;
             }

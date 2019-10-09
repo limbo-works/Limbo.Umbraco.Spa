@@ -63,6 +63,9 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         public int NavLevels { get; set; }
 
+        /// <summary>
+        /// Gets or sets whether the <c>context</c> property should be part of the <see cref="SpaApiPart.Navigation"/> part.
+        /// </summary>
         public bool NavContext { get; set; }
 
         /// <summary>
@@ -155,27 +158,6 @@ namespace Skybrud.Umbraco.Spa.Models {
 
             ShowHtmlErrors = context.IsDebuggingEnabled && context.IsCustomErrorEnabled == false && context.Request.Headers["Accept"].Contains("text/html");
 
-        }
-
-        public SpaRequestOptions(int siteId) {
-            SiteId = siteId;
-            Url = "";
-			IsPreview = false;
-			Parts = GetParts();
-        }
-
-        public SpaRequestOptions(int siteId, string url) {
-            SiteId = siteId;
-            Url = url;
-			IsPreview = url.IsPreviewUrl();
-			Parts = GetParts();
-        }
-
-        public SpaRequestOptions(int siteId, string url, string parts) {
-            SiteId = siteId;
-			Url = string.IsNullOrWhiteSpace(url) ? "/" : url;
-			IsPreview = Url.IsPreviewUrl();
-			Parts = GetParts(parts);
         }
 
         #endregion

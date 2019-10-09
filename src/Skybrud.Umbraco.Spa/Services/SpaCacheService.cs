@@ -6,7 +6,7 @@ namespace Skybrud.Umbraco.Spa.Services {
     /// <summary>
     /// Base implementation of a cache service for the SPA. 
     /// </summary>
-    public class SpaCacheService {
+    public class SpaCacheService : ISpaCacheService {
 
         private readonly IAppPolicyCache _runtimeCache;
 

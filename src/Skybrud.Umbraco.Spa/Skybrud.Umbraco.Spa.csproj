@@ -26,7 +26,9 @@
     <PackageReference Include="Skybrud.Essentials" Version="1.1.16" />
     <PackageReference Include="Skybrud.Umbraco.GridData" Version="3.0.0-beta003" />
     <PackageReference Include="Skybrud.WebApi.Json" Version="1.0.4" />
-    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="2.0.0" />
+    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="2.0.0">
+      <ExcludeAssets>contentFiles</ExcludeAssets>
+    </PackageReference>
     <PackageReference Include="UmbracoCms.Web" Version="8.1.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>

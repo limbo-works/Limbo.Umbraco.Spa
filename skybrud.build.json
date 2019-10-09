@@ -9,8 +9,16 @@
             "source": "src/{packageName}/bin/Release/",
             "destination": "bin/",
             "patterns": [
-              "**/*.dll",
-              "**/*.xml"
+              "{packageName}.dll",
+              "{packageName}.xml",
+              "Skybrud.Essentials.dll",
+              "Skybrud.Essentials.xml",
+              "Skybrud.WebApi.Json.dll",
+              "Skybrud.WebApi.Json.xml",
+              "Skybrud.Umbraco.GridData.dll",
+              "Skybrud.Umbraco.GridData.xml",
+              "Skybrud.Umbraco.Redirects.dll",
+              "Skybrud.Umbraco.Redirects.xml",
             ]
           },
           {

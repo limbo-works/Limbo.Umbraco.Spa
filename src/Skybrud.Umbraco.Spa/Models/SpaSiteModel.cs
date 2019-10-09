@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Skybrud.Umbraco.Spa.Models.Navigation;
 using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web;
 

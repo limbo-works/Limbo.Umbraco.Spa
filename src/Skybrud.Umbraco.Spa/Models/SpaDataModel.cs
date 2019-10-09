@@ -1,5 +1,6 @@
 ﻿using System;
 using Newtonsoft.Json;
+using Skybrud.Umbraco.Spa.Models.Navigation;
 
 namespace Skybrud.Umbraco.Spa.Models {
 

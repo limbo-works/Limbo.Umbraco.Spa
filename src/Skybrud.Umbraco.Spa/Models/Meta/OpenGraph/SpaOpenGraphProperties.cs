@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web;
 
@@ -133,6 +134,25 @@ namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
             }
 
             Images.AddRange(temp);
+
+        }
+
+        /// <summary>
+        /// Writes the Open Graph data to the specified JSON <paramref name="array"/>.
+        /// </summary>
+        /// <param name="array">The array to which the Open Graph data should be added.</param>
+        public virtual void WriteJson(JArray array) {
+
+            SpaUtils.Json.AddMetaProperty(array, "og:title", Title);
+            SpaUtils.Json.AddMetaProperty(array, "og:description", Description);
+            SpaUtils.Json.AddMetaProperty(array, "og:site_name", SiteName);
+            SpaUtils.Json.AddMetaProperty(array, "og:url", Url);
+
+            foreach (SpaOpenGraphImage image in Images) {
+                SpaUtils.Json.AddMetaProperty(array, "og:image", image.Url);
+                if (image.Width > 0) SpaUtils.Json.AddMetaProperty(array, "og:image:width", image.Width + string.Empty);
+                if (image.Height > 0) SpaUtils.Json.AddMetaProperty(array, "og:image:height", image.Height + string.Empty);
+            }
 
         }
 

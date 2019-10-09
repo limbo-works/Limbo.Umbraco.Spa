@@ -1,9 +1,12 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Skybrud.Umbraco.Spa.Extensions;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Models.Meta.Attributes;
 using Skybrud.Umbraco.Spa.Models.Meta.OpenGraph;
+using Skybrud.Umbraco.Spa.Models.Meta.Twitter;
 using Umbraco.Core.Models.PublishedContent;
 
 // ReSharper disable UnusedParameter.Local
@@ -22,6 +25,9 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
     public class SpaMetaData {
 
         private readonly SpaMetaLink _canonical;
+
+        private SpaOpenGraphProperties _og;
+        private ITwitterCard _twitter;
 
         #region Properties
 
@@ -80,7 +86,17 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         /// <summary>
         /// Gets a collection of Open Graph properties for the current page.
         /// </summary>
-        public SpaOpenGraphProperties OpenGraph => GetOpenGraph();
+        public SpaOpenGraphProperties OpenGraph => _og ?? (_og = GetOpenGraph());
+
+        /// <summary>
+        /// Gets an instance of <see cref="ITwitterCard"/> representing the current page, or <c>null</c> if the page doesn't have a Twitter card..
+        /// </summary>
+        public ITwitterCard TwitterCard => _twitter ?? (_twitter = GetTwitterCard());
+
+        /// <summary>
+        /// Gets whether the page has a Twitter card.
+        /// </summary>
+        public bool HasTwitterCard => TwitterCard != null;
 
         /// <summary>
         /// Gets or sets a collection of <c>&lt;link&gt;</c> elements.
@@ -142,6 +158,14 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         }
 
         /// <summary>
+        /// Gets the Twitter card of the current page. This method will return <c>null</c> by default, but can be overriden by subclasses.
+        /// </summary>
+        /// <returns>An instance of <see cref="ITwitterCard"/>, or <c>null</c> it not available.</returns>
+        protected virtual ITwitterCard GetTwitterCard() {
+            return null;
+        }
+
+        /// <summary>
         /// Adds a new <c>&lt;link%gt;</c> element with the specified parameters.
         /// </summary>
         /// <param name="href">The value of the <c>href</c> attribute.</param>
@@ -191,6 +215,69 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         public SpaMetaScript AddScript(SpaMetaScript script) {
             Scripts.Add(script);
             return script;
+        }
+
+        /// <summary>
+        /// Writes the meta data to the specified <paramref name="writer"/>.
+        /// </summary>
+        /// <param name="writer"></param>
+        public virtual void WriteJson(JsonWriter writer) {
+            ToMetaJson()?.WriteTo(writer);
+        }
+
+        /// <summary>
+        /// Returns a <see cref="JObject"/> representing the meta data.
+        /// </summary>
+        public virtual JObject ToMetaJson() {
+
+            JObject obj = new JObject();
+            JArray meta = new JArray();
+
+            obj["title"] = MetaTitle ?? string.Empty;
+
+            // Append the <html> attributes (if any)
+            if (HtmlAttributes != null && HtmlAttributes.Count > 0) {
+                JObject htmlAttrs = new JObject();
+                foreach (var attr in HtmlAttributes) {
+                    htmlAttrs.Add(attr.Key, attr.Value);
+                }
+                obj["htmlAttrs"] = htmlAttrs;
+            }
+
+            // Append the <head> attributes (if any)
+            if (HeadAttributes != null && HeadAttributes.Count > 0) {
+                JObject headAttrs = new JObject();
+                foreach (var attr in HeadAttributes) {
+                    headAttrs.Add(attr.Key, attr.Value);
+                }
+                obj["headAttrs"] = headAttrs;
+            }
+
+            // Append the <body> attributes (if any)
+            if (BodyAttributes != null && BodyAttributes.Count > 0) {
+                JObject bodyAttrs = new JObject();
+                foreach (var attr in BodyAttributes) {
+                    bodyAttrs.Add(attr.Key, attr.Value);
+                }
+                obj["bodyAttrs"] = bodyAttrs;
+            }
+
+
+            obj["meta"] = meta;
+
+            SpaUtils.Json.AddMetaContent(meta, "description", MetaDescription ?? string.Empty, true);
+            SpaUtils.Json.AddMetaContent(meta, "robots", Robots);
+
+            OpenGraph?.WriteJson(meta);
+            TwitterCard?.WriteJson(meta);
+
+            if (Links.Count > 0) obj.Add("link", JArray.FromObject(Links.Where(x => x.IsValid)));
+            if (Scripts.Count > 0) obj.Add("script", JArray.FromObject(Scripts));
+
+            if (DangerouslyDisableSanitizers.Length > 0) obj.Add("__dangerouslyDisableSanitizers", new JArray(from str in DangerouslyDisableSanitizers select str));
+
+            return obj;
+
         }
 
         #endregion

@@ -1,10 +1,13 @@
 ﻿using Newtonsoft.Json.Linq;
 
 namespace Skybrud.Umbraco.Spa.Models.Meta.Twitter  {
-
+    
     /// <summary>
     /// Interface representing a Twitter card.
     /// </summary>
+    /// <see>
+    ///     <cref>https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/abouts-cards</cref>
+    /// </see>
     public interface ITwitterCard {
 
         /// <summary>

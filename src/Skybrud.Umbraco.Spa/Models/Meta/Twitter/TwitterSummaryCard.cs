@@ -3,10 +3,13 @@
 // ReSharper disable InconsistentNaming
 
 namespace Skybrud.Umbraco.Spa.Models.Meta.Twitter  {
-
+    
     /// <summary>
     /// Class representing a <strong>Summary</strong> Twitter card.
     /// </summary>
+    /// <see>
+    ///     <cref>https://developer.twitter.com/en/docs/tweets/optimize-with-cards/overview/summary</cref>
+    /// </see>
     public class TwitterSummaryCard : ITwitterCard {
 
         /// <summary>

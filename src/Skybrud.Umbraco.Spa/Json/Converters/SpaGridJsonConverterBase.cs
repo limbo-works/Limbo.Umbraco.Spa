@@ -72,7 +72,7 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
 
             SpaGridModel hai = new SpaGridModel(grid, sections);
 
-            JObject obj = JObject.FromObject(hai);
+            JObject obj = JObject.FromObject(hai, serializer);
 
             obj.WriteTo(writer);
 

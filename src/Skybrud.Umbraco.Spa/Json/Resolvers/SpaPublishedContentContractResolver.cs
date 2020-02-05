@@ -62,10 +62,10 @@ namespace Skybrud.Umbraco.Spa.Json.Resolvers {
                 if (property.PropertyName == "SeoMetaDescription") return false;
                 if (property.PropertyName == "Seodashboard") return false;
                 if (property.PropertyName == "Preview") return false;
-		if (property.PropertyName == "SeoTitle") return false;
-		if (property.PropertyName == "UrlSegment") return false;
-		if (property.PropertyName == "Cultures") return false;
-		if (property.PropertyName == "ChildrenForAllCultures") return false;
+		        if (property.PropertyName == "SeoTitle") return false;
+		        if (property.PropertyName == "UrlSegment") return false;
+		        if (property.PropertyName == "Cultures") return false;
+		        if (property.PropertyName == "ChildrenForAllCultures") return false;
                 //ADD CUSTOM OVERRRIDES AFTER THIS IN THE ABOVE FORMAT
 
 

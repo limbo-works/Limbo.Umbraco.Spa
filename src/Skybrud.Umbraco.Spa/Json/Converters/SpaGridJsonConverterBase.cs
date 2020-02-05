@@ -88,6 +88,9 @@ namespace Skybrud.Umbraco.Spa.Json.Converters {
 
         protected virtual SpaGridControl GetControl(GridControl control) {
 
+            // Does the value inherit from SpaGridControlValueBase? Easy :D
+            if (control.Value is SpaGridControlValueBase spa) return spa.GetControlForSpa();
+
             object value;
             SpaGridEditor editor = GetEditor(control.Editor);
 

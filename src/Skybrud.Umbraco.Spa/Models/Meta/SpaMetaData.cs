@@ -100,6 +100,11 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         public bool HasTwitterCard => TwitterCard != null;
 
         /// <summary>
+        /// Gets or sets an object that defines the <c>&lt;base&gt;</c> HTML element.
+        /// </summary>
+        public SpaMetaBase Base { get; set; }
+
+        /// <summary>
         /// Gets or sets a collection of <c>&lt;link&gt;</c> elements.
         /// </summary>
         public List<SpaMetaLink> Links { get; set; }
@@ -236,6 +241,8 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
 
             obj["title"] = MetaTitle ?? string.Empty;
 
+            // TODO: Add support for the "titleTemplate" property
+
             // Append the <html> attributes (if any)
             if (HtmlAttributes != null && HtmlAttributes.Count > 0) {
                 JObject htmlAttrs = new JObject();
@@ -263,6 +270,7 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
                 obj["bodyAttrs"] = bodyAttrs;
             }
 
+            if (Base != null) obj["base"] = JObject.FromObject(Base);
 
             obj["meta"] = meta;
 
@@ -274,8 +282,11 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
 
             if (Links.Count > 0) obj.Add("link", JArray.FromObject(Links.Where(x => x.IsValid)));
             if (Scripts.Count > 0) obj.Add("script", JArray.FromObject(Scripts));
+            // TODO: Add support for the "style" property
+            // TODO: Add support for the "noscript" property
 
             if (DangerouslyDisableSanitizers.Length > 0) obj.Add("__dangerouslyDisableSanitizers", new JArray(from str in DangerouslyDisableSanitizers select str));
+            // TODO: Add support for the "__dangerouslyDisableSanitizersByTagID" property
 
             return obj;
 

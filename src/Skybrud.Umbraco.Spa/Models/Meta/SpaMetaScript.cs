@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace Skybrud.Umbraco.Spa.Models.Meta {
     
@@ -73,6 +74,13 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         /// </see>
         [JsonProperty("async", DefaultValueHandling = DefaultValueHandling.Ignore)]
         public bool Async { get; set; }
+
+        /// <summary>
+        /// Gets or sets the JSON of the <c>script</c> element. This property allows you to render JSON content within
+        /// a script tag, while still sanitizing the keys and values. For example this can be used to render JSON-LD.
+        /// </summary>
+        [JsonProperty("json", NullValueHandling = NullValueHandling.Ignore)]
+        public JToken Json { get; set; }
 
         #endregion
 

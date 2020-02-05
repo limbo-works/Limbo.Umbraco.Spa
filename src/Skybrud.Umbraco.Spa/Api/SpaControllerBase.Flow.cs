@@ -2,6 +2,7 @@
 using System.Net;
 using System.Web;
 using Skybrud.Umbraco.Redirects.Models;
+using Skybrud.Umbraco.Spa.Constants;
 using Skybrud.Umbraco.Spa.Exceptions;
 using Skybrud.Umbraco.Spa.Extensions;
 using Skybrud.Umbraco.Spa.Models;
@@ -88,8 +89,8 @@ namespace Skybrud.Umbraco.Spa.Api {
             }
 
             // Handle "umbracoInternalRedirectId" when present
-            if (request.Content != null && request.Content.HasValue(Constants.Conventions.Content.InternalRedirectId)) {
-                request.Content = Umbraco.Content(Constants.Conventions.Content.InternalRedirectId);
+            if (request.Content != null && request.Content.HasValue(SkyConstants.Properties.UmbracoInternalRedirect)) {
+                request.Content = Umbraco.Content(SkyConstants.Properties.UmbracoInternalRedirect);
             }
 
 	    }

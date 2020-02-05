@@ -1,8 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Skybrud.Umbraco.Spa.Constants;
 using Skybrud.Umbraco.Spa.Extensions;
-using Umbraco.Core;
 using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Web;
 
@@ -90,7 +90,7 @@ namespace Skybrud.Umbraco.Spa.Models.Navigation {
             Template = content.GetTemplateAlias();
             Culture = content.GetCultureInfo().Name;
             HasChildren = children.Any();
-            IsVisible = content.Value<bool>(Constants.Conventions.Content.NaviHide) == false;
+            IsVisible = content.Value<bool>(SkyConstants.Properties.UmbracoNaviHide) == false;
             Children = children.Any() && levels > levelcount ? children.Select(x => GetItem(x, levels)).ToArray() : new SpaNavigationItem[0];
 
         }

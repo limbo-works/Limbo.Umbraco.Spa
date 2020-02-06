@@ -25,8 +25,7 @@ namespace Skybrud.Umbraco.Spa.Attributes {
         /// Initializes a new instance with the specified <paramref name="value"/>.
         /// </summary>
         /// <param name="value">The value to be set for the HTTP header.</param>
-        public AccessControlAllowOriginAttribute(string value)
-        {
+        public AccessControlAllowOriginAttribute(string value) {
             Value = value;
         }
 

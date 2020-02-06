@@ -3,13 +3,12 @@ using Newtonsoft.Json;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Json.Resolvers;
 using Skybrud.Umbraco.Spa.Models;
-using Umbraco.Core.Composing;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.PublishedContent;
 
-namespace Skybrud.Umbraco.Spa.Api {
+namespace Skybrud.Umbraco.Spa {
 
-    public abstract partial class SpaControllerBase {
+    public partial class SpaRequestHelper {
 
         /// <summary>
         /// Virtual method for getting the <see cref="IPublishedContent"/> for the specified <paramref name="nodeId"/> or <paramref name="url"/>.
@@ -71,7 +70,7 @@ namespace Skybrud.Umbraco.Spa.Api {
         /// <returns>A JSON string.</returns>
         protected virtual string Serialize(object data) {
 
-            SpaGridJsonConverterBase gridConverter = new SpaGridJsonConverterBase();
+            SpaGridJsonConverterBase gridConverter = GridJsonConverters ?? new SpaGridJsonConverterBase();
 
             return JsonConvert.SerializeObject(data, Formatting.None, new JsonSerializerSettings {
                 ContractResolver = new SpaPublishedContentContractResolver(gridConverter)

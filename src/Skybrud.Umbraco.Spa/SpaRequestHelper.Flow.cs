@@ -6,15 +6,14 @@ using Skybrud.Umbraco.Spa.Constants;
 using Skybrud.Umbraco.Spa.Exceptions;
 using Skybrud.Umbraco.Spa.Extensions;
 using Skybrud.Umbraco.Spa.Models;
-using Umbraco.Core;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Core.Services;
 using Umbraco.Web;
 
-namespace Skybrud.Umbraco.Spa.Api {
+namespace Skybrud.Umbraco.Spa {
 
-    public abstract partial class SpaControllerBase {
+    public partial class SpaRequestHelper {
 
         /// <summary>
         /// SPA request event method responsible for initializing the arguments of the request. Most arguments are
@@ -25,14 +24,14 @@ namespace Skybrud.Umbraco.Spa.Api {
         protected virtual void InitArguments(SpaRequest request) {
 
             // If "pageId" or "nodeId" exists, prefer content from that node
-            if (Arguments.PageId > 0) {
+            if (request.Arguments.PageId > 0) {
 	            IPublishedContent c = UmbracoContext.Content.GetById(request.Arguments.PageId);
-	            if (c != null) Arguments.Url = c.Url;
+	            if (c != null) request.Arguments.Url = c.Url;
 	        }
 
 	        // Try get siteId from domain
-	        if (Arguments.SiteId == -1 && !string.IsNullOrWhiteSpace(Arguments.HostName) && TryGetDomain(Arguments.HostName, out IDomain domain)) {
-	            Arguments.SiteId = domain.RootContentId ?? -1;
+	        if (request.Arguments.SiteId == -1 && !string.IsNullOrWhiteSpace(request.Arguments.HostName) && TryGetDomain(request.Arguments.HostName, out IDomain domain)) {
+                request.Arguments.SiteId = domain.RootContentId ?? -1;
 	        }
 
 	    }
@@ -44,7 +43,7 @@ namespace Skybrud.Umbraco.Spa.Api {
         protected virtual void InitSite(SpaRequest request) {
 
             // Get a reference to the site node
-            request.Site = UmbracoContext.Content.GetById(Arguments.SiteId);
+            request.Site = UmbracoContext.Content.GetById(request.Arguments.SiteId);
 
             // Throw an exception if we can't determine the site node
             if (request.Site == null) throw new SpaSiteNotFoundException(request, "Unable to determine site node from request.");
@@ -84,13 +83,13 @@ namespace Skybrud.Umbraco.Spa.Api {
             } else {
 
                 // Get a reference to the current page (fetched regardless of "parts" as the URL determines the culture)
-                request.Content = GetContentFromInput(request.Site, Arguments.PageId, Arguments.Url);
+                request.Content = GetContentFromInput(request.Site, request.Arguments.PageId, request.Arguments.Url);
 
             }
 
             // Handle "umbracoInternalRedirectId" when present
             if (request.Content != null && request.Content.HasValue(SkyConstants.Properties.UmbracoInternalRedirect)) {
-                request.Content = Umbraco.Content(SkyConstants.Properties.UmbracoInternalRedirect);
+                request.Content = request.Content.Value<IPublishedContent>(SkyConstants.Properties.UmbracoInternalRedirect);
             }
 
 	    }
@@ -223,11 +222,11 @@ namespace Skybrud.Umbraco.Spa.Api {
         protected virtual bool HandleSkybrudRedirect(SpaRequest request) {
 
             // Look for a global Skybrud redirect
-            RedirectItem redirect = Redirects.GetRedirectByUrl(0, HttpUtility.UrlDecode(request.Url));
+            RedirectItem redirect = RedirectsService.GetRedirectByUrl(0, HttpUtility.UrlDecode(request.Url));
 
             // If nothing is found at this point, look for a site specific Skybrud redirect
             if (request.SiteId > 0 && redirect == null) {
-                redirect = Redirects.GetRedirectByUrl(request.SiteId, HttpUtility.UrlDecode(request.Url));
+                redirect = RedirectsService.GetRedirectByUrl(request.SiteId, HttpUtility.UrlDecode(request.Url));
             }
 
             if (redirect == null) return false;
@@ -338,10 +337,10 @@ namespace Skybrud.Umbraco.Spa.Api {
         protected virtual void ReadFromCache(SpaRequest request) {
 
             // Skip if caching is disabled
-            if (Arguments.EnableCaching == false) return;
+            if (request.Arguments.EnableCaching == false) return;
 
             // Attempt to get the data model from the runtime cache
-            request.DataModel = RuntimeCache.Get(Arguments.CacheKey) as SpaDataModel;
+            request.DataModel = AppCaches.RuntimeCache.Get(request.Arguments.CacheKey) as SpaDataModel;
 
             // Did we get a model?
             if (request.DataModel == null) return;
@@ -374,9 +373,9 @@ namespace Skybrud.Umbraco.Spa.Api {
 
             if (request.DataModel == null) return;
 
-            if (Arguments.EnableCaching == false) return;
+            if (request.Arguments.EnableCaching == false) return;
 
-            RuntimeCache.Insert(Arguments.CacheKey, () => request.DataModel, TimeSpan.FromSeconds(60));
+            AppCaches.RuntimeCache.Insert(request.Arguments.CacheKey, () => request.DataModel, TimeSpan.FromSeconds(60));
 
         }
 

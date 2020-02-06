@@ -6,9 +6,9 @@ using System.Text;
 using Skybrud.Umbraco.Spa.Models;
 using Skybrud.WebApi.Json.Meta;
 
-namespace Skybrud.Umbraco.Spa.Api {
+namespace Skybrud.Umbraco.Spa {
 
-    public abstract partial class SpaControllerBase {
+    public abstract partial class SpaRequestHelper {
 
         #region Text
 

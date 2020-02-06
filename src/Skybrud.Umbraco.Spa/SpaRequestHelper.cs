@@ -1,63 +1,61 @@
 ﻿using System;
 using System.Net.Http;
 using Skybrud.Umbraco.Redirects.Models;
-using Skybrud.Umbraco.Spa.Attributes;
 using Skybrud.Umbraco.Spa.Exceptions;
+using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Models;
 using Skybrud.Umbraco.Spa.Models.Flow;
-using Skybrud.WebApi.Json;
 using Umbraco.Core.Cache;
+using Umbraco.Core.Services;
+using Umbraco.Web;
 using Umbraco.Web.Composing;
-using Umbraco.Web.WebApi;
 
-namespace Skybrud.Umbraco.Spa.Api {
+namespace Skybrud.Umbraco.Spa  {
 
     /// <summary>
-    /// Base class for creating custom SPA API controllers.
-    ///
-    /// Server as a base class, most methods in this class have been marked as virtual, meaning your can override and tailor the controller to your needs.
+    /// Helper class used for handling a SPA request.
     /// </summary>
-    [JsonOnlyConfiguration]
-    [AccessControlAllowOrigin]
-    public abstract partial class SpaControllerBase : UmbracoApiController {
+    public partial class SpaRequestHelper {
 
         #region Properties
 
         /// <summary>
-        /// Gets a reference to the arguments of the current SPA request. 
+        /// Gets a reference to the current Umbraco context.
         /// </summary>
-        protected SpaRequestOptions Arguments => SpaRequest.Current.Arguments;
+        protected UmbracoContext UmbracoContext { get; }
 
         /// <summary>
-        /// Gets a reference to Umbraco's runtime cache.
+        /// Gets a reference to Umbraco's service context.
         /// </summary>
-        protected IAppPolicyCache RuntimeCache { get; }
+        protected ServiceContext Services { get; }
+
+        /// <summary>
+        /// Gets a reference to Umbraco's app caches.
+        /// </summary>
+        protected AppCaches AppCaches { get; }
 
         /// <summary>
         /// Gets a reference to the redirects service.
         /// </summary>
-        protected IRedirectsService Redirects { get; }
+        protected IRedirectsService RedirectsService { get; }
+
+        /// <summary>
+        /// Gets or sets the JSON converter to be used when serializing the grid.
+        /// </summary>
+        public SpaGridJsonConverterBase GridJsonConverters { get; set; }
 
         #endregion
 
         #region Constructors
 
         /// <summary>
-        /// Initializes a new instance.
+        /// Initializes a new helper instance.
         /// </summary>
-        protected SpaControllerBase() {
-            RuntimeCache = AppCaches.RuntimeCache;
-            Redirects = new RedirectsService(Current.ScopeProvider, Current.Services.DomainService, Logger);
-        }
-
-        /// <summary>
-        /// Initializes a new instance.
-        /// </summary>
-        /// <param name="caches">A reference to the application caches.</param>
-        /// <param name="redirects">A reference to the redirects service.</param>
-        protected SpaControllerBase(AppCaches caches, IRedirectsService redirects) {
-            RuntimeCache = caches.RuntimeCache;
-            Redirects = redirects;
+        public SpaRequestHelper() {
+            UmbracoContext = Current.UmbracoContext;
+            RedirectsService = new RedirectsService();
+            Services = Current.Services;
+            AppCaches = Current.AppCaches;
         }
 
         #endregion
@@ -120,7 +118,7 @@ namespace Skybrud.Umbraco.Spa.Api {
         /// </summary>
         /// <param name="request">The current SPA request.</param>
         /// <returns>The response.</returns>
-        protected virtual HttpResponseMessage GetResponse(SpaRequest request) {
+        public virtual HttpResponseMessage GetResponse(SpaRequest request) {
 
             // Iterate through the different methods in the page flow
             foreach (SpaActionGroup group in GetActionGroups(request)) {

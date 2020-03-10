@@ -5,6 +5,7 @@ using Newtonsoft.Json.Serialization;
 using Skybrud.Essentials.Strings;
 using Skybrud.Umbraco.GridData;
 using Skybrud.Umbraco.Spa.Json.Converters;
+using System.Web;
 
 #pragma warning disable 1591
 
@@ -110,6 +111,10 @@ namespace Skybrud.Umbraco.Spa.Json.Resolvers {
             if (objectType == typeof(GridDataModel)) {
                 contract.Converter = GridConverter;
             }
+            else if (objectType == typeof(HtmlString))
+            {
+                contract.Converter = new ToStringJsonConverter();
+            }		
 
             return contract;
         }

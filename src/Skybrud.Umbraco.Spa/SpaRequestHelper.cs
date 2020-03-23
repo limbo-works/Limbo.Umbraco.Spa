@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Net.Http;
 using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Spa.Exceptions;
@@ -6,6 +7,7 @@ using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Models;
 using Skybrud.Umbraco.Spa.Models.Flow;
 using Umbraco.Core.Cache;
+using Umbraco.Core.Logging;
 using Umbraco.Core.Services;
 using Umbraco.Web;
 using Umbraco.Web.Composing;
@@ -44,6 +46,11 @@ namespace Skybrud.Umbraco.Spa  {
         /// </summary>
         public SpaGridJsonConverterBase GridJsonConverters { get; set; }
 
+        /// <summary>
+        /// Gets a reference to Umbraco's logger.
+        /// </summary>
+        public ILogger Logger { get; }
+
         #endregion
 
         #region Constructors
@@ -51,11 +58,12 @@ namespace Skybrud.Umbraco.Spa  {
         /// <summary>
         /// Initializes a new helper instance.
         /// </summary>
-        public SpaRequestHelper() {
+        protected SpaRequestHelper() {
             UmbracoContext = Current.UmbracoContext;
             RedirectsService = new RedirectsService();
             Services = Current.Services;
             AppCaches = Current.AppCaches;
+            Logger = Current.Logger;
         }
 
         #endregion
@@ -120,20 +128,27 @@ namespace Skybrud.Umbraco.Spa  {
         /// <returns>The response.</returns>
         public virtual HttpResponseMessage GetResponse(SpaRequest request) {
 
-            // Iterate through the different methods in the page flow
-            foreach (SpaActionGroup group in GetActionGroups(request)) {
+            try {
+                
+                // Iterate through the different methods in the page flow
+                foreach (SpaActionGroup group in GetActionGroups(request)) {
 
-                // Should the group be executed?
-                if (group.Run(request) == false) continue;
+                    // Should the group be executed?
+                    if (group.Run(request) == false) continue;
 
-                // Iterate over and execute the actions of the group
-                foreach (Action<SpaRequest> method in group.Actions) {
+                    // Iterate over and execute the actions of the group
+                    foreach (Action<SpaRequest> method in group.Actions) {
 
-                    // Call the current flow method
-                    try {
-                        method(request);
-                    } catch (Exception ex) {
-                        throw new SpaActionException(request, group, method.Method, ex);
+                        // Call the current flow method
+                        try {
+                            method(request);
+                        } catch (Exception ex) {
+                            throw new SpaActionException(request, group, method.Method, ex);
+                        }
+
+                        // Break the loop if we already have a response
+                        if (request.Response != null) break;
+
                     }
 
                     // Break the loop if we already have a response
@@ -141,18 +156,25 @@ namespace Skybrud.Umbraco.Spa  {
 
                 }
 
-                // Break the loop if we already have a response
-                if (request.Response != null) break;
+                // Generate a successful response
+                if (request.Response == null && request.DataModel != null) {
+                    request.Response = CreateSpaResponse(request.ResponseStatusCode, request.DataModel);
+                }
+
+                // Generate a fallback error response
+                return request.Response ?? ReturnError("Næh");
+
+            } catch (Exception ex) {
+
+                Logger.Error<SpaRequestHelper>("SPA request failed.", ex);
+
+                if (request.HttpContext.IsDebuggingEnabled && (request.HttpContext.Request.AcceptTypes?.Contains("text/html") ?? false)) {
+                    return ReturnHtmlError(request, ex);
+                }
+
+                throw;
 
             }
-
-            // Generate a successful response
-            if (request.Response == null && request.DataModel != null) {
-                request.Response = CreateSpaResponse(request.ResponseStatusCode, request.DataModel);
-            }
-
-            // Generate a fallback error response
-            return request.Response ?? ReturnError("Næh");
 
         }
 

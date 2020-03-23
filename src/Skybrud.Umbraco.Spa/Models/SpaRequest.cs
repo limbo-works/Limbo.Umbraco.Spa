@@ -30,7 +30,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// <summary>
         /// Gets a reference to the HTTP context of the request.
         /// </summary>
-        public HttpContextBase HttpContext { get; }
+        public HttpContextWrapper HttpContext { get; }
 
         /// <summary>
         /// Gets the options/arguments determined from the current request.

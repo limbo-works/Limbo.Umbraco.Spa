@@ -70,7 +70,7 @@ namespace Skybrud.Umbraco.Spa {
         /// <returns>A JSON string.</returns>
         protected virtual string Serialize(object data) {
 
-            SpaGridJsonConverterBase gridConverter = GridJsonConverters ?? new SpaGridJsonConverterBase();
+            SpaGridJsonConverterBase gridConverter = GridJsonConverter ?? new SpaGridJsonConverterBase();
 
             return JsonConvert.SerializeObject(data, Formatting.None, new JsonSerializerSettings {
                 ContractResolver = new SpaPublishedContentContractResolver(gridConverter)

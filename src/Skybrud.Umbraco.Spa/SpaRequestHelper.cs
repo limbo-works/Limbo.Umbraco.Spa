@@ -42,9 +42,9 @@ namespace Skybrud.Umbraco.Spa  {
         protected IRedirectsService RedirectsService { get; }
 
         /// <summary>
-        /// Gets or sets the JSON converter to be used when serializing the grid.
+        /// Gets or sets the JSON converter to be used when serializing the Umbraco grid.
         /// </summary>
-        public SpaGridJsonConverterBase GridJsonConverters { get; set; }
+        public SpaGridJsonConverterBase GridJsonConverter { get; set; }
 
         /// <summary>
         /// Gets a reference to Umbraco's logger.

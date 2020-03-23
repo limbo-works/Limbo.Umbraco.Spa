@@ -31,7 +31,7 @@ namespace Skybrud.Umbraco.Spa.Attributes {
 
         /// <inheritdoc />
         public override void OnActionExecuted(HttpActionExecutedContext context) {
-            context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            context.Response?.Headers.Add("Access-Control-Allow-Origin", "*");
         }
 
     }

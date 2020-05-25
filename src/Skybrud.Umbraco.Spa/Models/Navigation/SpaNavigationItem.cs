@@ -91,7 +91,7 @@ namespace Skybrud.Umbraco.Spa.Models.Navigation {
             Culture = content.GetCultureInfo().Name;
             HasChildren = children.Any();
             IsVisible = content.Value<bool>(SkyConstants.Properties.UmbracoNaviHide) == false;
-            Children = children.Any() && levels > levelcount ? children.Select(x => GetItem(x, levels)).ToArray() : new SpaNavigationItem[0];
+            Children = children.Any() && levels > levelcount ? children.Select(x => GetItem(x, levels, levelcount++)).ToArray() : new SpaNavigationItem[0];
 
         }
 

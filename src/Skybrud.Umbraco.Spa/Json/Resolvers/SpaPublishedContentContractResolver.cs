@@ -7,6 +7,7 @@ using Skybrud.Umbraco.GridData;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using System.Web;
 using Skybrud.Essentials.Json.Converters;
+using Umbraco.Core.Models.PublishedContent;
 
 #pragma warning disable 1591
 
@@ -22,9 +23,7 @@ namespace Skybrud.Umbraco.Spa.Json.Resolvers {
 
         #region Constructors
 
-        public SpaPublishedContentContractResolver() {
-            GridConverter = new SpaGridJsonConverterBase();
-        }
+        public SpaPublishedContentContractResolver() : this(new SpaGridJsonConverterBase()) { }
 
         public SpaPublishedContentContractResolver(SpaGridJsonConverterBase gridConverter) {
             GridConverter = gridConverter;
@@ -34,49 +33,70 @@ namespace Skybrud.Umbraco.Spa.Json.Resolvers {
 
         #region Member methods
 
+        protected virtual bool ShouldSerialize(MemberInfo member, JsonProperty property) {
+
+            // Ignored unwanted properties from types in the Umbraco.Core.Models.PublishedContent namespace
+            if (member.DeclaringType?.Namespace == "Umbraco.Core.Models.PublishedContent") {
+                switch (member.Name) {
+                    case "CompositionAliases":
+                    case "ContentSet":
+                    case "ContentType":
+                    case "PropertyTypes":
+                    case "Properties":
+                    case "Parent":
+                    case "Children":
+                    case "DocumentTypeId":
+                    case "WriterName":
+                    case "CreatorName":
+                    case "Cultures":
+                    case "ChildrenForAllCultures":
+                    case "UrlSegment":
+                    case "WriterId":
+                    case "CreatorId":
+                    case "CreateDate":
+                    case "UpdateDate":
+                    case "Version":
+                    case "SortOrder":
+                    case "TemplateId":
+                    case "IsDraft":
+                    case "ItemType":
+                        return false;
+                }
+            }
+
+            // Ignore other unwanted properties
+            switch (member.Name) {
+                case "SeoMetaDescription":
+                case "Seodashboard":
+                case "Preview":
+                case "SeoTitle":
+                    return false;
+            }
+
+            if (member is PropertyInfo pi) {
+                switch (pi.PropertyType.FullName) {
+                    case "Skybrud.Separator.SeparatorModel":
+                        return false;
+                }
+            }
+
+            return true;
+
+        }
+
         protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization) {
 
+            // Get a JsonProperty instance from the parent
             JsonProperty property = base.CreateProperty(member, memberSerialization);
             
-			property.ShouldSerialize = instance => {
+            // Should we serialize the property?
+			property.ShouldSerialize = instance => ShouldSerialize(member, property);
 
-                if (property.PropertyName == "CompositionAliases") return false;
-                if (property.PropertyName == "ContentSet") return false;
-                if (property.PropertyName == "PropertyTypes") return false;
-                if (property.PropertyName == "Properties") return false;
-                if (property.PropertyName == "Parent") return false;
-                if (property.PropertyName == "Children") return false;
-                if (property.PropertyName == "DocumentTypeId") return false;
-                if (property.PropertyName == "WriterName") return false;
-                if (property.PropertyName == "CreatorName") return false;
-                if (property.PropertyName == "WriterId") return false;
-                if (property.PropertyName == "CreatorId") return false;
-                if (property.PropertyName == "CreateDate") return false;
-                if (property.PropertyName == "UpdateDate") return false;
-                if (property.PropertyName == "Version") return false;
-                if (property.PropertyName == "SortOrder") return false;
-                if (property.PropertyName == "TemplateId") return false;
-                if (property.PropertyName == "IsDraft") return false;
-                if (property.PropertyName == "ItemType") return false;
-                if (property.PropertyName == "ContentType") return false;
-                if (property.PropertyName == "ContentSet") return false;
-                if (property.PropertyName == "Path") return false; //override path with patharray to make it an array
-                if (property.PropertyName == "SeoMetaDescription") return false;
-                if (property.PropertyName == "Seodashboard") return false;
-                if (property.PropertyName == "Preview") return false;
-		        if (property.PropertyName == "SeoTitle") return false;
-		        if (property.PropertyName == "UrlSegment") return false;
-		        if (property.PropertyName == "Cultures") return false;
-		        if (property.PropertyName == "ChildrenForAllCultures") return false;
-                //ADD CUSTOM OVERRRIDES AFTER THIS IN THE ABOVE FORMAT
+            // Make sure the property names are in lower camel case
+            property.PropertyName = StringUtils.ToCamelCase(property.PropertyName);
 
-
-                property.PropertyName = StringUtils.ToCamelCase(property.PropertyName);
-
-                return true;
-            };
-
-            switch (property.PropertyName) {
+            // Overwrite the order of certain properties
+            switch (member.Name) {
 
                 case "Id":
                     property.Order = -99;

@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Linq;
 using System.Net.Http;
+using System.Text.RegularExpressions;
+using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Spa.Exceptions;
 using Skybrud.Umbraco.Spa.Json.Converters;
@@ -183,6 +185,25 @@ namespace Skybrud.Umbraco.Spa  {
                 throw;
 
             }
+
+        }
+
+        /// <summary>
+        /// Gets the preview ID from the specified <paramref name="url"/>, or <c>0</c> if <paramref name="url"/> doesn't match an Umbraco preview URL.
+        /// </summary>
+        /// <param name="url">The url.</param>
+        /// <param name="result">When this method returns, contains the preview ID of <paramref name="url"/>.</param>
+        /// <returns><c>true</c> if <paramref name="url"/> matches a preview URL; otherwise <c>false</c>.</returns>
+        public virtual bool TryGetPreviewId(string url, out int result) {
+
+            // Not sure the SPA API is hit for this URL
+            if (url.Contains("/umbraco/dialogs") && int.TryParse(url.Split('=')[1], out result)) return true;
+
+            // Find the ID using REGEX
+            Match match = Regex.Match(url.Split('?')[0].TrimEnd('/'), "^/([0-9]+)\\.aspx$");
+            result = match.Success ? match.Groups[1].Value.ToInt32() : 0;
+
+            return result > 0;
 
         }
 

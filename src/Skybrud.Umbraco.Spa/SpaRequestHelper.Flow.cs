@@ -20,7 +20,7 @@ namespace Skybrud.Umbraco.Spa {
         /// </summary>
         /// <param name="request">The current SPA request.</param>
         protected virtual void InitArguments(SpaRequest request) {
-            request.Arguments = new SpaRequestOptions(request);
+            request.Arguments = new SpaRequestOptions(request, this);
 	    }
 
         /// <summary>
@@ -33,12 +33,12 @@ namespace Skybrud.Umbraco.Spa {
 
             // If "pageId" or "nodeId" exists, prefer content from that node
             if (request.Arguments.PageId > 0) {
-	            IPublishedContent c = UmbracoContext.Content.GetById(request.Arguments.PageId);
-	            if (c != null) request.Arguments.Url = c.Url;
-	        }
+                IPublishedContent c = UmbracoContext.Content.GetById(request.Arguments.PageId);
+                if (c != null) request.Arguments.Url = c.Url;
+            }
 
-	        // Try get siteId from domain
-	        if (request.Arguments.SiteId == -1 && !string.IsNullOrWhiteSpace(request.Arguments.HostName) && TryGetDomain(request.Arguments.HostName, out IDomain domain)) {
+            // Try get siteId from domain
+            if (request.Arguments.SiteId == -1 && !string.IsNullOrWhiteSpace(request.Arguments.HostName) && TryGetDomain(request.Arguments.HostName, out IDomain domain)) {
                 request.Arguments.SiteId = domain.RootContentId ?? -1;
 	        }
 

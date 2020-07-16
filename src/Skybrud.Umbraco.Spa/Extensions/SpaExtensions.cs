@@ -35,7 +35,7 @@ namespace Skybrud.Umbraco.Spa.Extensions {
 
             } else {
 
-                Match match = Regex.Match(url.Split('?')[0], "^/([0-9]+)\\.aspx$");
+                Match match = Regex.Match(url.Split('?')[0].TrimEnd('/'), "^/([0-9]+)\\.aspx$");
 			    return match.Success ? match.Groups[1].Value.ToInt32() : 0;
 
             }

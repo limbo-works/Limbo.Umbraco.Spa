@@ -5,7 +5,6 @@ using System.Web;
 using Skybrud.Essentials.Enums;
 using Skybrud.Essentials.Strings;
 using Skybrud.Essentials.Strings.Extensions;
-using Skybrud.Umbraco.Spa.Extensions;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
@@ -113,13 +112,15 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// Initializes a new instance based on the specified <paramref name="request"/>.
         /// </summary>
         /// <param name="request">A SPA request.</param>
-        public SpaRequestOptions(SpaRequest request) : this(request.HttpContext) { }
+        /// <param name="helper">A current SPA request helper.</param>
+        public SpaRequestOptions(SpaRequest request, SpaRequestHelper helper) : this(request.HttpContext, helper) { }
 
         /// <summary>
         /// Initializes a new instance based on the specified <paramref name="context"/>.
         /// </summary>
         /// <param name="context">A HTTP context.</param>
-        public SpaRequestOptions(HttpContextBase context) {
+        /// <param name="helper">A current SPA request helper.</param>
+        public SpaRequestOptions(HttpContextBase context, SpaRequestHelper helper) {
 
             // Get a reference to the current request
             HttpRequestBase r = context.Request;
@@ -151,7 +152,10 @@ namespace Skybrud.Umbraco.Spa.Models {
             QueryString = r.QueryString;
 
             // Determine whether the current request is in debug mode
-            IsPreview = Url?.IsPreviewUrl() ?? false;
+            if (helper.TryGetPreviewId(Url, out int previewId)) {
+                PageId = previewId;
+                IsPreview = true;
+            }
 
             // Determine whether caching should be enabled
             EnableCaching = context.IsDebuggingEnabled == false && StringUtils.ParseBoolean(r.QueryString["cache"], true) && IsPreview == false;
@@ -162,7 +166,7 @@ namespace Skybrud.Umbraco.Spa.Models {
 
         #endregion
 
-        #region Private methods
+        #region Member methods
 
         /// <summary>
         /// Converts the specified string of <paramref name="parts"/> to <see cref="List{SpaApiPart}"/>.

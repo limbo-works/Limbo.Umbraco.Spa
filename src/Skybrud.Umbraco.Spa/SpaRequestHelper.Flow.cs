@@ -330,6 +330,12 @@ namespace Skybrud.Umbraco.Spa {
         }
 
         /// <summary>
+        /// Virtual method responsible for initializing custom models/part of the response.
+        /// </summary>
+        /// <param name="request">The current SPA request.</param>
+        protected virtual void InitCustomModels(SpaRequest request) { }
+
+        /// <summary>
         /// Virtual method responsible for initialing the main data model of the SPA response.
         /// </summary>
         /// <param name="request">The current SPA request.</param>

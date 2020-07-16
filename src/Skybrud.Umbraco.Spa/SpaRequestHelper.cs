@@ -118,6 +118,7 @@ namespace Skybrud.Umbraco.Spa  {
                     InitContentModel,
                     InitDataModel,
                     InitNavigationModel,
+                    InitCustomModels,
 
                     PrePushToCache,
                     PushToCache

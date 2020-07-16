@@ -88,6 +88,23 @@ namespace Skybrud.Umbraco.Spa.Models {
         }
 
         /// <summary>
+        /// Initializes a new instance based on another instance of <see cref="SpaDataModel"/>.
+        /// </summary>
+        /// <param name="model"></param>
+        public SpaDataModel(SpaDataModel model) {
+            PageId = model.PageId;
+            PageKey = model.PageKey;
+            SiteId = model.SiteId;
+            SiteKey = model.SiteKey;
+            ContentGuid = model.ContentGuid;
+            ExecuteTimeMs = model.ExecuteTimeMs;
+            IsCached = model.IsCached;
+            Site = model.Site;
+            Navigation = model.Navigation;
+            Content = model.Content;
+        }
+
+        /// <summary>
         /// Initializes a new instance based on the specified <paramref name="request"/>.
         /// </summary>
         /// <param name="request">An instance of <see cref="SpaRequest"/>.</param>

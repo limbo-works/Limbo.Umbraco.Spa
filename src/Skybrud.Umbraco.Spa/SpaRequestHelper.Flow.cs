@@ -16,12 +16,20 @@ namespace Skybrud.Umbraco.Spa {
     public partial class SpaRequestHelper {
 
         /// <summary>
-        /// SPA request event method responsible for initializing the arguments of the request. Most arguments are
+        /// SPA request event method responsible for initializing the arguments of the request.
+        /// </summary>
+        /// <param name="request">The current SPA request.</param>
+        protected virtual void InitArguments(SpaRequest request) {
+            request.Arguments = new SpaRequestOptions(request);
+	    }
+
+        /// <summary>
+        /// SPA request event method responsible for updating the arguments of the request. Most arguments are
         /// determined directly from the request (eg. from the query string), while some information is determined
         /// while the request is processed.
         /// </summary>
         /// <param name="request">The current SPA request.</param>
-        protected virtual void InitArguments(SpaRequest request) {
+        protected virtual void UpdateArguments(SpaRequest request) {
 
             // If "pageId" or "nodeId" exists, prefer content from that node
             if (request.Arguments.PageId > 0) {

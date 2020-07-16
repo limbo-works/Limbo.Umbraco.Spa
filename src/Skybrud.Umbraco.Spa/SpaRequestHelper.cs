@@ -82,7 +82,15 @@ namespace Skybrud.Umbraco.Spa  {
             return new [] {
 
                 // First group - should always be executed
-                new SpaActionGroup(r => true, InitArguments, ReadFromCache),
+                new SpaActionGroup(
+                    r => true,
+                    
+                    InitArguments,
+                    UpdateArguments,
+
+                    ReadFromCache
+
+                ),
 
                 // Second group - not executed if we already have a data model (eg. from the cache)
                 new SpaActionGroup(

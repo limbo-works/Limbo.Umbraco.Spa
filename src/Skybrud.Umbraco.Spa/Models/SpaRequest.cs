@@ -35,7 +35,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// <summary>
         /// Gets the options/arguments determined from the current request.
         /// </summary>
-        public SpaRequestOptions Arguments { get; }
+        public SpaRequestOptions Arguments { get; set; }
 
         /// <summary>
         /// Gets or sets the ID of the site.
@@ -151,7 +151,6 @@ namespace Skybrud.Umbraco.Spa.Models {
         [JsonConstructor]
         public SpaRequest() {
             HttpContext = new HttpContextWrapper(System.Web.HttpContext.Current);
-            Arguments = new SpaRequestOptions(this);
             Stopwatch = Stopwatch.StartNew();
         }
 
@@ -162,7 +161,6 @@ namespace Skybrud.Umbraco.Spa.Models {
         public SpaRequest(HttpContext context) {
             if (context == null) throw new ArgumentNullException(nameof(context));
             HttpContext = new HttpContextWrapper(context);
-            Arguments = new SpaRequestOptions(this);
             Stopwatch = Stopwatch.StartNew();
         }
         

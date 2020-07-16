@@ -172,7 +172,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         private static List<SpaApiPart> GetParts(string parts = "") {
             
             // No parts means all parts
-            if (String.IsNullOrWhiteSpace(parts)) return new List<SpaApiPart> { SpaApiPart.Content, SpaApiPart.Navigation, SpaApiPart.Site };
+            if (string.IsNullOrWhiteSpace(parts)) return new List<SpaApiPart> { SpaApiPart.Content, SpaApiPart.Navigation, SpaApiPart.Site };
 
             List<SpaApiPart> temp = new List<SpaApiPart>();
             foreach (string item in parts.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)) {

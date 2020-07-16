@@ -23,10 +23,10 @@
   </PropertyGroup>
   
   <ItemGroup>
-    <PackageReference Include="Skybrud.Essentials" Version="1.1.20" />
-    <PackageReference Include="Skybrud.Umbraco.GridData" Version="3.0.0-beta003" />
+    <PackageReference Include="Skybrud.Essentials" Version="1.1.21" />
+    <PackageReference Include="Skybrud.Umbraco.GridData" Version="3.0.1" />
     <PackageReference Include="Skybrud.WebApi.Json" Version="1.0.4" />
-    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="2.0.3">
+    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="2.0.4">
       <ExcludeAssets>contentFiles</ExcludeAssets>
     </PackageReference>
     <PackageReference Include="UmbracoCms.Web" Version="8.1.0">

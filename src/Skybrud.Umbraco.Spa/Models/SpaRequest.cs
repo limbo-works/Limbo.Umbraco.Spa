@@ -30,7 +30,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// <summary>
         /// Gets a reference to the HTTP context of the request.
         /// </summary>
-        public HttpContextWrapper HttpContext { get; }
+        public HttpContextBase HttpContext { get; }
 
         /// <summary>
         /// Gets the options/arguments determined from the current request.
@@ -161,6 +161,24 @@ namespace Skybrud.Umbraco.Spa.Models {
         public SpaRequest(HttpContext context) {
             if (context == null) throw new ArgumentNullException(nameof(context));
             HttpContext = new HttpContextWrapper(context);
+            Stopwatch = Stopwatch.StartNew();
+        }
+
+        /// <summary>
+        /// Initializes a new a instance based on the specified <paramref name="context"/>.
+        /// </summary>
+        /// <param name="context">The HTTP context of the current request.</param>
+        public SpaRequest(HttpContextWrapper context) {
+            HttpContext = context ?? throw new ArgumentNullException(nameof(context));
+            Stopwatch = Stopwatch.StartNew();
+        }
+
+        /// <summary>
+        /// Initializes a new a instance based on the specified <paramref name="context"/>.
+        /// </summary>
+        /// <param name="context">The HTTP context of the current request.</param>
+        public SpaRequest(HttpContextBase context) {
+            HttpContext = context ?? throw new ArgumentNullException(nameof(context));
             Stopwatch = Stopwatch.StartNew();
         }
         

@@ -17,7 +17,7 @@ namespace Skybrud.Umbraco.Spa {
         /// </summary>
         /// <param name="text">The text representing the response body.</param>
         /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public HttpResponseMessage CreateTextResponse(string text) {
+        public virtual HttpResponseMessage CreateTextResponse(string text) {
             return CreateTextResponse(HttpStatusCode.OK, text, Encoding.UTF8);
         }
 
@@ -27,7 +27,7 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="text">The text representing the response body.</param>
         /// <param name="encoding">The encoding to be used for the response.</param>
         /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public HttpResponseMessage CreateTextResponse(string text, Encoding encoding) {
+        public virtual HttpResponseMessage CreateTextResponse(string text, Encoding encoding) {
             return CreateTextResponse(HttpStatusCode.OK, text, encoding);
         }
 
@@ -38,7 +38,7 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="text">The text representing the response body.</param>
         /// <param name="encoding">The encoding to be used for the response.</param>
         /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public HttpResponseMessage CreateTextResponse(HttpStatusCode statusCode, string text, Encoding encoding) {
+        public virtual HttpResponseMessage CreateTextResponse(HttpStatusCode statusCode, string text, Encoding encoding) {
             return new HttpResponseMessage {
                 StatusCode = statusCode,
                 Content = new StringContent(text ?? string.Empty, encoding)
@@ -54,7 +54,7 @@ namespace Skybrud.Umbraco.Spa {
         /// </summary>
         /// <param name="html">The HTML value representing the response body.</param>
         /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public HttpResponseMessage CreateHtmlResponse(string html) {
+        public virtual HttpResponseMessage CreateHtmlResponse(string html) {
             return CreateHtmlResponse(HttpStatusCode.OK, html, Encoding.UTF8);
         }
 
@@ -64,7 +64,7 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="html">The HTML value representing the response body.</param>
         /// <param name="encoding">The encoding to be used for the response.</param>
         /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public HttpResponseMessage CreateHtmlResponse(string html, Encoding encoding) {
+        public virtual HttpResponseMessage CreateHtmlResponse(string html, Encoding encoding) {
             return CreateHtmlResponse(HttpStatusCode.OK, html, encoding);
         }
 
@@ -75,7 +75,7 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="html">The HTML value representing the response body.</param>
         /// <param name="encoding">The encoding to be used for the response.</param>
         /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public HttpResponseMessage CreateHtmlResponse(HttpStatusCode statusCode, string html, Encoding encoding) {
+        public virtual HttpResponseMessage CreateHtmlResponse(HttpStatusCode statusCode, string html, Encoding encoding) {
             return new HttpResponseMessage {
                 StatusCode = statusCode,
                 Content = new StringContent(html ?? string.Empty, encoding, "text/html")
@@ -88,7 +88,7 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="request">The current request.</param>
         /// <param name="exception">The exception the response should be about.</param>
         /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected HttpResponseMessage ReturnHtmlError(SpaRequest request, Exception exception) {
+        protected virtual HttpResponseMessage ReturnHtmlError(SpaRequest request, Exception exception) {
 
             StringBuilder sb = new StringBuilder();
 
@@ -110,20 +110,20 @@ namespace Skybrud.Umbraco.Spa {
             if (request.Arguments == null) {
                 sb.AppendLine("<table><tr><td><em><code>request.Arguments</code> has not yet been initialized.</em></td></tr></table>");
             } else {
-            sb.AppendLine("<table>\n");
-            sb.AppendLine("<tr><th>Page ID</th><td>" + request.Arguments.PageId + "</td></tr>");
-            sb.AppendLine("<tr><th>Site ID</th><td>" + request.Arguments.SiteId + "</td></tr>");
-            sb.AppendLine("<tr><th>URL</th><td>" + request.Arguments.Url + "</td></tr>");
-            sb.AppendLine("<tr><th>Query String</th><td>" + request.Arguments.QueryString + "</td></tr>");
-            sb.AppendLine("<tr><th>Preview</th><td>" + request.Arguments.IsPreview + "</td></tr>");
-            sb.AppendLine("<tr><th>Protocol</th><td>" + request.Arguments.Protocol + "</td></tr>");
-            sb.AppendLine("<tr><th>Host name</th><td>" + request.Arguments.HostName + "</td></tr>");
-            sb.AppendLine("<tr><th>Parts</th><td>" + string.Join(", ", from p in request.Arguments.Parts select p.ToString()) + "</td></tr>");
-            sb.AppendLine("<tr><th>Nav levels</th><td>" + request.Arguments.NavLevels + "</td></tr>");
-            sb.AppendLine("<tr><th>Nav context</th><td>" + request.Arguments.NavContext + "</td></tr>");
-            sb.AppendLine("<tr><th>Cache key</th><td>" + request.Arguments.CacheKey + "</td></tr>");
-            sb.AppendLine("<tr><th>Enable caching</th><td>" + request.Arguments.EnableCaching + "</td></tr>");
-            sb.AppendLine("</table>");
+                sb.AppendLine("<table>\n");
+                sb.AppendLine("<tr><th>Page ID</th><td>" + request.Arguments.PageId + "</td></tr>");
+                sb.AppendLine("<tr><th>Site ID</th><td>" + request.Arguments.SiteId + "</td></tr>");
+                sb.AppendLine("<tr><th>URL</th><td>" + request.Arguments.Url + "</td></tr>");
+                sb.AppendLine("<tr><th>Query String</th><td>" + request.Arguments.QueryString + "</td></tr>");
+                sb.AppendLine("<tr><th>Preview</th><td>" + request.Arguments.IsPreview + "</td></tr>");
+                sb.AppendLine("<tr><th>Protocol</th><td>" + request.Arguments.Protocol + "</td></tr>");
+                sb.AppendLine("<tr><th>Host name</th><td>" + request.Arguments.HostName + "</td></tr>");
+                sb.AppendLine("<tr><th>Parts</th><td>" + string.Join(", ", from p in request.Arguments.Parts select p.ToString()) + "</td></tr>");
+                sb.AppendLine("<tr><th>Nav levels</th><td>" + request.Arguments.NavLevels + "</td></tr>");
+                sb.AppendLine("<tr><th>Nav context</th><td>" + request.Arguments.NavContext + "</td></tr>");
+                sb.AppendLine("<tr><th>Cache key</th><td>" + request.Arguments.CacheKey + "</td></tr>");
+                sb.AppendLine("<tr><th>Enable caching</th><td>" + request.Arguments.EnableCaching + "</td></tr>");
+                sb.AppendLine("</table>");
             }
 
             sb.AppendLine("<h3>Config</h3>");

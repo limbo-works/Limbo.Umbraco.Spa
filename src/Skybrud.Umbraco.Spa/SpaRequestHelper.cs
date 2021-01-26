@@ -8,6 +8,7 @@ using Skybrud.Umbraco.Spa.Exceptions;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Models;
 using Skybrud.Umbraco.Spa.Models.Flow;
+using Umbraco.Core;
 using Umbraco.Core.Cache;
 using Umbraco.Core.Logging;
 using Umbraco.Core.Services;
@@ -62,7 +63,7 @@ namespace Skybrud.Umbraco.Spa  {
         /// </summary>
         protected SpaRequestHelper() {
             UmbracoContext = Current.UmbracoContext;
-            RedirectsService = new RedirectsService();
+            RedirectsService = Current.Factory.GetInstance<IRedirectsService>();
             Services = Current.Services;
             AppCaches = Current.AppCaches;
             Logger = Current.Logger;

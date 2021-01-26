@@ -177,7 +177,12 @@ namespace Skybrud.Umbraco.Spa  {
 
             } catch (Exception ex) {
 
-                Logger.Error<SpaRequestHelper>(ex, "SPA request failed.");
+                Logger.Error<SpaRequestHelper>(
+                    ex, "SPA request for scheme {Scheme}, domain {Domain} and URL {Url} failed.",
+                request.HttpContext.Request.Url?.Scheme,
+                    request.HttpContext.Request.Url?.Host,
+                    request.HttpContext.Request.RawUrl
+                );
 
                 if (request.HttpContext.IsDebuggingEnabled && (request.HttpContext.Request.AcceptTypes?.Contains("text/html") ?? false)) {
                     return ReturnHtmlError(request, ex);

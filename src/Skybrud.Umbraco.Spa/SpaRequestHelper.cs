@@ -197,6 +197,12 @@ namespace Skybrud.Umbraco.Spa  {
         /// <returns><c>true</c> if <paramref name="url"/> matches a preview URL; otherwise <c>false</c>.</returns>
         public virtual bool TryGetPreviewId(string url, out int result) {
 
+            // Shouldn't be null
+            if (url == null) {
+                result = 0;
+                return false;
+            }
+
             // Not sure the SPA API is hit for this URL
             if (url.Contains("/umbraco/dialogs") && int.TryParse(url.Split('=')[1], out result)) return true;
 

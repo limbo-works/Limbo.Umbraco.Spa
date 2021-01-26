@@ -107,6 +107,9 @@ namespace Skybrud.Umbraco.Spa {
             sb.AppendLine("</table>");
 
             sb.AppendLine("<h3>SPA Options</h3>");
+            if (request.Arguments == null) {
+                sb.AppendLine("<table><tr><td><em><code>request.Arguments</code> has not yet been initialized.</em></td></tr></table>");
+            } else {
             sb.AppendLine("<table>\n");
             sb.AppendLine("<tr><th>Page ID</th><td>" + request.Arguments.PageId + "</td></tr>");
             sb.AppendLine("<tr><th>Site ID</th><td>" + request.Arguments.SiteId + "</td></tr>");
@@ -121,6 +124,7 @@ namespace Skybrud.Umbraco.Spa {
             sb.AppendLine("<tr><th>Cache key</th><td>" + request.Arguments.CacheKey + "</td></tr>");
             sb.AppendLine("<tr><th>Enable caching</th><td>" + request.Arguments.EnableCaching + "</td></tr>");
             sb.AppendLine("</table>");
+            }
 
             sb.AppendLine("<h3>Config</h3>");
             sb.AppendLine("<table>\n");

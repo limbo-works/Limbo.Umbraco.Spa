@@ -178,20 +178,46 @@ namespace Skybrud.Umbraco.Spa  {
 
             } catch (Exception ex) {
 
-                Logger.Error<SpaRequestHelper>(
-                    ex, "SPA request for scheme {Scheme}, domain {Domain} and URL {Url} failed.",
-                request.HttpContext.Request.Url?.Scheme,
-                    request.HttpContext.Request.Url?.Host,
-                    request.HttpContext.Request.RawUrl
-                );
+                // A bit of error handling
+                request.Response = HandleGetResponseException(request, ex);
 
-                if (request.HttpContext.IsDebuggingEnabled && (request.HttpContext.Request.AcceptTypes?.Contains("text/html") ?? false)) {
-                    return ReturnHtmlError(request, ex);
-                }
+                // Return the response if present
+                if (request.Response != null) return request.Response;
 
                 throw;
 
             }
+
+        }
+
+        /// <summary>
+        /// Method called when the <see cref="GetResponse"/> method results in an exception. The method can be used for
+        /// custom error logging, as well as sending a different error message to the client.
+        ///
+        /// If the method returns a <see cref="HttpResponseMessage"/>, that response will be returned directly to the
+        /// client. If the method returns <c>null</c>, the exception will bubble up through the request pipeline.
+        ///
+        /// By default, this method will write the exception to the Umbraco log, and if the solution is running i debug
+        /// mode, and the Accept header of the request contains <c>text/html</c>, a user friendly HTML error message
+        /// will be returned to the user.
+        /// </summary>
+        /// <param name="request">The current SPA request.</param>
+        /// <param name="exception">The exception.</param>
+        /// <returns>The response.</returns>
+        protected virtual HttpResponseMessage HandleGetResponseException(SpaRequest request, Exception exception) {
+
+            Logger.Error<SpaRequestHelper>(
+                exception, "SPA request for scheme {Scheme}, domain {Domain} and URL {Url} failed.",
+            request.HttpContext.Request.Url?.Scheme,
+                request.HttpContext.Request.Url?.Host,
+                request.HttpContext.Request.RawUrl
+            );
+
+            if (request.HttpContext.IsDebuggingEnabled && (request.HttpContext.Request.AcceptTypes?.Contains("text/html") ?? false)) {
+                return ReturnHtmlError(request, exception);
+            }
+
+            return null;
 
         }
 

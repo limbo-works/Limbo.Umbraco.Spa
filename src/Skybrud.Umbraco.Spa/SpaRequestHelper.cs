@@ -206,12 +206,26 @@ namespace Skybrud.Umbraco.Spa  {
         /// <returns>The response.</returns>
         protected virtual HttpResponseMessage HandleGetResponseException(SpaRequest request, Exception exception) {
 
+            if (exception is SpaActionException ex) {
+
+                Logger.Error<SpaRequestHelper>(
+                    exception, "SPA request for scheme {Scheme}, domain {Domain} and URL {Url} failed. Action was {Action}.",
+                    request.HttpContext.Request.Url?.Scheme,
+                    request.HttpContext.Request.Url?.Host,
+                    request.HttpContext.Request.RawUrl,
+                    ex.MethodName
+                );
+
+            } else {
+
             Logger.Error<SpaRequestHelper>(
                 exception, "SPA request for scheme {Scheme}, domain {Domain} and URL {Url} failed.",
             request.HttpContext.Request.Url?.Scheme,
                 request.HttpContext.Request.Url?.Host,
                 request.HttpContext.Request.RawUrl
             );
+
+            }
 
             if (request.HttpContext.IsDebuggingEnabled && (request.HttpContext.Request.AcceptTypes?.Contains("text/html") ?? false)) {
                 return ReturnHtmlError(request, exception);

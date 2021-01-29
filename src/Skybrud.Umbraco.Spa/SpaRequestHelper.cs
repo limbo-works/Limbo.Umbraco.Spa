@@ -218,12 +218,12 @@ namespace Skybrud.Umbraco.Spa  {
 
             } else {
 
-            Logger.Error<SpaRequestHelper>(
-                exception, "SPA request for scheme {Scheme}, domain {Domain} and URL {Url} failed.",
-            request.HttpContext.Request.Url?.Scheme,
-                request.HttpContext.Request.Url?.Host,
-                request.HttpContext.Request.RawUrl
-            );
+                Logger.Error<SpaRequestHelper>(
+                    exception, "SPA request for scheme {Scheme}, domain {Domain} and URL {Url} failed.",
+                    request.HttpContext.Request.Url?.Scheme,
+                    request.HttpContext.Request.Url?.Host,
+                    request.HttpContext.Request.RawUrl
+                );
 
             }
 
@@ -257,6 +257,54 @@ namespace Skybrud.Umbraco.Spa  {
             result = match.Success ? match.Groups[1].Value.ToInt32() : 0;
 
             return result > 0;
+
+        }
+
+        /// <summary>
+        /// Protected method which can be used to enforcing a trailing slash at the end of <see cref="SpaRequestOptions.Url"/>.
+        ///
+        /// If the requested URL doesn't already end with a trailing slash, the user will then be redirected to the correct URL.
+        /// </summary>
+        /// <param name="request">The SPA request.</param>
+        protected virtual void AddTrailingSlash(SpaRequest request) {
+            
+            if (request.Url == null || request.IsPreview) return;
+
+            // Slit the URL so we don't look at the query string
+            string[] url = request.Url.Split('?');
+
+            // Return as the URL already ends with a trailing slash
+            if (url[0].EndsWith("/")) return;
+
+            // Append the trailing slash
+            url[0] += "/";
+            
+            // Redirect the user to the correct URL
+            request.Response = ReturnRedirect(request, string.Join("?", url));
+
+        }
+
+        /// <summary>
+        /// Protected method which can be used to remove a trailing slash at the end of <see cref="SpaRequestOptions.Url"/>.
+        ///
+        /// If the requested URL ends with trailing slash, the user will then be redirected to the correct URL.
+        /// </summary>
+        /// <param name="request">The SPA request.</param>
+        protected virtual void RemoveTrailingSlash(SpaRequest request) {
+            
+            if (request.IsPreview) return;
+
+            // Slit the URL so we don't look at the query string
+            string[] url = request.Url.Split('?');
+
+            // Return as the URL doesn't end with a trailing slash
+            if (!url[0].EndsWith("/")) return;
+
+            // Remove the trailing slash
+            url[0] = url[0].Substring(0, url[0].Length - 1);
+            
+            // Redirect the user to the correct URL
+            request.Response = ReturnRedirect(request, string.Join("?", url));
 
         }
 

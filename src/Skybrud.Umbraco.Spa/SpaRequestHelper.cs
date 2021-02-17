@@ -117,10 +117,12 @@ namespace Skybrud.Umbraco.Spa  {
                     HandleNotFound,
                     HandleOutboundRedirects,
 
+                    PreInitModels,
                     InitContentModel,
                     InitDataModel,
                     InitNavigationModel,
                     InitCustomModels,
+                    PostInitModels,
 
                     PrePushToCache,
                     PushToCache

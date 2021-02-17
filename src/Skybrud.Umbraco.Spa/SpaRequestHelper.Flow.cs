@@ -286,6 +286,12 @@ namespace Skybrud.Umbraco.Spa {
         }
 
         /// <summary>
+        /// Virtual method executed right before <see cref="InitContentModel"/>.
+        /// </summary>
+        /// <param name="request"></param>
+        protected virtual void PreInitModels(SpaRequest request) { }
+
+        /// <summary>
         /// Virtual method for initializing the <see cref="SpaContentModel"/> representing the requested page.
         ///
         /// The default implementation is able to detect models from ModelsBuilder, in which case it may not be
@@ -352,6 +358,12 @@ namespace Skybrud.Umbraco.Spa {
         /// </summary>
         /// <param name="request">The current SPA request.</param>
         protected virtual void InitCustomModels(SpaRequest request) { }
+
+        /// <summary>
+        /// Virtual method executed right after <see cref="InitContentModel"/>.
+        /// </summary>
+        /// <param name="request"></param>
+        protected virtual void PostInitModels(SpaRequest request) { }
 
         /// <summary>
         /// Virtual method responsible for initialing the main data model of the SPA response.

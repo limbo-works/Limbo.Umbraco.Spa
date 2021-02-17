@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net;
 using System.Web;
+using Skybrud.Umbraco.Redirects.Extensions;
 using Skybrud.Umbraco.Redirects.Models;
+using Skybrud.Umbraco.Redirects.Models.Outbound;
 using Skybrud.Umbraco.Spa.Constants;
 using Skybrud.Umbraco.Spa.Exceptions;
 using Skybrud.Umbraco.Spa.Extensions;
@@ -264,6 +266,22 @@ namespace Skybrud.Umbraco.Spa {
             // Send a redirect response if a page was found
             request.Response = ReturnRedirect(request, newContent.Url, true);
             return true;
+
+        }
+
+        /// <summary>
+        /// Virtual method for handling outbound redirects - wich is redirects pointing from content in Umbraco to somewhere else.
+        /// </summary>
+        /// <param name="request">The current request.</param>
+        protected virtual void HandleOutboundRedirects(SpaRequest request) {
+
+            // Get the outbound URL from the current page (if set)
+            OutboundRedirect redirect = request.Content?.GetOutboundRedirect();
+            
+            // If the redirect is valid, we'll set the response to return a redirect
+            if (redirect != null && redirect.HasDestination) {
+                request.Response = ReturnRedirect(request, redirect.Destination.Url, redirect.IsPermanent);
+            }
 
         }
 

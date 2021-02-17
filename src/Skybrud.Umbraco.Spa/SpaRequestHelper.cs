@@ -115,6 +115,7 @@ namespace Skybrud.Umbraco.Spa  {
                     InitSiteModel,
 
                     HandleNotFound,
+                    HandleOutboundRedirects,
 
                     InitContentModel,
                     InitDataModel,

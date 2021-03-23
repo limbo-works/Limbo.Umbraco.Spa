@@ -137,7 +137,7 @@ namespace Skybrud.Umbraco.Spa {
                 sb.AppendLine("<h3>Exception</h3>");
                 sb.AppendLine("<table>\n");
                 sb.AppendLine("<tr><th>Type</th><td>" + exception.GetType() + "</td></tr>");
-                sb.AppendLine("<tr><th>Message</th><td>" + exception.Message + "</td></tr>");
+                sb.AppendLine("<tr><th>Message</th><td><pre>" + exception.Message + "</pre></td></tr>");
                 sb.AppendLine("<tr><th>Stack trace</th><td><pre>" + exception.StackTrace + "</pre></td></tr>");
                 sb.AppendLine("</table>");
 

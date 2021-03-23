@@ -84,11 +84,8 @@ namespace Skybrud.Umbraco.Spa {
             // We should probably handle preview mode
             if (request.IsPreview) {
 
-                // Get the ID from the request
-                int id = request.Url.GetPreviewId();
-
                 // Get a reference to the current page (fetched regardless of "parts" as the URL determines the culture)
-                request.Content = UmbracoContext.Content.GetById(true, id);
+                request.Content = UmbracoContext.Content.GetById(true, request.Arguments.PageId);
 
             } else {
 

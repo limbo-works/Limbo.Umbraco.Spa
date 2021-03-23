@@ -23,7 +23,7 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="request">The current SPA request.</param>
         protected virtual void InitArguments(SpaRequest request) {
             request.Arguments = new SpaRequestOptions(request, this);
-	    }
+        }
 
         /// <summary>
         /// SPA request event method responsible for updating the arguments of the request. Most arguments are
@@ -42,9 +42,9 @@ namespace Skybrud.Umbraco.Spa {
             // Try get siteId from domain
             if (request.Arguments.SiteId == -1 && !string.IsNullOrWhiteSpace(request.Arguments.HostName) && TryGetDomain(request.Arguments.HostName, out IDomain domain)) {
                 request.Arguments.SiteId = domain.RootContentId ?? -1;
-	        }
+            }
 
-	    }
+        }
 
         /// <summary>
         /// Virtual method responsible for finding the <see cref="IPublishedContent"/> representing the site node.
@@ -62,7 +62,7 @@ namespace Skybrud.Umbraco.Spa {
 
         private void PostInitSite(SpaRequest request) {
             request.SiteId = request.Site?.Id ?? request.SiteId;
-        } 
+        }
 
         /// <summary>
         /// Virtual method called before the controller will attempt to look up the <see cref="IPublishedContent"/> representing the requested page.
@@ -102,7 +102,7 @@ namespace Skybrud.Umbraco.Spa {
                 request.Content = request.Content.Value<IPublishedContent>(SkyConstants.Properties.UmbracoInternalRedirect);
             }
 
-	    }
+        }
 
         /// <summary>
         /// Virtual method called after the controller will attempt to look up the <see cref="IPublishedContent"/>
@@ -202,7 +202,7 @@ namespace Skybrud.Umbraco.Spa {
             if (request.Content != null) return;
 
             HandleInboundRedirects(request);
-            
+
             // Make sure to set the status as 404
             request.ResponseStatusCode = HttpStatusCode.NotFound;
 
@@ -243,7 +243,7 @@ namespace Skybrud.Umbraco.Spa {
 
             // Return a redirect response based on the Skybrud redirect
             request.Response = ReturnRedirect(request, redirect.LinkUrl, redirect.IsPermanent);
-            
+
             return true;
 
         }
@@ -277,7 +277,7 @@ namespace Skybrud.Umbraco.Spa {
 
             // Get the outbound URL from the current page (if set)
             OutboundRedirect redirect = request.Content?.GetOutboundRedirect();
-            
+
             // If the redirect is valid, we'll set the response to return a redirect
             if (redirect != null && redirect.HasDestination) {
                 request.Response = ReturnRedirect(request, redirect.Destination.Url, redirect.IsPermanent);

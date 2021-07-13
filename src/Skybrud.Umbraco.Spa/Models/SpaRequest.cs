@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Web;
 using Newtonsoft.Json;
 using Umbraco.Core.Models.PublishedContent;
+using Umbraco.Web.Routing;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
@@ -140,6 +141,10 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// Gets the <see cref="Stopwatch"/> used for measuring the duration of the request.
         /// </summary>
         public Stopwatch Stopwatch { get; }
+
+        public DomainAndUri Domain { get; set; }
+
+        public CultureInfo CultureInfo { get; set; }
 
         #endregion
 

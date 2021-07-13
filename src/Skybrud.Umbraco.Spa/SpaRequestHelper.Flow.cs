@@ -6,7 +6,6 @@ using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Redirects.Models.Outbound;
 using Skybrud.Umbraco.Spa.Constants;
 using Skybrud.Umbraco.Spa.Exceptions;
-using Skybrud.Umbraco.Spa.Extensions;
 using Skybrud.Umbraco.Spa.Models;
 using Umbraco.Core.Models;
 using Umbraco.Core.Models.PublishedContent;
@@ -23,6 +22,40 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="request">The current SPA request.</param>
         protected virtual void InitArguments(SpaRequest request) {
             request.Arguments = new SpaRequestOptions(request, this);
+        }
+
+        protected virtual void FindDomainAndCulture(SpaRequest request) {
+
+            // Find the domain (sets the "Domain" and "CultureInfo" of "request")
+            DomainRepository.FindDomain(request, request.Arguments.Uri);
+
+            if (request.Arguments.PageId > 0) {
+
+                // If a page ID was specifically specified for the request, it may mean that we're
+                // in preview mode or that the "url" parameter isn't specified. In either case, we
+                // need to find the assigned domains of the requested node (or it's ancestor) so we
+                // can determine the sitenode
+
+                // TODO: Look at the "siteId" parameter as well (may be relevant for virtual content etc.)
+                
+                IPublishedContent c = UmbracoContext.Content.GetById(request.Arguments.PageId);
+
+                if (c != null) {
+                    
+                    request.Domain = DomainRepository.DomainForNode(c, null, request.Arguments.QueryString["culture"]);
+
+                    if (request.Domain != null) {
+                        request.CultureInfo = request.Domain.Culture;
+                    }
+
+                }
+
+
+            }
+
+            // Make sure to overwrite the variation context
+            VariationContextAccessor.VariationContext = new VariationContext(request.CultureInfo.Name);
+
         }
 
         /// <summary>
@@ -90,7 +123,7 @@ namespace Skybrud.Umbraco.Spa {
             } else {
 
                 // Get a reference to the current page (fetched regardless of "parts" as the URL determines the culture)
-                request.Content = GetContentFromInput(request.Site, request.Arguments.PageId, request.Arguments.Url);
+                request.Content = GetContentFromRequest(request);
 
             }
 

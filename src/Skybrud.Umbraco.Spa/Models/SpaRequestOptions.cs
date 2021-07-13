@@ -34,6 +34,11 @@ namespace Skybrud.Umbraco.Spa.Models {
         public string Url { get; set; }
 
         /// <summary>
+        /// Gets or sets the URI of the requested page.
+        /// </summary>
+        public Uri Uri { get; set; }
+
+        /// <summary>
         /// Gets whether the current request is in preview mode.
         /// </summary>
         public bool IsPreview { get; set; }
@@ -104,6 +109,11 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         public bool ShowHtmlErrors { get; set; }
 
+        /// <summary>
+        /// Gets or sets the culture of the request.
+        /// </summary>
+        public string Culture { get; set; }
+
         #endregion
 
         #region Constructors
@@ -142,14 +152,17 @@ namespace Skybrud.Umbraco.Spa.Models {
             // Parse the requests "parts"
             Parts = GetParts(r.QueryString["parts"]);
 
-            // Get the URL of thr requested page
+            // Get the URL and URI of the requested page
             Url = r.QueryString["url"];
+            Uri = new Uri($"{Protocol}://{HostName}{Url}");
 
             // Parse the "siteId" and "pageId" parameters ("appSiteId" and "nodeId" are checked for legacy support)
             SiteId = Math.Max(r.QueryString["siteId"].ToInt32(-1), r.QueryString["appSiteId"].ToInt32(-1));
             PageId = Math.Max(r.QueryString["pageId"].ToInt32(-1), r.QueryString["nodeId"].ToInt32(-1));
 
             QueryString = r.QueryString;
+
+            Culture = r.QueryString["culture"];
 
             // Determine whether the current request is in debug mode
             if (helper.TryGetPreviewId(Url, out int previewId)) {

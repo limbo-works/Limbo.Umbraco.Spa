@@ -8,12 +8,15 @@ using Skybrud.Umbraco.Spa.Exceptions;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Models;
 using Skybrud.Umbraco.Spa.Models.Flow;
+using Skybrud.Umbraco.Spa.Repositories;
 using Umbraco.Core;
 using Umbraco.Core.Cache;
 using Umbraco.Core.Logging;
+using Umbraco.Core.Models.PublishedContent;
 using Umbraco.Core.Services;
 using Umbraco.Web;
 using Umbraco.Web.Composing;
+using Umbraco.Web.PublishedCache;
 
 namespace Skybrud.Umbraco.Spa  {
 
@@ -54,6 +57,18 @@ namespace Skybrud.Umbraco.Spa  {
         /// </summary>
         public ILogger Logger { get; }
 
+        public IVariationContextAccessor VariationContextAccessor { get; }
+
+        /// <summary>
+        /// Gets a reference to the current published snapshot.
+        /// </summary>
+        public IPublishedSnapshot PublishedSnapshot { get; }
+
+        /// <summary>
+        /// Gets a reference to the current published snapshot.
+        /// </summary>
+        public SpaDomainRepository DomainRepository { get; }
+
         #endregion
 
         #region Constructors
@@ -67,7 +82,11 @@ namespace Skybrud.Umbraco.Spa  {
             Services = Current.Services;
             AppCaches = Current.AppCaches;
             Logger = Current.Logger;
+            VariationContextAccessor = Current.VariationContextAccessor;
+            PublishedSnapshot = Current.PublishedSnapshot;
+            DomainRepository = Current.Factory.GetInstance<SpaDomainRepository>();
         }
+
 
         #endregion
 
@@ -89,6 +108,7 @@ namespace Skybrud.Umbraco.Spa  {
                     r => true,
                     
                     InitArguments,
+                    FindDomainAndCulture,
                     UpdateArguments,
 
                     ReadFromCache

@@ -1,4 +1,5 @@
 ﻿using Skybrud.Umbraco.Spa.Components;
+using Skybrud.Umbraco.Spa.Repositories;
 using Skybrud.Umbraco.Spa.Services;
 using Umbraco.Core;
 using Umbraco.Core.Composing;
@@ -11,7 +12,8 @@ namespace Skybrud.Umbraco.Spa.Composers {
     public class SpaComposer : IUserComposer {
 
         public void Compose(Composition composition) {
-            composition.Register<ISpaCacheService, SpaCacheService>(); 
+            composition.Register<ISpaCacheService, SpaCacheService>();
+            composition.Register<SpaDomainRepository>();
             composition.Components().Append<SpaCacheComponent>();
         }
 

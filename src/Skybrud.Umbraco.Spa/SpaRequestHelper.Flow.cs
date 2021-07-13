@@ -423,6 +423,10 @@ namespace Skybrud.Umbraco.Spa {
             request.DataModel.ExecuteTimeMs = request.Stopwatch.ElapsedMilliseconds;
             request.DataModel.IsCached = true;
 
+            // Update the status code based on the cached model (eg. 404)
+            request.ResponseStatusCode = request.DataModel.Meta.StatusCode;
+
+
         }
 
         /// <summary>

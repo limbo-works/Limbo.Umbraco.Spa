@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using Skybrud.Essentials.Strings.Extensions;
@@ -69,6 +70,15 @@ namespace Skybrud.Umbraco.Spa  {
         /// </summary>
         public SpaDomainRepository DomainRepository { get; }
 
+        /// <summary>
+        /// Gets whether the helper should overwrite the status code of responses returned by the helper. Default is <c>true</c>.
+        ///
+        /// When enabled, status codes like <see cref="HttpStatusCode.MovedPermanently"/>,
+        /// <see cref="HttpStatusCode.TemporaryRedirect"/> and <see cref="HttpStatusCode.NotFound"/> will be set to
+        /// <see cref="HttpStatusCode.OK"/>.
+        /// </summary>
+        public bool OverwriteStatusCodes { get; }
+
         #endregion
 
         #region Constructors
@@ -85,6 +95,7 @@ namespace Skybrud.Umbraco.Spa  {
             VariationContextAccessor = Current.VariationContextAccessor;
             PublishedSnapshot = Current.PublishedSnapshot;
             DomainRepository = Current.Factory.GetInstance<SpaDomainRepository>();
+            OverwriteStatusCodes = true;
         }
 
 

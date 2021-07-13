@@ -12,6 +12,12 @@ namespace Skybrud.Umbraco.Spa.Models {
         #region Properties
 
         /// <summary>
+        /// Gets or sets teh meta data of the response.
+        /// </summary>
+        [JsonProperty("meta", Order = -150)]
+        public SpaResponseMeta Meta { get; set; }
+
+        /// <summary>
         /// Gets the ID of the current page.
         /// </summary>
         [JsonProperty("pageId", Order = -99)]
@@ -85,6 +91,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         public SpaDataModel() {
             ContentGuid = SpaEnvironment.ContentGuid;
             ExecuteTimeMs = -1;
+            Meta = new SpaResponseMeta();
         }
 
         /// <summary>
@@ -102,6 +109,7 @@ namespace Skybrud.Umbraco.Spa.Models {
             Site = model.Site;
             Navigation = model.Navigation;
             Content = model.Content;
+            Meta = new SpaResponseMeta();
         }
 
         /// <summary>
@@ -115,6 +123,7 @@ namespace Skybrud.Umbraco.Spa.Models {
             SiteId = request.Site?.Id ?? -1;
             SiteKey = request.Site?.Key ?? Guid.Empty;
             ContentGuid = SpaEnvironment.ContentGuid;
+            Meta = new SpaResponseMeta();
 
             ExecuteTimeMs = -1;
 

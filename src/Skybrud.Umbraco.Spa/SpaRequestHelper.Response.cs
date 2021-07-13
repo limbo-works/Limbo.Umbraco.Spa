@@ -164,9 +164,26 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="data">The data to be serialized to JSON and returned as the response body.</param>
         /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
         protected virtual HttpResponseMessage CreateSpaResponse(HttpStatusCode statusCode, object data) {
+
+            // Ensure that the status code is set on the data model so the status code is kept when caching the data model
+            if (data is SpaDataModel dataModel) dataModel.Meta.StatusCode = statusCode;
+
+            // Overwrite the status code to make the frontenders happy
+            if (OverwriteStatusCodes) {
+                switch (statusCode) {
+                    case HttpStatusCode.NotFound:
+                    case HttpStatusCode.TemporaryRedirect:
+                    case HttpStatusCode.MovedPermanently:
+                        statusCode = HttpStatusCode.OK;
+                        break;
+                }
+            }
+
+            // Create a new response
             return new HttpResponseMessage(statusCode) {
                 Content = new StringContent(Serialize(data), Encoding.UTF8, "application/json")
             };
+
         }
 
         /// <summary>
@@ -277,8 +294,11 @@ namespace Skybrud.Umbraco.Spa {
             // Initialize the response body (including the correct status code)
             JsonMetaResponse body = JsonMetaResponse.GetError(statusCode, "Page has moved", data);
 
-            // Generate the response (using "418 I'm a teapot" as the status code to support older browsers and systems)
-            return CreateSpaResponse(SpaConstants.Teapot, body);
+            // Overwrite the status code to make the frontenders happy
+            statusCode = OverwriteStatusCodes ? HttpStatusCode.OK : SpaConstants.Teapot;
+
+            // Generate the response
+            return CreateSpaResponse(statusCode, body);
 
         }
 

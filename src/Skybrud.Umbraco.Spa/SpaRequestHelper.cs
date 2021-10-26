@@ -77,7 +77,7 @@ namespace Skybrud.Umbraco.Spa  {
         /// <see cref="HttpStatusCode.TemporaryRedirect"/> and <see cref="HttpStatusCode.NotFound"/> will be set to
         /// <see cref="HttpStatusCode.OK"/>.
         /// </summary>
-        public bool OverwriteStatusCodes { get; }
+        public bool OverwriteStatusCodes { get; set; }
 
         #endregion
 

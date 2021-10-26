@@ -58,6 +58,9 @@ namespace Skybrud.Umbraco.Spa  {
         /// </summary>
         public ILogger Logger { get; }
 
+        /// <summary>
+        /// Gets a reference to the current <see cref="IVariationContextAccessor"/>.
+        /// </summary>
         public IVariationContextAccessor VariationContextAccessor { get; }
 
         /// <summary>

@@ -142,8 +142,14 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         public Stopwatch Stopwatch { get; }
 
+        /// <summary>
+        /// Gets a reference to the domain of the request.
+        /// </summary>
         public DomainAndUri Domain { get; set; }
-
+        
+        /// <summary>
+        /// Gets a reference to the culture of the request.
+        /// </summary>
         public CultureInfo CultureInfo { get; set; }
 
         #endregion

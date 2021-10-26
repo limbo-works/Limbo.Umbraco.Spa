@@ -24,6 +24,10 @@ namespace Skybrud.Umbraco.Spa {
             request.Arguments = new SpaRequestOptions(request, this);
         }
 
+        /// <summary>
+        /// SPA request event method responsible for determining the domain and culture of <paramref name="request"/>.
+        /// </summary>
+        /// <param name="request">The current SPA request.</param>
         protected virtual void FindDomainAndCulture(SpaRequest request) {
 
             // Find the domain (sets the "Domain" and "CultureInfo" of "request")

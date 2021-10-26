@@ -10,16 +10,32 @@ using Umbraco.Web.Routing;
 
 namespace Skybrud.Umbraco.Spa.Repositories {
     
+    /// <summary>
+    /// Repository for working with Umbraco domains in relation to the SPA package.
+    /// </summary>
     public class SpaDomainRepository {
         
         private readonly IPublishedSnapshotAccessor _publishedSnapshotAccessor;
         private readonly ISiteDomainHelper _siteDomainHelper;
 
+        /// <summary>
+        /// Initializes a new instance.
+        /// </summary>
+        /// <param name="publishedSnapshotAccessor">The current published snapshot accessor.</param>
+        /// <param name="siteDomainHelper">The current site domain helper.</param>
         public SpaDomainRepository(IPublishedSnapshotAccessor publishedSnapshotAccessor, ISiteDomainHelper siteDomainHelper) {
             _publishedSnapshotAccessor = publishedSnapshotAccessor;
             _siteDomainHelper = siteDomainHelper;
         }
 
+        /// <summary>
+        /// Returns the <see cref="DomainAndUri"/> for the node with the specified <paramref name="nodeId"/>, or
+        /// <c>null</c> if not found. The domain will be determined either from the node it self or one of it's ancestors.
+        /// </summary>
+        /// <param name="nodeId">The ID of the node.</param>
+        /// <param name="current">The URI of the request.</param>
+        /// <param name="culture">The culture code of the request.</param>
+        /// <returns>An instance of <see cref="DomainAndUri"/> representing the domain, or <c>null</c> if not domain was found.</returns>
         public DomainAndUri DomainForNode(int nodeId, Uri current, string culture = null) {
 
             // be safe
@@ -36,7 +52,15 @@ namespace Skybrud.Umbraco.Spa.Repositories {
             return SelectDomain(domains, current, culture, _publishedSnapshotAccessor.PublishedSnapshot.Domains.DefaultCulture, _siteDomainHelper.MapDomain);
 
         }
-
+        
+        /// <summary>
+        /// Returns the <see cref="DomainAndUri"/> for the specified <paramref name="content"/> node, or <c>null</c> if
+        /// not found. The domain will be determined either from the node it self or one of it's ancestors.
+        /// </summary>
+        /// <param name="content">Ther node.</param>
+        /// <param name="current">The URI of the request.</param>
+        /// <param name="culture">The culture code of the request.</param>
+        /// <returns>An instance of <see cref="DomainAndUri"/> representing the domain, or <c>null</c> if not domain was found.</returns>
         public DomainAndUri DomainForNode(IPublishedContent content, Uri current, string culture = null) {
 
             while (content != null) {
@@ -52,6 +76,13 @@ namespace Skybrud.Umbraco.Spa.Repositories {
 
         }
 
+        /// <summary>
+        /// Attempts to find the domain for the specified <paramref name="request"/> and <paramref name="uri"/>. If a
+        /// domain is found, it will be used to populate the <see cref="SpaRequest.Domain"/> property of <paramref name="request"/>.
+        /// </summary>
+        /// <param name="request">The request.</param>
+        /// <param name="uri">The URI.</param>
+        /// <returns><c>true</c> if a domain was found; otherwise <c>false</c>.</returns>
         public bool FindDomain(SpaRequest request, Uri uri) {
 
             // If a page ID was specifically specified for the request, it may mean that we're

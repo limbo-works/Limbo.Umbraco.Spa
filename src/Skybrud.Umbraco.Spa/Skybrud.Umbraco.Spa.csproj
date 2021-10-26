@@ -7,11 +7,12 @@
   <PropertyGroup>
     <RootNamespace>Skybrud.Umbraco.Spa</RootNamespace>
     <Version>3.0.0-beta013</Version>
-    <Company>Skybrud.dk a/s</Company>
+    <Company>Limbo</Company>
     <Product>Skybrud.Umbraco.Spa</Product>
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © 2021</Copyright>
     <Description>SPA (single page application) package for Umbraco 8.</Description>
+    <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/skybrud/Skybrud.Umbraco.Spa</RepositoryUrl>
   </PropertyGroup>
 
@@ -19,7 +20,7 @@
     <PackageTags>Skybrud, Umbraco, SPA, Headless</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/skybrud/Skybrud.Umbraco.Spa</PackageProjectUrl>
-    <PackageIconUrl>https://www.skybrud.dk/img/5431sk/icon/favicon.ico</PackageIconUrl>
+    <PackageIcon>Limbo.png</PackageIcon>
   </PropertyGroup>
   
   <ItemGroup>
@@ -32,6 +33,10 @@
     <PackageReference Include="UmbracoCms.Web" Version="8.1.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="../build/Limbo.png" Pack="true" PackagePath="\"/>
   </ItemGroup>
 
   <PropertyGroup>

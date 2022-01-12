@@ -79,10 +79,12 @@ namespace Skybrud.Umbraco.Spa {
 
             // Try get siteId from the domain
             if (!request.Arguments.IsDefaultPort && TryGetDomain(request.Arguments.HostName, out IDomain domain)) {
+                // TODO: Should we set "request.Domain" here?
                 request.Arguments.SiteId = domain.RootContentId ?? -1;
             }
 
             if (TryGetDomain(request.Arguments.HostName + ":" + request.Arguments.PortNumber, out domain)) {
+                // TODO: Should we set "request.Domain" here?
                 request.Arguments.SiteId = domain.RootContentId ?? -1;
             }
 

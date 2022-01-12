@@ -60,8 +60,14 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         public string HostName { get; set; }
 
+        /// <summary>
+        /// Gets or sets the port number of the inbound request.
+        /// </summary>
         public int PortNumber { get; set; }
 
+        /// <summary>
+        /// Gets whether the inbound request is received via the default port number (eg. <c>80</c> for HTTP and <c>443</c> for HTTPS).
+        /// </summary>
         public bool IsDefaultPort { get; set; }
 
         /// <summary>

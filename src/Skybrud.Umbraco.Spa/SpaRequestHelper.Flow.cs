@@ -380,7 +380,7 @@ namespace Skybrud.Umbraco.Spa {
             switch (request.Content) {
 
                 case PublishedContentModel content:
-                    request.DataModel.Content = request.ContentModel = new SpaContentModel(content, new PublishedValueFallback(Services, VariationContextAccessor));
+                    request.ContentModel = new SpaContentModel(content, new PublishedValueFallback(Services, VariationContextAccessor));
                     break;
 
             }

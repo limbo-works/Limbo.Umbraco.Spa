@@ -26,7 +26,7 @@ namespace Skybrud.Umbraco.Spa {
             string url = request.Arguments.Url;
 
             // If the current domain specifies a path, we remove that from the path of the current request
-            if (request.Domain.Uri.AbsolutePath.Length > 1) url = url.Substring(request.Domain.Uri.AbsolutePath.Length);
+            if (request.Domain != null && request.Domain.Uri.AbsolutePath.Length > 1) url = url.Substring(request.Domain.Uri.AbsolutePath.Length);
             
             // Attempt to get content item by either it's numeric ID or URL
             return nodeId > 0 ? umbracoContext.Content.GetById(nodeId) : umbracoContext.Content.GetByRoute(request.Site.Id + url, culture: request.CultureInfo.Name);

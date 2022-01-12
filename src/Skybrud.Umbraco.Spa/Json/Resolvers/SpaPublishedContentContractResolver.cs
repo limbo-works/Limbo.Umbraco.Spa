@@ -24,7 +24,7 @@ namespace Skybrud.Umbraco.Spa.Json.Resolvers {
         protected virtual bool ShouldSerialize(MemberInfo member, JsonProperty property) {
 
             // Ignored unwanted properties from types in the Umbraco.Core.Models.PublishedContent namespace
-            if (member.DeclaringType?.Namespace == "Umbraco.Core.Models.PublishedContent") {
+            if (member.DeclaringType?.Namespace == "Umbraco.Cms.Core.Models.PublishedContent") {
                 switch (member.Name) {
                     case "CompositionAliases":
                     case "ContentSet":

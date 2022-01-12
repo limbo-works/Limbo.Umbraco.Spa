@@ -162,8 +162,8 @@ namespace Skybrud.Umbraco.Spa.Models {
             IsDefaultPort = uri.IsDefaultPort;
 
             // Parse the "navLevels" and "navContext" parameters from the query string
-            NavLevels = r.Query["navLevels"].ToInt32(1);
-            NavContext = r.Query["navContext"].ToBoolean();
+            NavLevels = r.Query.GetInt32("navLevels", 1);
+            NavContext = r.Query.GetBoolean("navContext");
 
             // Parse the requests "parts"
             Parts = GetParts(r.Query["parts"]);
@@ -172,9 +172,9 @@ namespace Skybrud.Umbraco.Spa.Models {
             Url = r.Query["url"];
             Uri = new Uri($"{Protocol}://{HostName}{Url}");
 
-            // Parse the "siteId" and "pageId" parameters ("appSiteId" and "nodeId" are checked for legacy support)
-            SiteId = Math.Max(r.Query["siteId"].ToInt32(-1), r.Query["appSiteId"].ToInt32(-1));
-            PageId = Math.Max(r.Query["pageId"].ToInt32(-1), r.Query["nodeId"].ToInt32(-1));
+            // Parse the "siteId" and "pageId" parameters
+            SiteId = r.Query.GetInt32("siteId", -1);
+            PageId = r.Query.GetInt32("pageId", -1);
 
             QueryString = r.Query;
 
@@ -191,7 +191,7 @@ namespace Skybrud.Umbraco.Spa.Models {
             AcceptTypes = r.GetAcceptTypes() ?? string.Empty;
 
             // Determine whether caching should be enabled
-            EnableCaching = helper.Environment.IsDevelopment() == false && r.Query["cache"].ToBoolean(true) && IsPreview == false;
+            EnableCaching = helper.Environment.IsDevelopment() == false && r.Query.GetBoolean("cache", true) && IsPreview == false;
 
             ShowHtmlErrors = helper.Environment.IsDevelopment()/* && context.IsCustomErrorEnabled == false*/ && AcceptTypes.Contains("text/html");
 

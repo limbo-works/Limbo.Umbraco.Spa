@@ -73,8 +73,16 @@ namespace Skybrud.Umbraco.Spa {
                 if (c != null) request.Arguments.Url = c.Url();
             }
 
-            // Try get siteId from domain
-            if (request.Arguments.SiteId == -1 && !string.IsNullOrWhiteSpace(request.Arguments.HostName) && TryGetDomain(request.Arguments.HostName, out IDomain domain)) {
+            // Check exit conditions
+            if (request.Arguments.SiteId > 0) return;
+            if (string.IsNullOrWhiteSpace(request.Arguments.HostName)) return;
+
+            // Try get siteId from the domain
+            if (!request.Arguments.IsDefaultPort && TryGetDomain(request.Arguments.HostName, out IDomain domain)) {
+                request.Arguments.SiteId = domain.RootContentId ?? -1;
+            }
+
+            if (TryGetDomain(request.Arguments.HostName + ":" + request.Arguments.PortNumber, out domain)) {
                 request.Arguments.SiteId = domain.RootContentId ?? -1;
             }
 

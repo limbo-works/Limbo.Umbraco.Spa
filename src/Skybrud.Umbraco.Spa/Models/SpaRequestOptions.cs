@@ -60,6 +60,10 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         public string HostName { get; set; }
 
+        public int PortNumber { get; set; }
+
+        public bool IsDefaultPort { get; set; }
+
         /// <summary>
         /// Gets the maximum amount of levels to be included in the <c>navigation</c> part. The value is based on the
         /// <c>navLevels</c> query string parameter, but defaults to <c>1</c> if not specified.
@@ -154,6 +158,8 @@ namespace Skybrud.Umbraco.Spa.Models {
             // Use the current URL as fallback for "appHost" and "appProtocol"
             HostName = string.IsNullOrWhiteSpace(appHost) ? uri.Host : appHost;
             Protocol = string.IsNullOrWhiteSpace(appProtocol) ? uri.Scheme : appProtocol;
+            PortNumber = uri.Port;
+            IsDefaultPort = uri.IsDefaultPort;
 
             // Parse the "navLevels" and "navContext" parameters from the query string
             NavLevels = r.Query["navLevels"].ToInt32(1);

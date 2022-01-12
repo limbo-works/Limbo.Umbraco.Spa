@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Hosting;
+using Skybrud.Essentials.AspNetCore;
 using Skybrud.Essentials.Enums;
-using Skybrud.Essentials.Strings;
-using Skybrud.Essentials.Strings.Extensions;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
@@ -83,7 +82,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// <summary>
         /// Gets a reference to the query string of the current SPA API request.
         /// </summary>
-        public NameValueCollection QueryString { get; set; }
+        public IQueryCollection QueryString { get; set; }
 
         /// <summary>
         /// Gets whether caching should be enabled for the current request.
@@ -99,13 +98,6 @@ namespace Skybrud.Umbraco.Spa.Models {
 
         /// <summary>
         /// Gets or sets whether the SPA should return a HTML response with exception details should part of the SPA or underlying logic fail.
-        ///
-        /// By default HTML errors will be shown when the following criteria are met:
-        /// <ul>
-        ///   <li><see cref="HttpContextBase.IsDebuggingEnabled"/> is <c>true</c></li>
-        ///   <li><see cref="HttpContextBase.IsCustomErrorEnabled"/> is <c>false</c></li>
-        ///   <li>the <strong>Accept</strong> header of the current request contains <c>text/html</c></li>
-        /// </ul>
         /// </summary>
         public bool ShowHtmlErrors { get; set; }
 
@@ -113,6 +105,21 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// Gets or sets the culture of the request.
         /// </summary>
         public string Culture { get; set; }
+
+        /// <summary>
+        /// Gets the remote address of the user.
+        /// </summary>
+        public string RemoteAddress { get; }
+
+        /// <summary>
+        /// Gets the user agent of the request.
+        /// </summary>
+        public string UserAgent { get; }
+
+        /// <summary>
+        /// Gets the accept types of the request.
+        /// </summary>
+        public string AcceptTypes { get; }
 
         #endregion
 
@@ -130,39 +137,42 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         /// <param name="context">A HTTP context.</param>
         /// <param name="helper">A current SPA request helper.</param>
-        public SpaRequestOptions(HttpContextBase context, SpaRequestHelper helper) {
+        public SpaRequestOptions(HttpContext context, SpaRequestHelper helper) {
 
             // Get a reference to the current request
-            HttpRequestBase r = context.Request;
+            HttpRequest r = context.Request;
+
+            // Get the URI of the current request
+            Uri uri = r.GetUri();
             
             // Get the host name from the query
-            string appHost = r.QueryString["appHost"];
+            string appHost = r.Query["appHost"];
 
             // Get the protocol from the query
-            string appProtocol = r.QueryString["appProtocol"];
+            string appProtocol = r.Query["appProtocol"];
 
             // Use the current URL as fallback for "appHost" and "appProtocol"
-            HostName = string.IsNullOrWhiteSpace(appHost) ? r.Url?.Host : appHost;
-            Protocol = string.IsNullOrWhiteSpace(appProtocol) ? r.Url?.Scheme : appProtocol;
+            HostName = string.IsNullOrWhiteSpace(appHost) ? uri.Host : appHost;
+            Protocol = string.IsNullOrWhiteSpace(appProtocol) ? uri.Scheme : appProtocol;
 
             // Parse the "navLevels" and "navContext" parameters from the query string
-            NavLevels = r.QueryString["navLevels"].ToInt32(1);
-            NavContext = StringUtils.ParseBoolean(r.QueryString["navContext"]);
+            NavLevels = r.Query["navLevels"].ToInt32(1);
+            NavContext = r.Query["navContext"].ToBoolean();
 
             // Parse the requests "parts"
-            Parts = GetParts(r.QueryString["parts"]);
+            Parts = GetParts(r.Query["parts"]);
 
             // Get the URL and URI of the requested page
-            Url = r.QueryString["url"];
+            Url = r.Query["url"];
             Uri = new Uri($"{Protocol}://{HostName}{Url}");
 
             // Parse the "siteId" and "pageId" parameters ("appSiteId" and "nodeId" are checked for legacy support)
-            SiteId = Math.Max(r.QueryString["siteId"].ToInt32(-1), r.QueryString["appSiteId"].ToInt32(-1));
-            PageId = Math.Max(r.QueryString["pageId"].ToInt32(-1), r.QueryString["nodeId"].ToInt32(-1));
+            SiteId = Math.Max(r.Query["siteId"].ToInt32(-1), r.Query["appSiteId"].ToInt32(-1));
+            PageId = Math.Max(r.Query["pageId"].ToInt32(-1), r.Query["nodeId"].ToInt32(-1));
 
-            QueryString = r.QueryString;
+            QueryString = r.Query;
 
-            Culture = r.QueryString["culture"];
+            Culture = r.Query["culture"];
 
             // Determine whether the current request is in debug mode
             if (helper.TryGetPreviewId(Url, out int previewId)) {
@@ -170,10 +180,14 @@ namespace Skybrud.Umbraco.Spa.Models {
                 IsPreview = true;
             }
 
-            // Determine whether caching should be enabled
-            EnableCaching = context.IsDebuggingEnabled == false && StringUtils.ParseBoolean(r.QueryString["cache"], true) && IsPreview == false;
+            RemoteAddress = r.GetRemoteAddress() ?? string.Empty;
+            UserAgent = r.GetUserAgent() ?? string.Empty;
+            AcceptTypes = r.GetAcceptTypes() ?? string.Empty;
 
-            ShowHtmlErrors = context.IsDebuggingEnabled && context.IsCustomErrorEnabled == false && context.Request.Headers["Accept"].Contains("text/html");
+            // Determine whether caching should be enabled
+            EnableCaching = helper.Environment.IsDevelopment() == false && r.Query["cache"].ToBoolean(true) && IsPreview == false;
+
+            ShowHtmlErrors = helper.Environment.IsDevelopment()/* && context.IsCustomErrorEnabled == false*/ && AcceptTypes.Contains("text/html");
 
         }
 

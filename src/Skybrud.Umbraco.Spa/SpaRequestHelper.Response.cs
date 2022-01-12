@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Text;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Skybrud.Umbraco.Spa.Models;
-using Skybrud.WebApi.Json.Meta;
+using Skybrud.Umbraco.Spa.Models.Api;
 
 namespace Skybrud.Umbraco.Spa {
 
@@ -16,8 +17,8 @@ namespace Skybrud.Umbraco.Spa {
         /// Initializes a new text response from the specified <paramref name="text"/>.
         /// </summary>
         /// <param name="text">The text representing the response body.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public virtual HttpResponseMessage CreateTextResponse(string text) {
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        public virtual ActionResult CreateTextResponse(string text) {
             return CreateTextResponse(HttpStatusCode.OK, text, Encoding.UTF8);
         }
 
@@ -26,8 +27,8 @@ namespace Skybrud.Umbraco.Spa {
         /// </summary>
         /// <param name="text">The text representing the response body.</param>
         /// <param name="encoding">The encoding to be used for the response.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public virtual HttpResponseMessage CreateTextResponse(string text, Encoding encoding) {
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        public virtual ActionResult CreateTextResponse(string text, Encoding encoding) {
             return CreateTextResponse(HttpStatusCode.OK, text, encoding);
         }
 
@@ -37,11 +38,12 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="statusCode">The status code of the response.</param>
         /// <param name="text">The text representing the response body.</param>
         /// <param name="encoding">The encoding to be used for the response.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public virtual HttpResponseMessage CreateTextResponse(HttpStatusCode statusCode, string text, Encoding encoding) {
-            return new HttpResponseMessage {
-                StatusCode = statusCode,
-                Content = new StringContent(text ?? string.Empty, encoding)
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        public virtual ActionResult CreateTextResponse(HttpStatusCode statusCode, string text, Encoding encoding) {
+            return new ContentResult {
+                StatusCode = (int) HttpStatusCode.InternalServerError,
+                ContentType = "text/plain",
+                Content = text ?? string.Empty
             };
         }
 
@@ -53,8 +55,8 @@ namespace Skybrud.Umbraco.Spa {
         /// Creates a new HTMl based response from the specified <paramref name="html"/>.
         /// </summary>
         /// <param name="html">The HTML value representing the response body.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public virtual HttpResponseMessage CreateHtmlResponse(string html) {
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        public virtual ActionResult CreateHtmlResponse(string html) {
             return CreateHtmlResponse(HttpStatusCode.OK, html, Encoding.UTF8);
         }
 
@@ -63,8 +65,8 @@ namespace Skybrud.Umbraco.Spa {
         /// </summary>
         /// <param name="html">The HTML value representing the response body.</param>
         /// <param name="encoding">The encoding to be used for the response.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public virtual HttpResponseMessage CreateHtmlResponse(string html, Encoding encoding) {
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        public virtual ActionResult CreateHtmlResponse(string html, Encoding encoding) {
             return CreateHtmlResponse(HttpStatusCode.OK, html, encoding);
         }
 
@@ -74,11 +76,12 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="statusCode">The status code of the response.</param>
         /// <param name="html">The HTML value representing the response body.</param>
         /// <param name="encoding">The encoding to be used for the response.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        public virtual HttpResponseMessage CreateHtmlResponse(HttpStatusCode statusCode, string html, Encoding encoding) {
-            return new HttpResponseMessage {
-                StatusCode = statusCode,
-                Content = new StringContent(html ?? string.Empty, encoding, "text/html")
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        public virtual ActionResult CreateHtmlResponse(HttpStatusCode statusCode, string html, Encoding encoding) {
+            return new ContentResult {
+                StatusCode = (int) HttpStatusCode.InternalServerError,
+                ContentType = "text/html",
+                Content = html ?? string.Empty
             };
         }
 
@@ -87,8 +90,8 @@ namespace Skybrud.Umbraco.Spa {
         /// </summary>
         /// <param name="request">The current request.</param>
         /// <param name="exception">The exception the response should be about.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage ReturnHtmlError(SpaRequest request, Exception exception) {
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult ReturnHtmlError(SpaRequest request, Exception exception) {
 
             StringBuilder sb = new StringBuilder();
 
@@ -101,9 +104,9 @@ namespace Skybrud.Umbraco.Spa {
 
             sb.AppendLine("<h3>HTTP Request</h3>");
             sb.AppendLine("<table>\n");
-            sb.AppendLine("<tr><th>Remote Address</th><td>" + request.HttpContext.Request.ServerVariables["REMOTE_ADDR"] + "</td></tr>");
-            sb.AppendLine("<tr><th>User Agent</th><td>" + request.HttpContext.Request.UserAgent + "</td></tr>");
-            sb.AppendLine("<tr><th>Accept Header</th><td>" + request.HttpContext.Request.Headers["Accept"] + "</td></tr>");
+            sb.AppendLine("<tr><th>Remote Address</th><td>" + request.Arguments.RemoteAddress + "</td></tr>");
+            sb.AppendLine("<tr><th>User Agent</th><td>" + request.Arguments.UserAgent + "</td></tr>");
+            sb.AppendLine("<tr><th>Accept Header</th><td>" + request.Arguments.AcceptTypes + "</td></tr>");
             sb.AppendLine("</table>");
 
             sb.AppendLine("<h3>SPA Options</h3>");
@@ -128,8 +131,8 @@ namespace Skybrud.Umbraco.Spa {
 
             sb.AppendLine("<h3>Config</h3>");
             sb.AppendLine("<table>\n");
-            sb.AppendLine("<tr><th>IsDebuggingEnabled</th><td>" + request.HttpContext.IsDebuggingEnabled + "</td></tr>");
-            sb.AppendLine("<tr><th>IsCustomErrorEnabled</th><td>" + request.HttpContext.IsCustomErrorEnabled + "</td></tr>");
+            sb.AppendLine("<tr><th>IsDevelopment</th><td>" + Environment.IsDevelopment() + "</td></tr>");
+            //sb.AppendLine("<tr><th>IsCustomErrorEnabled</th><td>" + request.HttpContext.IsCustomErrorEnabled + "</td></tr>");
             sb.AppendLine("</table>");
 
             while (exception != null) {
@@ -145,10 +148,8 @@ namespace Skybrud.Umbraco.Spa {
 
             }
 
-            return new HttpResponseMessage {
-                StatusCode = HttpStatusCode.InternalServerError,
-                Content = new StringContent(sb.ToString(), Encoding.UTF8, "text/html")
-            };
+            // Create a new response
+            return CreateHtmlResponse(HttpStatusCode.InternalServerError, sb.ToString(), Encoding.UTF8);
 
         }
 
@@ -157,13 +158,13 @@ namespace Skybrud.Umbraco.Spa {
         #region SPA
 
         /// <summary>
-        /// Returns a new JSON based instance of <see cref="HttpResponseMessage"/> for the specified
+        /// Returns a new JSON based instance of <see cref="ActionResult"/> for the specified
         /// <paramref name="data"/>. <paramref name="statusCode"/> is used as the status code in the response.
         /// </summary>
         /// <param name="statusCode">The status code to be used for the response.</param>
         /// <param name="data">The data to be serialized to JSON and returned as the response body.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage CreateSpaResponse(HttpStatusCode statusCode, object data) {
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult CreateSpaResponse(HttpStatusCode statusCode, object data) {
 
             // Ensure that the status code is set on the data model so the status code is kept when caching the data model
             if (data is SpaDataModel dataModel) dataModel.Meta.StatusCode = statusCode;
@@ -178,26 +179,28 @@ namespace Skybrud.Umbraco.Spa {
                         break;
                 }
             }
-
+            
             // Create a new response
-            return new HttpResponseMessage(statusCode) {
-                Content = new StringContent(Serialize(data), Encoding.UTF8, "application/json")
+            return new ContentResult {
+                StatusCode = (int)statusCode,
+                ContentType = "application/json",
+                Content = Serialize(data)
             };
 
         }
 
         /// <summary>
-        /// Returns a new JSON based instance of <see cref="HttpResponseMessage"/> for the specified
+        /// Returns a new JSON based instance of <see cref="ActionResult"/> for the specified
         /// <paramref name="data"/>.
         /// 
-        /// If <paramref name="data"/> is an instance of <see cref="JsonMetaResponse"/>, the status code will be
-        /// inherited from the <see cref="JsonMetaData.Code"/> property. In any other cases, the status code will be
+        /// If <paramref name="data"/> is an instance of <see cref="SpaResponseModel"/>, the status code will be
+        /// inherited from the <see cref="SpaMetaData.Code"/> property. In any other cases, the status code will be
         /// <see cref="HttpStatusCode.OK"/>.
         /// </summary>
         /// <param name="data">The data to be serialized to JSON and returned as the response body.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage CreateSpaResponse(object data) {
-            return data is JsonMetaResponse meta ? CreateSpaResponse(meta.Meta.Code, meta) : CreateSpaResponse(HttpStatusCode.OK, data);
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult CreateSpaResponse(object data) {
+            return data is SpaResponseModel meta ? CreateSpaResponse(meta.Meta.Code, meta) : CreateSpaResponse(HttpStatusCode.OK, data);
         }
 
         #endregion
@@ -205,29 +208,29 @@ namespace Skybrud.Umbraco.Spa {
         #region SPA/error
 
         /// <summary>
-        /// Returns an instance of <see cref="HttpResponseMessage"/> representing a server error.
+        /// Returns an instance of <see cref="ActionResult"/> representing a server error.
         /// </summary>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage ReturnError() {
-            return CreateSpaResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, "Internal server error"));
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult ReturnError() {
+            return CreateSpaResponse(SpaResponseModel.GetError(HttpStatusCode.InternalServerError, "Internal server error"));
         }
 
         /// <summary>
         /// Returns a new JSON based error response with the specified <paramref name="statusCode"/>.
         /// </summary>
         /// <param name="statusCode">The status code to be used for the response.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage ReturnError(HttpStatusCode statusCode) {
-            return CreateSpaResponse(JsonMetaResponse.GetError(statusCode, null));
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult ReturnError(HttpStatusCode statusCode) {
+            return CreateSpaResponse(SpaResponseModel.GetError(statusCode, null));
         }
 
         /// <summary>
         /// Returns a new JSON based error response with the specified <paramref name="message"/>.
         /// </summary>
         /// <param name="message">The message of the error response.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage ReturnError(string message) {
-            return CreateSpaResponse(JsonMetaResponse.GetError(HttpStatusCode.InternalServerError, message));
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult ReturnError(string message) {
+            return CreateSpaResponse(SpaResponseModel.GetError(HttpStatusCode.InternalServerError, message));
         }
 
         /// <summary>
@@ -235,9 +238,9 @@ namespace Skybrud.Umbraco.Spa {
         /// </summary>
         /// <param name="statusCode">The status code to be used for the response.</param>
         /// <param name="message">The message of the error response.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage ReturnError(HttpStatusCode statusCode, string message) {
-            return CreateSpaResponse(JsonMetaResponse.GetError(statusCode, message));
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult ReturnError(HttpStatusCode statusCode, string message) {
+            return CreateSpaResponse(SpaResponseModel.GetError(statusCode, message));
         }
 
         /// <summary>
@@ -246,9 +249,9 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="statusCode">The status code to be used for the response.</param>
         /// <param name="message">The message of the error response.</param>
         /// <param name="data">The value of the <c>data</c> property in the JSON response.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage ReturnError(HttpStatusCode statusCode, string message, object data) {
-            return CreateSpaResponse(JsonMetaResponse.GetError(statusCode, message, data));
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult ReturnError(HttpStatusCode statusCode, string message, object data) {
+            return CreateSpaResponse(SpaResponseModel.GetError(statusCode, message, data));
         }
 
         #endregion
@@ -260,8 +263,8 @@ namespace Skybrud.Umbraco.Spa {
         /// </summary>
         /// <param name="request">The current request.</param>
         /// <param name="destinationUrl">The destination URL of the redirect.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl) {
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult ReturnRedirect(SpaRequest request, string destinationUrl) {
 		    return ReturnRedirect(request, destinationUrl, HttpStatusCode.MovedPermanently);
 	    }
 
@@ -271,8 +274,8 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="request">The current request.</param>
         /// <param name="destinationUrl">The destination URL of the redirect.</param>
         /// <param name="permanent">Whether the redirect is permanent (<see cref="HttpStatusCode.MovedPermanently"/>) or temporary (<see cref="HttpStatusCode.TemporaryRedirect"/>).</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl, bool permanent) {
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult ReturnRedirect(SpaRequest request, string destinationUrl, bool permanent) {
             return ReturnRedirect(request, destinationUrl, permanent ? HttpStatusCode.MovedPermanently : HttpStatusCode.TemporaryRedirect);
         }
 
@@ -282,8 +285,8 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="request">The current request.</param>
         /// <param name="destinationUrl">The destination URL of the redirect.</param>
         /// <param name="statusCode">The status code of the response - eg. <see cref="HttpStatusCode.MovedPermanently"/>.</param>
-        /// <returns>An instance of <see cref="HttpResponseMessage"/>.</returns>
-        protected virtual HttpResponseMessage ReturnRedirect(SpaRequest request, string destinationUrl, HttpStatusCode statusCode) {
+        /// <returns>An instance of <see cref="ActionResult"/>.</returns>
+        protected virtual ActionResult ReturnRedirect(SpaRequest request, string destinationUrl, HttpStatusCode statusCode) {
             
             // Initialize the "data" object for the response
             var data = new {
@@ -292,7 +295,7 @@ namespace Skybrud.Umbraco.Spa {
             };
             
             // Initialize the response body (including the correct status code)
-            JsonMetaResponse body = JsonMetaResponse.GetError(statusCode, "Page has moved", data);
+            SpaResponseModel body = SpaResponseModel.GetError(statusCode, "Page has moved", data);
 
             // Overwrite the status code to make the frontenders happy
             statusCode = OverwriteStatusCodes ? HttpStatusCode.OK : SpaConstants.Teapot;

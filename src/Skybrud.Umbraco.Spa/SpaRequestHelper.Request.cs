@@ -1,10 +1,10 @@
 ﻿using Newtonsoft.Json;
 using Skybrud.Essentials.Common;
-using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Json.Resolvers;
 using Skybrud.Umbraco.Spa.Models;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Web;
 
 namespace Skybrud.Umbraco.Spa {
 
@@ -19,14 +19,17 @@ namespace Skybrud.Umbraco.Spa {
 
             if (request.Site == null) throw new PropertyNotSetException(nameof(request.Site));
 
+            // Return NULL if we dont have an Umbraco context
+            if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext umbracoContext)) return null;
+
             int nodeId = request.Arguments.PageId; 
             string url = request.Arguments.Url;
 
             // If the current domain specifies a path, we remove that from the path of the current request
             if (request.Domain.Uri.AbsolutePath.Length > 1) url = url.Substring(request.Domain.Uri.AbsolutePath.Length);
-
+            
             // Attempt to get content item by either it's numeric ID or URL
-            return nodeId > 0 ? UmbracoContext.Content.GetById(nodeId) : UmbracoContext.Content.GetByRoute(request.Site.Id + url, culture: request.CultureInfo.Name);
+            return nodeId > 0 ? umbracoContext.Content.GetById(nodeId) : umbracoContext.Content.GetByRoute(request.Site.Id + url, culture: request.CultureInfo.Name);
 
         }
 
@@ -47,8 +50,16 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="request">The current request.</param>
         /// <returns>An instance of <see cref="IPublishedContent"/> representing the culture node, or <c>null</c> if not found.</returns>
         protected virtual IPublishedContent GetCultureFromUrl(SpaRequest request) {
+
+            // Return NULL if we dont have an Umbraco context
+            if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext umbracoContext)) return null;
+            
+            // Attemp to get the culture ID from the URL of the current request
             int contentId = GetCultureIdFromUrl(request);
-            return contentId > 0 ? UmbracoContext.Content.GetById(contentId) : null;
+            
+            // Get the IPublishedContent matching "contentId"
+            return contentId > 0 ? umbracoContext.Content.GetById(contentId) : null;
+
         }
 
         /// <summary>
@@ -74,10 +85,8 @@ namespace Skybrud.Umbraco.Spa {
         /// <returns>A JSON string.</returns>
         protected virtual string Serialize(object data) {
 
-            SpaGridJsonConverterBase gridConverter = GridJsonConverter ?? new SpaGridJsonConverterBase();
-
             return JsonConvert.SerializeObject(data, Formatting.None, new JsonSerializerSettings {
-                ContractResolver = new SpaPublishedContentContractResolver(gridConverter)
+                ContractResolver = new SpaPublishedContentContractResolver()
             });
 
         }

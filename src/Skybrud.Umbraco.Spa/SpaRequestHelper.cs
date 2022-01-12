@@ -1,23 +1,22 @@
 ﻿using System;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
+using Skybrud.Essentials.AspNetCore;
 using Skybrud.Essentials.Strings.Extensions;
-using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Spa.Exceptions;
-using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Models;
 using Skybrud.Umbraco.Spa.Models.Flow;
 using Skybrud.Umbraco.Spa.Repositories;
-using Umbraco.Core;
-using Umbraco.Core.Cache;
-using Umbraco.Core.Logging;
-using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Core.Services;
-using Umbraco.Web;
-using Umbraco.Web.Composing;
-using Umbraco.Web.PublishedCache;
+using Umbraco.Cms.Core.Cache;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.PublishedCache;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Web;
 
 namespace Skybrud.Umbraco.Spa  {
 
@@ -27,11 +26,16 @@ namespace Skybrud.Umbraco.Spa  {
     public partial class SpaRequestHelper {
 
         #region Properties
+        
+        /// <summary>
+        /// Gets a reference to the current environment.
+        /// </summary>
+        public IWebHostEnvironment Environment { get; }
 
         /// <summary>
-        /// Gets a reference to the current Umbraco context.
+        /// Gets a reference to the current Umbraco context accessor.
         /// </summary>
-        protected UmbracoContext UmbracoContext { get; }
+        protected IUmbracoContextAccessor UmbracoContextAccessor { get; }
 
         /// <summary>
         /// Gets a reference to Umbraco's service context.
@@ -43,15 +47,10 @@ namespace Skybrud.Umbraco.Spa  {
         /// </summary>
         protected AppCaches AppCaches { get; }
 
-        /// <summary>
-        /// Gets a reference to the redirects service.
-        /// </summary>
-        protected IRedirectsService RedirectsService { get; }
-
-        /// <summary>
-        /// Gets or sets the JSON converter to be used when serializing the Umbraco grid.
-        /// </summary>
-        public SpaGridJsonConverterBase GridJsonConverter { get; set; }
+        ///// <summary>
+        ///// Gets a reference to the redirects service.
+        ///// </summary>
+        //protected IRedirectsService RedirectsService { get; }
 
         /// <summary>
         /// Gets a reference to Umbraco's logger.
@@ -64,9 +63,9 @@ namespace Skybrud.Umbraco.Spa  {
         public IVariationContextAccessor VariationContextAccessor { get; }
 
         /// <summary>
-        /// Gets a reference to the current published snapshot.
+        /// Gets a reference to the current published snapshot accessor.
         /// </summary>
-        public IPublishedSnapshot PublishedSnapshot { get; }
+        public IPublishedSnapshotAccessor PublishedSnapshotAccessor { get; }
 
         /// <summary>
         /// Gets a reference to the current published snapshot.
@@ -89,16 +88,21 @@ namespace Skybrud.Umbraco.Spa  {
         /// <summary>
         /// Initializes a new helper instance.
         /// </summary>
-        protected SpaRequestHelper() {
-            UmbracoContext = Current.UmbracoContext;
-            RedirectsService = Current.Factory.GetInstance<IRedirectsService>();
-            Services = Current.Services;
-            AppCaches = Current.AppCaches;
-            Logger = Current.Logger;
-            VariationContextAccessor = Current.VariationContextAccessor;
-            PublishedSnapshot = Current.PublishedSnapshot;
-            DomainRepository = Current.Factory.GetInstance<SpaDomainRepository>();
+        protected SpaRequestHelper(SpaRequestHelperDependencies dependencies) {
+            
+            // Set dependencies
+            Environment = dependencies.Environment;
+            UmbracoContextAccessor = dependencies.UmbracoContextAccessor;
+            Services = dependencies.Services;
+            AppCaches = dependencies.AppCaches;
+            Logger = dependencies.Logger;
+            VariationContextAccessor = dependencies.VariationContextAccessor;
+            PublishedSnapshotAccessor = dependencies.PublishedSnapshotAccessor;
+            DomainRepository = dependencies.DomainRepository;
+            
+            // Default options
             OverwriteStatusCodes = true;
+
         }
 
 
@@ -119,7 +123,7 @@ namespace Skybrud.Umbraco.Spa  {
 
                 // First group - should always be executed
                 new SpaActionGroup(
-                    r => true,
+                    _ => true,
                     
                     InitArguments,
                     FindDomainAndCulture,
@@ -164,7 +168,7 @@ namespace Skybrud.Umbraco.Spa  {
                 ),
 
                 // Third group - always executed
-                new SpaActionGroup(r => true, RaisinInTheSausageEnd),
+                new SpaActionGroup(_ => true, RaisinInTheSausageEnd)
 
             };
 
@@ -175,7 +179,7 @@ namespace Skybrud.Umbraco.Spa  {
         /// </summary>
         /// <param name="request">The current SPA request.</param>
         /// <returns>The response.</returns>
-        public virtual HttpResponseMessage GetResponse(SpaRequest request) {
+        public virtual ActionResult GetResponse(SpaRequest request) {
 
             try {
                 
@@ -241,30 +245,39 @@ namespace Skybrud.Umbraco.Spa  {
         /// <param name="request">The current SPA request.</param>
         /// <param name="exception">The exception.</param>
         /// <returns>The response.</returns>
-        protected virtual HttpResponseMessage HandleGetResponseException(SpaRequest request, Exception exception) {
+        protected virtual ActionResult HandleGetResponseException(SpaRequest request, Exception exception) {
+
+            // Get a reference to the URI of the request
+            Uri uri = request.HttpContext.Request.GetUri();
 
             if (exception is SpaActionException ex) {
 
-                Logger.Error<SpaRequestHelper>(
+                Logger.LogError(
                     exception, "SPA request for scheme {Scheme}, domain {Domain} and URL {Url} failed. Action was {Action}.",
-                    request.HttpContext.Request.Url?.Scheme,
-                    request.HttpContext.Request.Url?.Host,
-                    request.HttpContext.Request.RawUrl,
+                    uri.Scheme,
+                    uri.Host,
+                    uri.PathAndQuery,
                     ex.MethodName
                 );
 
             } else {
-
-                Logger.Error<SpaRequestHelper>(
+                
+                Logger.LogError(
                     exception, "SPA request for scheme {Scheme}, domain {Domain} and URL {Url} failed.",
-                    request.HttpContext.Request.Url?.Scheme,
-                    request.HttpContext.Request.Url?.Host,
-                    request.HttpContext.Request.RawUrl
+                    uri.Scheme,
+                    uri.Host,
+                    uri.PathAndQuery
                 );
 
             }
 
-            if (request.HttpContext.IsDebuggingEnabled && (request.HttpContext.Request.AcceptTypes?.Contains("text/html") ?? false)) {
+            // If not in development mode, we don't overwrite the response
+            if (!Environment.IsDevelopment()) return null;
+
+            // Get the accept header from the current request
+            string accept = request.HttpContext.Request.Headers["Accept"];
+
+            if (Environment.IsDevelopment() && (accept?.Contains("text/html") ?? false)) {
                 return ReturnHtmlError(request, exception);
             }
 

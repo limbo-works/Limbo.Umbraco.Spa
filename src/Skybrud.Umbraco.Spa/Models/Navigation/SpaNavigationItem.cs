@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
+using Skybrud.Essentials.Umbraco;
 using Skybrud.Umbraco.Spa.Constants;
-using Skybrud.Umbraco.Spa.Extensions;
-using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Web;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Extensions;
 
 namespace Skybrud.Umbraco.Spa.Models.Navigation {
 
@@ -82,10 +82,10 @@ namespace Skybrud.Umbraco.Spa.Models.Navigation {
         protected SpaNavigationItem(IPublishedContent content, int levels = 1, int levelcount = 1) {
 
             IPublishedContent[] children = content.Children(x => x.TemplateId > 0 && x.IsVisible()).ToArray();
-
+            
             Id = content.Id;
             Title = content.Name;
-            Url = content.Url;
+            Url = content.Url();
             ParentId = content.Parent?.Id ?? -1;
             Template = content.GetTemplateAlias();
             Culture = content.GetCultureInfo().Name;

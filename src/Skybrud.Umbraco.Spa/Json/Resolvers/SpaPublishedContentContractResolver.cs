@@ -3,11 +3,9 @@ using System.Reflection;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Skybrud.Essentials.Strings;
-using Skybrud.Umbraco.GridData;
-using Skybrud.Umbraco.Spa.Json.Converters;
 using System.Web;
+using Microsoft.AspNetCore.Html;
 using Skybrud.Essentials.Json.Converters;
-using Umbraco.Core.Models.PublishedContent;
 
 #pragma warning disable 1591
 
@@ -15,19 +13,9 @@ namespace Skybrud.Umbraco.Spa.Json.Resolvers {
 
     public class SpaPublishedContentContractResolver : DefaultContractResolver {
 
-        #region Properties
-
-        public SpaGridJsonConverterBase GridConverter { get; }
-
-        #endregion
-
         #region Constructors
 
-        public SpaPublishedContentContractResolver() : this(new SpaGridJsonConverterBase()) { }
-
-        public SpaPublishedContentContractResolver(SpaGridJsonConverterBase gridConverter) {
-            GridConverter = gridConverter;
-        }
+        public SpaPublishedContentContractResolver() { }
 
         #endregion
 
@@ -129,10 +117,8 @@ namespace Skybrud.Umbraco.Spa.Json.Resolvers {
             JsonContract contract = base.CreateContract(objectType);
 
             // this will only be called once and then cached
-            if (objectType == typeof(GridDataModel)) {
-                contract.Converter = GridConverter;
-            } else if (objectType == typeof(HtmlString) || objectType == typeof(IHtmlString)) {
-                contract.Converter = new ToStringJsonConverter();
+            if (objectType == typeof(HtmlString)) {
+                contract.Converter = new StringJsonConverter();
             }		
 
             return contract;

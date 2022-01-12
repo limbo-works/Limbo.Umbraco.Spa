@@ -1,4 +1,4 @@
-﻿using UmbracoContentConstants = Umbraco.Core.Constants.Conventions.Content;
+﻿using UmbracoContentConstants = Umbraco.Cms.Core.Constants.Conventions.Content;
 
 // ReSharper disable InconsistentNaming
 

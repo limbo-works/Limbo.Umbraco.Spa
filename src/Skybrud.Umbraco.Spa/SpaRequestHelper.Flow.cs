@@ -1,16 +1,13 @@
 ﻿using System;
+using System.Globalization;
 using System.Net;
-using System.Web;
-using Skybrud.Umbraco.Redirects.Extensions;
-using Skybrud.Umbraco.Redirects.Models;
-using Skybrud.Umbraco.Redirects.Models.Outbound;
 using Skybrud.Umbraco.Spa.Constants;
 using Skybrud.Umbraco.Spa.Exceptions;
 using Skybrud.Umbraco.Spa.Models;
-using Umbraco.Core.Models;
-using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Core.Services;
-using Umbraco.Web;
+using Umbraco.Cms.Core.Models;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Services;
+using Umbraco.Extensions;
 
 namespace Skybrud.Umbraco.Spa {
 
@@ -42,14 +39,14 @@ namespace Skybrud.Umbraco.Spa {
 
                 // TODO: Look at the "siteId" parameter as well (may be relevant for virtual content etc.)
                 
-                IPublishedContent c = UmbracoContext.Content.GetById(request.Arguments.PageId);
+                IPublishedContent c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content.GetById(request.Arguments.PageId);
 
                 if (c != null) {
                     
                     request.Domain = DomainRepository.DomainForNode(c, null, request.Arguments.QueryString["culture"]);
 
                     if (request.Domain != null) {
-                        request.CultureInfo = request.Domain.Culture;
+                        request.CultureInfo = CultureInfo.GetCultureInfo(request.Domain.Culture);
                     }
 
                 }
@@ -72,8 +69,8 @@ namespace Skybrud.Umbraco.Spa {
 
             // If "pageId" or "nodeId" exists, prefer content from that node
             if (request.Arguments.PageId > 0) {
-                IPublishedContent c = UmbracoContext.Content.GetById(request.Arguments.PageId);
-                if (c != null) request.Arguments.Url = c.Url;
+                IPublishedContent c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content.GetById(request.Arguments.PageId);
+                if (c != null) request.Arguments.Url = c.Url();
             }
 
             // Try get siteId from domain
@@ -90,7 +87,10 @@ namespace Skybrud.Umbraco.Spa {
         protected virtual void InitSite(SpaRequest request) {
 
             // Get a reference to the site node
-            request.Site = UmbracoContext.Content.GetById(request.Arguments.SiteId);
+            request.Site = UmbracoContextAccessor
+                .GetRequiredUmbracoContext()
+                .Content
+                .GetById(request.Arguments.SiteId);
 
             // Throw an exception if we can't determine the site node
             if (request.Site == null) throw new SpaSiteNotFoundException(request, "Unable to determine site node from request.");
@@ -122,7 +122,10 @@ namespace Skybrud.Umbraco.Spa {
             if (request.IsPreview) {
 
                 // Get a reference to the current page (fetched regardless of "parts" as the URL determines the culture)
-                request.Content = UmbracoContext.Content.GetById(true, request.Arguments.PageId);
+                request.Content = UmbracoContextAccessor
+                    .GetRequiredUmbracoContext()
+                    .Content.
+                    GetById(true, request.Arguments.PageId);
 
             } else {
 
@@ -265,20 +268,22 @@ namespace Skybrud.Umbraco.Spa {
         /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
         protected virtual bool HandleSkybrudRedirect(SpaRequest request) {
 
-            // Look for a global Skybrud redirect
-            RedirectItem redirect = RedirectsService.GetRedirectByUrl(0, HttpUtility.UrlDecode(request.Url));
+            return false;
 
-            // If nothing is found at this point, look for a site specific Skybrud redirect
-            if (request.SiteId > 0 && redirect == null) {
-                redirect = RedirectsService.GetRedirectByUrl(request.SiteId, HttpUtility.UrlDecode(request.Url));
-            }
+            //// Look for a global Skybrud redirect
+            //RedirectItem redirect = RedirectsService.GetRedirectByUrl(0, HttpUtility.UrlDecode(request.Url));
 
-            if (redirect == null) return false;
+            //// If nothing is found at this point, look for a site specific Skybrud redirect
+            //if (request.SiteId > 0 && redirect == null) {
+            //    redirect = RedirectsService.GetRedirectByUrl(request.SiteId, HttpUtility.UrlDecode(request.Url));
+            //}
 
-            // Return a redirect response based on the Skybrud redirect
-            request.Response = ReturnRedirect(request, redirect.LinkUrl, redirect.IsPermanent);
+            //if (redirect == null) return false;
 
-            return true;
+            //// Return a redirect response based on the Skybrud redirect
+            //request.Response = ReturnRedirect(request, redirect.LinkUrl, redirect.IsPermanent);
+
+            //return true;
 
         }
 
@@ -294,11 +299,11 @@ namespace Skybrud.Umbraco.Spa {
             if (umbRedirect == null) return false;
 
             // Get the destination page from the content cache
-            IPublishedContent newContent = UmbracoContext.Content.GetById(umbRedirect.ContentId);
+            IPublishedContent newContent = UmbracoContextAccessor.GetRequiredUmbracoContext().Content.GetById(umbRedirect.ContentId);
             if (newContent == null) return false;
 
             // Send a redirect response if a page was found
-            request.Response = ReturnRedirect(request, newContent.Url, true);
+            request.Response = ReturnRedirect(request, newContent.Url(), true);
             return true;
 
         }
@@ -309,13 +314,13 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="request">The current request.</param>
         protected virtual void HandleOutboundRedirects(SpaRequest request) {
 
-            // Get the outbound URL from the current page (if set)
-            OutboundRedirect redirect = request.Content?.GetOutboundRedirect();
+            //// Get the outbound URL from the current page (if set)
+            //OutboundRedirect redirect = request.Content?.GetOutboundRedirect();
 
-            // If the redirect is valid, we'll set the response to return a redirect
-            if (redirect != null && redirect.HasDestination) {
-                request.Response = ReturnRedirect(request, redirect.Destination.Url, redirect.IsPermanent);
-            }
+            //// If the redirect is valid, we'll set the response to return a redirect
+            //if (redirect != null && redirect.HasDestination) {
+            //    request.Response = ReturnRedirect(request, redirect.Destination.Url, redirect.IsPermanent);
+            //}
 
         }
 
@@ -365,7 +370,7 @@ namespace Skybrud.Umbraco.Spa {
             switch (request.Content) {
 
                 case PublishedContentModel content:
-                    request.DataModel.Content = request.ContentModel = new SpaContentModel(content);
+                    request.DataModel.Content = request.ContentModel = new SpaContentModel(content, new PublishedValueFallback(Services, VariationContextAccessor));
                     break;
 
             }

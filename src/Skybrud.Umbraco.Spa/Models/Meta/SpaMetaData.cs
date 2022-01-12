@@ -2,13 +2,12 @@
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
-using Skybrud.Umbraco.Spa.Extensions;
+using Skybrud.Essentials.Umbraco;
 using Skybrud.Umbraco.Spa.Json.Converters;
 using Skybrud.Umbraco.Spa.Models.Meta.Attributes;
 using Skybrud.Umbraco.Spa.Models.Meta.OpenGraph;
 using Skybrud.Umbraco.Spa.Models.Meta.Twitter;
-using Umbraco.Core;
-using Umbraco.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Models.PublishedContent;
 
 // ReSharper disable UnusedParameter.Local
 
@@ -87,12 +86,12 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         /// <summary>
         /// Gets a collection of Open Graph properties for the current page.
         /// </summary>
-        public SpaOpenGraphProperties OpenGraph => _og ?? (_og = GetOpenGraph());
+        public SpaOpenGraphProperties OpenGraph => _og ??= GetOpenGraph();
 
         /// <summary>
         /// Gets an instance of <see cref="ITwitterCard"/> representing the current page, or <c>null</c> if the page doesn't have a Twitter card..
         /// </summary>
-        public ITwitterCard TwitterCard => _twitter ?? (_twitter = GetTwitterCard());
+        public ITwitterCard TwitterCard => _twitter ??= GetTwitterCard();
 
         /// <summary>
         /// Gets whether the page has a Twitter card.

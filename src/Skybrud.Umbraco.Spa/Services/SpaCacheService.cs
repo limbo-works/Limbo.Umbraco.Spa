@@ -1,5 +1,5 @@
 ﻿using System;
-using Umbraco.Core.Cache;
+using Umbraco.Cms.Core.Cache;
 
 namespace Skybrud.Umbraco.Spa.Services {
     

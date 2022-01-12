@@ -1,5 +1,6 @@
 ﻿using Newtonsoft.Json;
-using Umbraco.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Extensions;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
@@ -33,7 +34,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// </summary>
         /// <param name="content">The instance of <see cref="IPublishedContent"/> the link should be based on.</param>
         protected SpaLinkItem(IPublishedContent content) {
-            Url = content.Url;
+            Url = content.Url();
         }
 
         /// <summary>

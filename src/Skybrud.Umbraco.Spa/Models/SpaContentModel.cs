@@ -1,4 +1,4 @@
-﻿using Umbraco.Core.Models.PublishedContent;
+﻿using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
@@ -11,7 +11,13 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// Initializes a new instance based on the specified <paramref name="content"/>.
         /// </summary>
         /// <param name="content">An instance of <see cref="IPublishedContent"/> representing the current page.</param>
-        public SpaContentModel(IPublishedContent content) : base(content) { }
+        public SpaContentModel(IPublishedContent content) : base(content, null) { }
+
+        /// <summary>
+        /// Initializes a new instance based on the specified <paramref name="content"/>.
+        /// </summary>
+        /// <param name="content">An instance of <see cref="IPublishedContent"/> representing the current page.</param>
+        public SpaContentModel(IPublishedContent content, IPublishedValueFallback publishedValueFallback) : base(content, null) { }
 
     }
 

@@ -1,8 +1,8 @@
 ﻿using System;
 using Newtonsoft.Json;
 using Skybrud.Umbraco.Spa.Models.Navigation;
-using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Web;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Extensions;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
@@ -82,8 +82,8 @@ namespace Skybrud.Umbraco.Spa.Models {
             // Site
             Site = site ?? throw new ArgumentNullException(nameof(site));
             Id = site.Id;
-            Name = site.Value<string>("siteName");
-            Url = site.Url;
+            Name = site.Value<string>(SpaConstants.Properties.SiteName);
+            Url = site.Url();
 
         }
 
@@ -102,8 +102,8 @@ namespace Skybrud.Umbraco.Spa.Models {
 
             // Culture
             Culture = culture ?? site;
-            Name = Culture.Value<string>("siteName");
-            Url = Culture.Url;
+            Name = site.Value<string>(SpaConstants.Properties.SiteName);
+            Url = site.Url();
 
         }
 

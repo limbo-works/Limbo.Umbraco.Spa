@@ -2,11 +2,11 @@
 using System.Diagnostics;
 using System.Globalization;
 using System.Net;
-using System.Net.Http;
-using System.Web;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
-using Umbraco.Core.Models.PublishedContent;
-using Umbraco.Web.Routing;
+using Umbraco.Cms.Core.Models.PublishedContent;
+using Umbraco.Cms.Core.Routing;
 
 namespace Skybrud.Umbraco.Spa.Models {
 
@@ -18,20 +18,9 @@ namespace Skybrud.Umbraco.Spa.Models {
         #region Properties
 
         /// <summary>
-        /// Gets a reference to the current SPA API request.
-        /// </summary>
-        public static SpaRequest Current {
-            get {
-                if (System.Web.HttpContext.Current == null) return null;
-                return System.Web.HttpContext.Current.Items["SpaApiRequest"] as SpaRequest;
-            }
-            set => System.Web.HttpContext.Current.Items["SpaApiRequest"] = value;
-        }
-
-        /// <summary>
         /// Gets a reference to the HTTP context of the request.
         /// </summary>
-        public HttpContextBase HttpContext { get; }
+        public HttpContext HttpContext { get; }
 
         /// <summary>
         /// Gets the options/arguments determined from the current request.
@@ -135,7 +124,7 @@ namespace Skybrud.Umbraco.Spa.Models {
         /// <summary>
         /// Gets or sets the response.
         /// </summary>
-        public HttpResponseMessage Response { get; set; }
+        public ActionResult Response { get; set; }
 
         /// <summary>
         /// Gets the <see cref="Stopwatch"/> used for measuring the duration of the request.
@@ -157,38 +146,10 @@ namespace Skybrud.Umbraco.Spa.Models {
         #region Constructors
 
         /// <summary>
-        /// Initializes a new a instance with default options.
-        /// </summary>
-        [JsonConstructor]
-        public SpaRequest() {
-            HttpContext = new HttpContextWrapper(System.Web.HttpContext.Current);
-            Stopwatch = Stopwatch.StartNew();
-        }
-
-        /// <summary>
         /// Initializes a new a instance based on the specified <paramref name="context"/>.
         /// </summary>
         /// <param name="context">The HTTP context of the current request.</param>
         public SpaRequest(HttpContext context) {
-            if (context == null) throw new ArgumentNullException(nameof(context));
-            HttpContext = new HttpContextWrapper(context);
-            Stopwatch = Stopwatch.StartNew();
-        }
-
-        /// <summary>
-        /// Initializes a new a instance based on the specified <paramref name="context"/>.
-        /// </summary>
-        /// <param name="context">The HTTP context of the current request.</param>
-        public SpaRequest(HttpContextWrapper context) {
-            HttpContext = context ?? throw new ArgumentNullException(nameof(context));
-            Stopwatch = Stopwatch.StartNew();
-        }
-
-        /// <summary>
-        /// Initializes a new a instance based on the specified <paramref name="context"/>.
-        /// </summary>
-        /// <param name="context">The HTTP context of the current request.</param>
-        public SpaRequest(HttpContextBase context) {
             HttpContext = context ?? throw new ArgumentNullException(nameof(context));
             Stopwatch = Stopwatch.StartNew();
         }

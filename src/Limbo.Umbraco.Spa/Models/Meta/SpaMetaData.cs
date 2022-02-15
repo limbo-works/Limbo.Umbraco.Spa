@@ -152,6 +152,9 @@ namespace Limbo.Umbraco.Spa.Models.Meta {
 
         }
 
+        /// <summary>
+        /// Initializes a new instance with default values.
+        /// </summary>
         public SpaMetaData() {
             HtmlAttributes = new SpaMetaHtmlAttributeList();
             HeadAttributes = new SpaMetaAttributeList();

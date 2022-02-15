@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.27703.2035
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skybrud.Umbraco.Spa", "Skybrud.Umbraco.Spa\Skybrud.Umbraco.Spa.csproj", "{288B724E-DC12-4DBA-9715-D5D7F0530876}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Limbo.Umbraco.Spa", "Limbo.Umbraco.Spa/Limbo.Umbraco.Spa.csproj", "{288B724E-DC12-4DBA-9715-D5D7F0530876}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

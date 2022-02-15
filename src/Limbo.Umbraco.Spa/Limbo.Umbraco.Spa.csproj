@@ -5,21 +5,21 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <RootNamespace>Skybrud.Umbraco.Spa</RootNamespace>
-    <Version>4.0.0-alpha001</Version>
+    <RootNamespace>Limbo.Umbraco.Spa</RootNamespace>
+    <Version>1.0.0-alpha001</Version>
     <Company>Limbo</Company>
-    <Product>Skybrud.Umbraco.Spa</Product>
+    <Product>Limbo.Umbraco.Spa</Product>
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © 2021</Copyright>
     <Description>SPA (single page application) package for Umbraco 9.</Description>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/skybrud/Skybrud.Umbraco.Spa</RepositoryUrl>
+    <RepositoryUrl>https://github.com/skybrud/Limbo.Umbraco.Spa</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup>
     <PackageTags>Skybrud, Umbraco, SPA, Headless</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/skybrud/Skybrud.Umbraco.Spa</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/skybrud/Limbo.Umbraco.Spa</PackageProjectUrl>
     <PackageIcon>Limbo.png</PackageIcon>
   </PropertyGroup>
   
@@ -37,7 +37,7 @@
   </ItemGroup>
 
   <PropertyGroup>
-    <DocumentationFile>bin\$(ConfigurationName)\$(TargetFramework)\Skybrud.Umbraco.Spa.xml</DocumentationFile>
+    <DocumentationFile>bin\$(ConfigurationName)\$(TargetFramework)\Limbo.Umbraco.Spa.xml</DocumentationFile>
   </PropertyGroup>
 
 </Project>

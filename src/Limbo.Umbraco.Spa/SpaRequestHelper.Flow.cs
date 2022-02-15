@@ -272,7 +272,7 @@ namespace Limbo.Umbraco.Spa {
         /// <summary>
         /// Virtual method for handling inbound redirects created by editors through Skybrud's redirects package.
         ///
-        /// The redirects handled by this method are the ones retrived through the <see cref="IRedirectsService"/> service.
+        /// The redirects handled by this method are the ones retrived through the <c>IRedirectsService</c> service.
         /// </summary>
         /// <param name="request">The current request.</param>
         /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>

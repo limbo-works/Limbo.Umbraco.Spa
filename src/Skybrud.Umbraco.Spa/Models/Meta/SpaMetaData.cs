@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
@@ -130,6 +131,7 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
         /// </summary>
         /// <param name="site">The site of the current page.</param>
         /// <param name="content">The current page.</param>
+        [Obsolete("Use constructor overload instead.")]
         public SpaMetaData(SpaSiteModel site, IPublishedContent content) {
 
             Content = content;
@@ -148,6 +150,15 @@ namespace Skybrud.Umbraco.Spa.Models.Meta {
 
             DangerouslyDisableSanitizers = new[] {"script"};
 
+        }
+
+        public SpaMetaData() {
+            HtmlAttributes = new SpaMetaHtmlAttributeList();
+            HeadAttributes = new SpaMetaAttributeList();
+            BodyAttributes = new SpaMetaAttributeList();
+            Links = new List<SpaMetaLink>();
+            Scripts = new List<SpaMetaScript>();
+            AddLink(_canonical = new SpaMetaLink { Rel = "canonical" });
         }
 
         #endregion

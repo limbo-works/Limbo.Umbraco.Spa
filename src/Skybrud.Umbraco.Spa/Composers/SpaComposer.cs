@@ -19,6 +19,7 @@ namespace Skybrud.Umbraco.Spa.Composers {
             builder.Services.AddUnique<SpaRequestHelperDependencies>();
             builder.Services.AddUnique<ISpaCacheService, SpaCacheService>();
             builder.Services.AddUnique<ISpaContentFactory, SpaContentFactory>();
+            builder.Services.AddUnique<ISpaMetaDataFactory, SpaMetaDataFactory>();
             builder.Services.AddUnique<SpaDomainRepository>();
             
             // Add notification handlers

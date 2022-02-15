@@ -4,9 +4,9 @@ using System.Net;
 using System.Text;
 using Limbo.Umbraco.Spa.Models;
 using Limbo.Umbraco.Spa.Models.Api;
-using Limbo.Umbraco.Spa.MoveTo.Skybrud.Essentials.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
+using Skybrud.Essentials.AspNetCore;
 
 namespace Limbo.Umbraco.Spa {
 

@@ -1,4 +1,5 @@
-﻿using Skybrud.Umbraco.Spa.Repositories;
+﻿using Skybrud.Umbraco.Spa.Factories;
+using Skybrud.Umbraco.Spa.Repositories;
 using Skybrud.Umbraco.Spa.Services;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
@@ -17,6 +18,7 @@ namespace Skybrud.Umbraco.Spa.Composers {
             // Register services
             builder.Services.AddUnique<SpaRequestHelperDependencies>();
             builder.Services.AddUnique<ISpaCacheService, SpaCacheService>();
+            builder.Services.AddUnique<ISpaContentFactory, SpaContentFactory>();
             builder.Services.AddUnique<SpaDomainRepository>();
             
             // Add notification handlers

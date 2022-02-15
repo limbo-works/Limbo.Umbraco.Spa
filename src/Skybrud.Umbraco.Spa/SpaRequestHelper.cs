@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using Skybrud.Essentials.AspNetCore;
 using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Spa.Exceptions;
+using Skybrud.Umbraco.Spa.Factories;
 using Skybrud.Umbraco.Spa.Models;
 using Skybrud.Umbraco.Spa.Models.Flow;
 using Skybrud.Umbraco.Spa.Repositories;
@@ -73,6 +74,11 @@ namespace Skybrud.Umbraco.Spa  {
         public SpaDomainRepository DomainRepository { get; }
 
         /// <summary>
+        /// Gets a reference to the current SPA content factory.
+        /// </summary>
+        public ISpaContentFactory ContentFactory { get; }
+
+        /// <summary>
         /// Gets whether the helper should overwrite the status code of responses returned by the helper. Default is <c>true</c>.
         ///
         /// When enabled, status codes like <see cref="HttpStatusCode.MovedPermanently"/>,
@@ -99,6 +105,7 @@ namespace Skybrud.Umbraco.Spa  {
             VariationContextAccessor = dependencies.VariationContextAccessor;
             PublishedSnapshotAccessor = dependencies.PublishedSnapshotAccessor;
             DomainRepository = dependencies.DomainRepository;
+            ContentFactory = dependencies.ContentFactory;
             
             // Default options
             OverwriteStatusCodes = true;

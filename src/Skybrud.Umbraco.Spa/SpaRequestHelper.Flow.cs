@@ -370,20 +370,9 @@ namespace Skybrud.Umbraco.Spa {
 
             // Skip this part if the "content" part wasn't requested
             if (request.Arguments.Parts.Contains(SpaApiPart.Content) == false) return;
-
-            // Populate the data model with the content model if already present in the request
-            if (request.ContentModel != null) {
-                request.DataModel.Content = request.ContentModel;
-                return;
-            }
-
-            switch (request.Content) {
-
-                case PublishedContentModel content:
-                    request.ContentModel = new SpaContentModel(content, new PublishedValueFallback(Services, VariationContextAccessor));
-                    break;
-
-            }
+            
+            // Initialize the new model
+            request.ContentModel = ContentFactory.CreateContentModel(request.Content, new PublishedValueFallback(Services, VariationContextAccessor), request);
 
         }
 

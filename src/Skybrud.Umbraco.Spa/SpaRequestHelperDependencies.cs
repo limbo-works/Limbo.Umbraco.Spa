@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Skybrud.Umbraco.Spa.Factories;
 using Skybrud.Umbraco.Spa.Repositories;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Models.PublishedContent;
@@ -61,6 +62,11 @@ namespace Skybrud.Umbraco.Spa {
         /// </summary>
         public SpaDomainRepository DomainRepository { get; }
 
+        /// <summary>
+        /// Gets a reference to the current SPA content factory.
+        /// </summary>
+        public ISpaContentFactory ContentFactory { get; }
+
         #endregion
 
         #region Constructors
@@ -76,7 +82,8 @@ namespace Skybrud.Umbraco.Spa {
         /// <param name="variationContextAccessor"></param>
         /// <param name="publishedSnapshotAccessor"></param>
         /// <param name="domainRepository"></param>
-        public SpaRequestHelperDependencies(IWebHostEnvironment environment, IUmbracoContextAccessor umbracoContextAccessor, ServiceContext serviceContext, AppCaches appCaches, ILogger<SpaRequestHelper> logger, IVariationContextAccessor variationContextAccessor, IPublishedSnapshotAccessor publishedSnapshotAccessor, SpaDomainRepository domainRepository) {
+        /// <param name="contentFactory"></param>
+        public SpaRequestHelperDependencies(IWebHostEnvironment environment, IUmbracoContextAccessor umbracoContextAccessor, ServiceContext serviceContext, AppCaches appCaches, ILogger<SpaRequestHelper> logger, IVariationContextAccessor variationContextAccessor, IPublishedSnapshotAccessor publishedSnapshotAccessor, SpaDomainRepository domainRepository, ISpaContentFactory contentFactory) {
             Environment = environment;
             UmbracoContextAccessor = umbracoContextAccessor;
             Services = serviceContext;
@@ -85,6 +92,7 @@ namespace Skybrud.Umbraco.Spa {
             VariationContextAccessor = variationContextAccessor;
             PublishedSnapshotAccessor = publishedSnapshotAccessor;
             DomainRepository = domainRepository;
+            ContentFactory = contentFactory;
         }
 
         #endregion

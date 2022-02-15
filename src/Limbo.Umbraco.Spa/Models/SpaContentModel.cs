@@ -17,7 +17,8 @@ namespace Limbo.Umbraco.Spa.Models {
         /// Initializes a new instance based on the specified <paramref name="content"/>.
         /// </summary>
         /// <param name="content">An instance of <see cref="IPublishedContent"/> representing the current page.</param>
-        public SpaContentModel(IPublishedContent content, IPublishedValueFallback publishedValueFallback) : base(content, null) { }
+        /// <param name="publishedValueFallback">The published value fallback.</param>
+        public SpaContentModel(IPublishedContent content, IPublishedValueFallback publishedValueFallback) : base(content, publishedValueFallback) { }
 
     }
 

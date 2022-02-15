@@ -19,10 +19,10 @@
     <PackageId>Limbo.Umbraco.Spa</PackageId>
     <PackageTags>Skybrud, Umbraco, SPA, Headless</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <PackageProjectUrl>https://github.com/skybrud/Limbo.Umbraco.Spa</PackageProjectUrl>
+    <PackageProjectUrl>https://github.com/limbo-works/Limbo.Umbraco.Spa</PackageProjectUrl>
     <PackageIcon>Limbo.png</PackageIcon>
     <RepositoryType>git</RepositoryType>
-    <RepositoryUrl>https://github.com/skybrud/Limbo.Umbraco.Spa</RepositoryUrl>
+    <RepositoryUrl>https://github.com/limbo-works/Limbo.Umbraco.Spa</RepositoryUrl>
   </PropertyGroup>
 
   <!-- Include NuGet dependencies -->

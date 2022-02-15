@@ -1,12 +1,12 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using Limbo.Umbraco.Spa.Constants;
 using Newtonsoft.Json;
 using Skybrud.Essentials.Umbraco;
-using Skybrud.Umbraco.Spa.Constants;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Extensions;
 
-namespace Skybrud.Umbraco.Spa.Models.Navigation {
+namespace Limbo.Umbraco.Spa.Models.Navigation {
 
     /// <summary>
     /// Class representing an item in the navigation.

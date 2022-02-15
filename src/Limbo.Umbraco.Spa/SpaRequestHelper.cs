@@ -2,24 +2,24 @@
 using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using Limbo.Umbraco.Spa.Exceptions;
+using Limbo.Umbraco.Spa.Factories;
+using Limbo.Umbraco.Spa.Models;
+using Limbo.Umbraco.Spa.Models.Flow;
+using Limbo.Umbraco.Spa.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Skybrud.Essentials.AspNetCore;
 using Skybrud.Essentials.Strings.Extensions;
-using Skybrud.Umbraco.Spa.Exceptions;
-using Skybrud.Umbraco.Spa.Factories;
-using Skybrud.Umbraco.Spa.Models;
-using Skybrud.Umbraco.Spa.Models.Flow;
-using Skybrud.Umbraco.Spa.Repositories;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.PublishedCache;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
 
-namespace Skybrud.Umbraco.Spa  {
+namespace Limbo.Umbraco.Spa  {
 
     /// <summary>
     /// Helper class used for handling a SPA request.

@@ -1,6 +1,6 @@
-﻿using Skybrud.Umbraco.Spa.Factories;
-using Skybrud.Umbraco.Spa.Repositories;
-using Skybrud.Umbraco.Spa.Services;
+﻿using Limbo.Umbraco.Spa.Factories;
+using Limbo.Umbraco.Spa.Repositories;
+using Limbo.Umbraco.Spa.Services;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Events;
@@ -9,7 +9,7 @@ using Umbraco.Extensions;
 
 #pragma warning disable 1591
 
-namespace Skybrud.Umbraco.Spa.Composers {
+namespace Limbo.Umbraco.Spa.Composers {
 
     public class SpaComposer : IComposer {
 

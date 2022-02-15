@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Skybrud.Umbraco.Spa.Models.Flow {
+namespace Limbo.Umbraco.Spa.Models.Flow {
 
     /// <summary>
     /// Class representing an action group in the SPA page life cycle.

@@ -1,4 +1,4 @@
-﻿namespace Skybrud.Umbraco.Spa.Models.Meta.Attributes  {
+﻿namespace Limbo.Umbraco.Spa.Models.Meta.Attributes  {
 
     /// <summary>
     /// Class representing a list of attributes of the <c>html</c> element.

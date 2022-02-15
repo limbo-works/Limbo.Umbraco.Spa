@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
+namespace Limbo.Umbraco.Spa.Models.Meta.OpenGraph {
 
     /// <summary>
     /// Class with information about an Open Graph image.

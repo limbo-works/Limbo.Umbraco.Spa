@@ -1,10 +1,10 @@
 ﻿using System;
+using Limbo.Umbraco.Spa.Models.Navigation;
 using Newtonsoft.Json;
-using Skybrud.Umbraco.Spa.Models.Navigation;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Extensions;
 
-namespace Skybrud.Umbraco.Spa.Models {
+namespace Limbo.Umbraco.Spa.Models {
 
     /// <summary>
     /// Class representing the base model of a SPA site.

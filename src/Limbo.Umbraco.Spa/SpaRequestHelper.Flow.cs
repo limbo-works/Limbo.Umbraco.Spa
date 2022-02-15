@@ -1,15 +1,15 @@
 ﻿using System;
 using System.Globalization;
 using System.Net;
-using Skybrud.Umbraco.Spa.Constants;
-using Skybrud.Umbraco.Spa.Exceptions;
-using Skybrud.Umbraco.Spa.Models;
+using Limbo.Umbraco.Spa.Constants;
+using Limbo.Umbraco.Spa.Exceptions;
+using Limbo.Umbraco.Spa.Models;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Extensions;
 
-namespace Skybrud.Umbraco.Spa {
+namespace Limbo.Umbraco.Spa {
 
     public partial class SpaRequestHelper {
 

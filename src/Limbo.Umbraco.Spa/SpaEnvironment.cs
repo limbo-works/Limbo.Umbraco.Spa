@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Skybrud.Umbraco.Spa {
+namespace Limbo.Umbraco.Spa {
 
     /// <summary>
     /// Static class representing the overall SPA environment.

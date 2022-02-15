@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 
-namespace Skybrud.Umbraco.Spa.Models.Meta {
+namespace Limbo.Umbraco.Spa.Models.Meta {
     
     /// <summary>
     /// Represents a <c>base</c> HTML element.

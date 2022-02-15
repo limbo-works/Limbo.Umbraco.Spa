@@ -2,7 +2,7 @@
 
 // ReSharper disable once InconsistentNaming
 
-namespace Skybrud.Umbraco.Spa {
+namespace Limbo.Umbraco.Spa {
 
     /// <summary>
     /// Various utility methods for woroking with the SPA.

@@ -2,7 +2,7 @@
 
 // ReSharper disable InconsistentNaming
 
-namespace Skybrud.Umbraco.Spa.Constants {
+namespace Limbo.Umbraco.Spa.Constants {
 
     public static partial class SkyConstants {
 

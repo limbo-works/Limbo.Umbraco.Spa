@@ -1,7 +1,7 @@
-﻿using Skybrud.Umbraco.Spa.Models;
+﻿using Limbo.Umbraco.Spa.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 
-namespace Skybrud.Umbraco.Spa.Factories {
+namespace Limbo.Umbraco.Spa.Factories {
 
     /// <summary>
     /// The SPA's default implementation of the <see cref="ISpaContentFactory"/> interface.

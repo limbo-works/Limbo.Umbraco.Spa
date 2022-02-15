@@ -2,7 +2,7 @@
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Extensions;
 
-namespace Skybrud.Umbraco.Spa.Models {
+namespace Limbo.Umbraco.Spa.Models {
 
     /// <summary>
     /// Class representing a simple link.

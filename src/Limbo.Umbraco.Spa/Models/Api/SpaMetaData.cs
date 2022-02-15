@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
 
-namespace Skybrud.Umbraco.Spa.Models.Api {
+namespace Limbo.Umbraco.Spa.Models.Api {
     
     /// <summary>
     /// Class representing the meta data of a JSON response.

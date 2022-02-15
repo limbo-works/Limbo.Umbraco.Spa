@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
-using Skybrud.Umbraco.Spa.Models;
+using Limbo.Umbraco.Spa.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.PublishedCache;
 using Umbraco.Cms.Core.Routing;
 using Umbraco.Extensions;
 
-namespace Skybrud.Umbraco.Spa.Repositories {
+namespace Limbo.Umbraco.Spa.Repositories {
     
     /// <summary>
     /// Repository for working with Umbraco domains in relation to the SPA package.

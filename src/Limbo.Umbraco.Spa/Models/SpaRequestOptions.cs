@@ -5,7 +5,7 @@ using Microsoft.Extensions.Hosting;
 using Skybrud.Essentials.AspNetCore;
 using Skybrud.Essentials.Enums;
 
-namespace Skybrud.Umbraco.Spa.Models {
+namespace Limbo.Umbraco.Spa.Models {
 
     /// <summary>
     /// Class representing the options of a SPA request. The options are initialized from arguments in the SPA request,

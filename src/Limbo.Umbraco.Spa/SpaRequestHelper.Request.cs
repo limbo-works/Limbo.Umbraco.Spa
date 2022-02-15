@@ -1,12 +1,12 @@
-﻿using Newtonsoft.Json;
+﻿using Limbo.Umbraco.Spa.Json.Resolvers;
+using Limbo.Umbraco.Spa.Models;
+using Newtonsoft.Json;
 using Skybrud.Essentials.Common;
-using Skybrud.Umbraco.Spa.Json.Resolvers;
-using Skybrud.Umbraco.Spa.Models;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Web;
 
-namespace Skybrud.Umbraco.Spa {
+namespace Limbo.Umbraco.Spa {
 
     public partial class SpaRequestHelper {
         

@@ -1,4 +1,4 @@
-﻿namespace Skybrud.Umbraco.Spa.Services  {
+﻿namespace Limbo.Umbraco.Spa.Services  {
 
     /// <summary>
     /// Interface describing a service for handling caching related to the SPA.

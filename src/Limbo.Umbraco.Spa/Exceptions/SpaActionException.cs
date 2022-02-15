@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Reflection;
-using Skybrud.Umbraco.Spa.Models;
-using Skybrud.Umbraco.Spa.Models.Flow;
+using Limbo.Umbraco.Spa.Models;
+using Limbo.Umbraco.Spa.Models.Flow;
 
-namespace Skybrud.Umbraco.Spa.Exceptions {
+namespace Limbo.Umbraco.Spa.Exceptions {
 
     /// <summary>
     /// Wrapper class for exceptions triggered during page life cycle.

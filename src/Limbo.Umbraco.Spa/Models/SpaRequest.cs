@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Routing;
 
-namespace Skybrud.Umbraco.Spa.Models {
+namespace Limbo.Umbraco.Spa.Models {
 
     /// <summary>
     /// Class representing a request via the <c>GetData</c> endpoint in the SPA API.

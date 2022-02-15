@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Skybrud.Essentials.Json.Converters.Enums;
 
-namespace Skybrud.Umbraco.Spa.Models {
+namespace Limbo.Umbraco.Spa.Models {
 
     /// <summary>
     /// Enums class representing the parts of a SPA response.

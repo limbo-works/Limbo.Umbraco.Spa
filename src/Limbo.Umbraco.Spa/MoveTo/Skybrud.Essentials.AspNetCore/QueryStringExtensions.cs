@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 using Skybrud.Essentials.Strings;
 
-namespace Skybrud.Umbraco.Spa.MoveTo.Skybrud.Essentials.AspNetCore {
+namespace Limbo.Umbraco.Spa.MoveTo.Skybrud.Essentials.AspNetCore {
     
     public static class QueryStringExtensions {
         

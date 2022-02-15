@@ -1,8 +1,8 @@
 ﻿using System;
+using Limbo.Umbraco.Spa.Models.Navigation;
 using Newtonsoft.Json;
-using Skybrud.Umbraco.Spa.Models.Navigation;
 
-namespace Skybrud.Umbraco.Spa.Models {
+namespace Limbo.Umbraco.Spa.Models {
 
     /// <summary>
     /// Class representing a SPA data model - the main object returned by a SPA <c>GetData</c> response.

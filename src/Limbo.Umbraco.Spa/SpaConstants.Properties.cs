@@ -1,6 +1,6 @@
 ﻿// ReSharper disable InconsistentNaming
 
-namespace Skybrud.Umbraco.Spa {
+namespace Limbo.Umbraco.Spa {
     
     public static partial class SpaConstants {
         

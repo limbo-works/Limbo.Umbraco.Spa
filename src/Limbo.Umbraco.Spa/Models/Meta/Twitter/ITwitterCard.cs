@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json.Linq;
 
-namespace Skybrud.Umbraco.Spa.Models.Meta.Twitter  {
+namespace Limbo.Umbraco.Spa.Models.Meta.Twitter  {
     
     /// <summary>
     /// Interface representing a Twitter card.

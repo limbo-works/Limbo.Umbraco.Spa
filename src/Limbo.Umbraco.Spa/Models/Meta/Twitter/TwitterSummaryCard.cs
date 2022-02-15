@@ -2,7 +2,7 @@
 
 // ReSharper disable InconsistentNaming
 
-namespace Skybrud.Umbraco.Spa.Models.Meta.Twitter  {
+namespace Limbo.Umbraco.Spa.Models.Meta.Twitter  {
     
     /// <summary>
     /// Class representing a <strong>Summary</strong> Twitter card.

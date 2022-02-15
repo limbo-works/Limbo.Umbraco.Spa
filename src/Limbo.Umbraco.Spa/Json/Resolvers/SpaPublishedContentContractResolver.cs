@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Reflection;
+using Microsoft.AspNetCore.Html;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Skybrud.Essentials.Strings;
-using System.Web;
-using Microsoft.AspNetCore.Html;
 using Skybrud.Essentials.Json.Converters;
+using Skybrud.Essentials.Strings;
 
 #pragma warning disable 1591
 
-namespace Skybrud.Umbraco.Spa.Json.Resolvers {
+namespace Limbo.Umbraco.Spa.Json.Resolvers {
 
     public class SpaPublishedContentContractResolver : DefaultContractResolver {
 

@@ -1,10 +1,10 @@
-﻿using Skybrud.Essentials.Umbraco;
-using Skybrud.Umbraco.Spa.Models;
-using Skybrud.Umbraco.Spa.Models.Meta;
+﻿using Limbo.Umbraco.Spa.Models;
+using Limbo.Umbraco.Spa.Models.Meta;
+using Skybrud.Essentials.Umbraco;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Extensions;
 
-namespace Skybrud.Umbraco.Spa.Factories {
+namespace Limbo.Umbraco.Spa.Factories {
     
     /// <summary>
     /// The SPA's default implementation of the <see cref="ISpaMetaDataFactory"/> interface.

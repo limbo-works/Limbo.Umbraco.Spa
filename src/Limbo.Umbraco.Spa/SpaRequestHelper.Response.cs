@@ -2,13 +2,13 @@
 using System.Linq;
 using System.Net;
 using System.Text;
+using Limbo.Umbraco.Spa.Models;
+using Limbo.Umbraco.Spa.Models.Api;
+using Limbo.Umbraco.Spa.MoveTo.Skybrud.Essentials.AspNetCore;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
-using Skybrud.Umbraco.Spa.Models;
-using Skybrud.Umbraco.Spa.Models.Api;
-using Skybrud.Umbraco.Spa.MoveTo.Skybrud.Essentials.AspNetCore;
 
-namespace Skybrud.Umbraco.Spa {
+namespace Limbo.Umbraco.Spa {
 
     public abstract partial class SpaRequestHelper {
 

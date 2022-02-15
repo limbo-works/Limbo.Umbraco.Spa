@@ -1,4 +1,4 @@
-﻿namespace Skybrud.Umbraco.Spa.Models.Navigation {
+﻿namespace Limbo.Umbraco.Spa.Models.Navigation {
 
     /// <summary>
     /// Class representing the model for the <see cref="SpaApiPart.Navigation"/> part.

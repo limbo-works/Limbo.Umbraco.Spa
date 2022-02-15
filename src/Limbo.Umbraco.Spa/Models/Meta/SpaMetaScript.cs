@@ -1,7 +1,7 @@
 ﻿using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
-namespace Skybrud.Umbraco.Spa.Models.Meta {
+namespace Limbo.Umbraco.Spa.Models.Meta {
     
     /// <summary>
     /// Represents a <c>script</c> HTML element.

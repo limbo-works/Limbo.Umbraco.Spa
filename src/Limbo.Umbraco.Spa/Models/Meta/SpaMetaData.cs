@@ -1,18 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Limbo.Umbraco.Spa.Json.Converters;
+using Limbo.Umbraco.Spa.Models.Meta.Attributes;
+using Limbo.Umbraco.Spa.Models.Meta.OpenGraph;
+using Limbo.Umbraco.Spa.Models.Meta.Twitter;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Skybrud.Essentials.Umbraco;
-using Skybrud.Umbraco.Spa.Json.Converters;
-using Skybrud.Umbraco.Spa.Models.Meta.Attributes;
-using Skybrud.Umbraco.Spa.Models.Meta.OpenGraph;
-using Skybrud.Umbraco.Spa.Models.Meta.Twitter;
 using Umbraco.Cms.Core.Models.PublishedContent;
 
 // ReSharper disable UnusedParameter.Local
 
-namespace Skybrud.Umbraco.Spa.Models.Meta {
+namespace Limbo.Umbraco.Spa.Models.Meta {
     
     /// <summary>
     /// Class representing meta data about a page in Umbraco.

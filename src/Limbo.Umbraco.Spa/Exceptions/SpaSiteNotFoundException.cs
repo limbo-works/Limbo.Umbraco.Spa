@@ -1,6 +1,6 @@
-﻿using Skybrud.Umbraco.Spa.Models;
+﻿using Limbo.Umbraco.Spa.Models;
 
-namespace Skybrud.Umbraco.Spa.Exceptions {
+namespace Limbo.Umbraco.Spa.Exceptions {
 
     /// <summary>
     /// Exception class for when the SPA can't determine the current site.

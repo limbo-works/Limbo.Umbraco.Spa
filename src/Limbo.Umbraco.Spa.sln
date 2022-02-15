@@ -1,9 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27703.2035
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31729.503
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Limbo.Umbraco.Spa", "Limbo.Umbraco.Spa/Limbo.Umbraco.Spa.csproj", "{288B724E-DC12-4DBA-9715-D5D7F0530876}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{B4DED7AC-19A6-4ED9-97C0-EFE13299B049}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Limbo.Umbraco.Spa", "Limbo.Umbraco.Spa\Limbo.Umbraco.Spa.csproj", "{2B66A4EE-80C1-4DE8-B5B7-D3296BBEAAC5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -11,15 +16,15 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{288B724E-DC12-4DBA-9715-D5D7F0530876}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{288B724E-DC12-4DBA-9715-D5D7F0530876}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{288B724E-DC12-4DBA-9715-D5D7F0530876}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{288B724E-DC12-4DBA-9715-D5D7F0530876}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2B66A4EE-80C1-4DE8-B5B7-D3296BBEAAC5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2B66A4EE-80C1-4DE8-B5B7-D3296BBEAAC5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2B66A4EE-80C1-4DE8-B5B7-D3296BBEAAC5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2B66A4EE-80C1-4DE8-B5B7-D3296BBEAAC5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {E9241587-E78D-44DD-9640-9599C714787D}
+		SolutionGuid = {00000000-0000-0000-0000-000000000000}
 	EndGlobalSection
 EndGlobal

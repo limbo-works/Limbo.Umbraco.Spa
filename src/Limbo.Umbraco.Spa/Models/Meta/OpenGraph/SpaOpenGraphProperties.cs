@@ -5,7 +5,7 @@ using Newtonsoft.Json.Linq;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Extensions;
 
-namespace Skybrud.Umbraco.Spa.Models.Meta.OpenGraph {
+namespace Limbo.Umbraco.Spa.Models.Meta.OpenGraph {
 
     /// <summary>
     /// Class representing the Open Graph properties of a page.

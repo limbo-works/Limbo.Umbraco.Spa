@@ -1,14 +1,14 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Limbo.Umbraco.Spa.Factories;
+using Limbo.Umbraco.Spa.Repositories;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using Skybrud.Umbraco.Spa.Factories;
-using Skybrud.Umbraco.Spa.Repositories;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.PublishedCache;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
 
-namespace Skybrud.Umbraco.Spa {
+namespace Limbo.Umbraco.Spa {
     
     /// <summary>
     /// Class used for handling the DI dependencies of the <see cref="SpaRequestHelper"/> class.

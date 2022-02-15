@@ -1,10 +1,10 @@
 ﻿using System;
+using Limbo.Umbraco.Spa.Models.Meta;
 using Newtonsoft.Json;
-using Skybrud.Umbraco.Spa.Models.Meta;
 
 #pragma warning disable 1591
 
-namespace Skybrud.Umbraco.Spa.Json.Converters {
+namespace Limbo.Umbraco.Spa.Json.Converters {
 
     public class SpaMetaDataJsonConverter : JsonConverter {
 

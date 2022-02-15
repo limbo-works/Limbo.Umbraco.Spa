@@ -1,7 +1,7 @@
-﻿using Skybrud.Umbraco.Spa.Models;
-using Skybrud.Umbraco.Spa.Models.Meta;
+﻿using Limbo.Umbraco.Spa.Models;
+using Limbo.Umbraco.Spa.Models.Meta;
 
-namespace Skybrud.Umbraco.Spa.Factories {
+namespace Limbo.Umbraco.Spa.Factories {
 
     /// <summary>
     /// Interface describing a meta data factory.

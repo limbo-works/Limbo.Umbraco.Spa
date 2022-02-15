@@ -10,6 +10,7 @@
     <Company>Limbo</Company>
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © 2022</Copyright>
+    <Title>Limbo SPA</Title>
     <Description>SPA (single page application) package for Umbraco 9.</Description>
   </PropertyGroup>
 

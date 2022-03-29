@@ -307,10 +307,15 @@ namespace Limbo.Umbraco.Spa  {
             }
 
             // Not sure the SPA API is hit for this URL
-            if (url.Contains("/umbraco/dialogs") && int.TryParse(url.Split('=')[1], out result)) return true;
+            if (url.Contains("/umbraco/preview/") && int.TryParse(url.Split('=')[1], out result)) return true;
 
             // Find the ID using REGEX
             Match match = Regex.Match(url.Split('?')[0].TrimEnd('/'), "^/([0-9]+)\\.aspx$");
+            result = match.Success ? match.Groups[1].Value.ToInt32() : 0;
+            if (result > 0) return true;
+            
+            // Find the ID using REGEX
+            match = Regex.Match(url.Split('?')[0].TrimEnd('/'), "^/([0-9]+)$");
             result = match.Success ? match.Groups[1].Value.ToInt32() : 0;
 
             return result > 0;

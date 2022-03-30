@@ -4,16 +4,16 @@
 
 ## Installation
 
-For Umbraco 9, the package is only available via [NuGet](https://www.nuget.org/packages/Limbo.Umbraco.Spa/1.0.0-alpha001):
+For Umbraco 9, the package is only available via [NuGet](https://www.nuget.org/packages/Limbo.Umbraco.Spa/1.0.0-alpha002):
 
 ```
-dotnet add package Limbo.Umbraco.Spa --version 1.0.0-alpha001
+dotnet add package Limbo.Umbraco.Spa --version 1.0.0-alpha002
 ```
 
 or:
 
 ```
-Install-Package Limbo.Umbraco.Spa -Version 1.0.0-alpha001
+Install-Package Limbo.Umbraco.Spa -Version 1.0.0-alpha002
 ```
 
 For older versions of Umbraco, see our older [Skybrud.Umbraco.Spa](https://github.com/skybrud/Skybrud.Umbraco.Spa) package.

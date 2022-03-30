@@ -55,7 +55,10 @@ namespace Limbo.Umbraco.Spa.Models.Api {
         /// <param name="data">The data object.</param>
         public static SpaResponseModel GetError(HttpStatusCode code, string error, object data) {
             return new SpaResponseModel {
-                Meta = { Code = code, Error = error },
+                Meta = new SpaMetaData {
+                    Code = code,
+                    Error = error
+                },
                 Data = data
             };
         }

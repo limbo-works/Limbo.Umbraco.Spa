@@ -7,10 +7,14 @@ using Limbo.Umbraco.Spa.Factories;
 using Limbo.Umbraco.Spa.Models;
 using Limbo.Umbraco.Spa.Models.Flow;
 using Limbo.Umbraco.Spa.Repositories;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Skybrud.Essentials.AspNetCore;
 using Skybrud.Essentials.Strings.Extensions;
 using Umbraco.Cms.Core.Cache;
@@ -18,6 +22,7 @@ using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.PublishedCache;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
+using Umbraco.Extensions;
 
 namespace Limbo.Umbraco.Spa  {
 
@@ -135,6 +140,8 @@ namespace Limbo.Umbraco.Spa  {
                     InitArguments,
                     FindDomainAndCulture,
                     UpdateArguments,
+                    
+                    ValidatePreviewAccess,
 
                     ReadFromCache
 
@@ -367,6 +374,22 @@ namespace Limbo.Umbraco.Spa  {
             
             // Redirect the user to the correct URL
             request.Response = ReturnRedirect(request, string.Join("?", url));
+
+        }
+
+        private bool HasBackofficeIdentity(HttpContext context) {
+
+            var cookieOptions = context.RequestServices
+                .GetRequiredService<IOptionsSnapshot<CookieAuthenticationOptions>>()
+                .Get(global::Umbraco.Cms.Core.Constants.Security.BackOfficeAuthenticationType);
+
+            if (string.IsNullOrWhiteSpace(cookieOptions.Cookie.Name)) return false;
+            if (!context.Request.Cookies.TryGetValue(cookieOptions.Cookie.Name, out string cookie)) return false;
+            if (string.IsNullOrWhiteSpace(cookie)) return false;
+            
+            var unprotected = cookieOptions.TicketDataFormat.Unprotect(cookie);
+            var backOfficeIdentity = unprotected?.Principal.GetUmbracoIdentity();
+            return backOfficeIdentity is { IsAuthenticated: true };
 
         }
 

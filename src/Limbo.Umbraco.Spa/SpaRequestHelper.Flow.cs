@@ -91,6 +91,21 @@ namespace Limbo.Umbraco.Spa {
         }
 
         /// <summary>
+        /// If preview mode is enabled, checks whether the user is authenticated in the Umbraco backoffice. If not,
+        /// <see cref="SpaRequest.Response"/> will be set to a <see cref="HttpStatusCode.Unauthorized"/> error response.
+        /// </summary>
+        /// <param name="request">The current SPA request.</param>
+        protected virtual void ValidatePreviewAccess(SpaRequest request) {
+
+            if (!request.IsPreview) return;
+
+            if (!HasBackofficeIdentity(request.HttpContext)) {
+                request.Response = ReturnError(HttpStatusCode.Unauthorized, "User not authenticated.");
+            }
+            
+        }
+
+        /// <summary>
         /// Virtual method responsible for finding the <see cref="IPublishedContent"/> representing the site node.
         /// </summary>
         /// <param name="request">The current SPA request.</param>

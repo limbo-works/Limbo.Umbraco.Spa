@@ -7,6 +7,7 @@ using Limbo.Umbraco.Spa.Models.Api;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Skybrud.Essentials.AspNetCore;
+using Skybrud.Essentials.Reflection;
 
 namespace Limbo.Umbraco.Spa {
 
@@ -94,7 +95,7 @@ namespace Limbo.Umbraco.Spa {
         /// <returns>An instance of <see cref="ActionResult"/>.</returns>
         protected virtual ActionResult ReturnHtmlError(SpaRequest request, Exception exception) {
 
-            StringBuilder sb = new StringBuilder();
+            StringBuilder sb = new();
 
             sb.AppendLine("<style>");
             sb.AppendLine("body { font: 16px/1.4em Arial, sans-serif; background: #f1f1f1; color: #333; margin: 10px; }");
@@ -102,6 +103,13 @@ namespace Limbo.Umbraco.Spa {
             sb.AppendLine("h3 { margin-bottom: 5px; }");
             sb.AppendLine("th, td { vertical-align: top; padding: 3px; font-size: 12px; }");
             sb.AppendLine("</style>");
+
+            if (Environment.IsDevelopment()) {
+                sb.AppendLine("<h3>Limbo SPA</h3>");
+                sb.AppendLine("<table>\n");
+                sb.AppendLine("<tr><th>Version</th><td>" + ReflectionUtils.GetInformationalVersion(typeof(SpaRequest).Assembly) + "</td></tr>");
+                sb.AppendLine("</table>");
+            }
 
             sb.AppendLine("<h3>HTTP Request</h3>");
             sb.AppendLine("<table>\n");

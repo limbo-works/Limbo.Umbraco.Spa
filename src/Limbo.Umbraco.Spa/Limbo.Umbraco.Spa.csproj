@@ -28,6 +28,7 @@
 
   <!-- Include NuGet dependencies -->
   <ItemGroup>
+    <PackageReference Include="Limbo.MetaData" Version="1.0.0-alpha001" />
     <PackageReference Include="Skybrud.Essentials" Version="1.1.41" />
     <PackageReference Include="Skybrud.Essentials.AspNetCore" Version="1.0.0-alpha003" />
     <PackageReference Include="Skybrud.Essentials.Umbraco" Version="1.0.0-alpha002" />

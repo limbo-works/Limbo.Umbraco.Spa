@@ -67,7 +67,7 @@ namespace Limbo.Umbraco.Spa {
         /// <param name="request">The current SPA request.</param>
         protected virtual void UpdateArguments(SpaRequest request) {
 
-            // If "pageId" or "nodeId" exists, prefer content from that node
+            // If "pageId" exists, prefer content from that node
             if (request.Arguments.PageId > 0) {
                 IPublishedContent c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content.GetById(request.Arguments.PageId);
                 if (c != null) request.Arguments.Url = c.Url();

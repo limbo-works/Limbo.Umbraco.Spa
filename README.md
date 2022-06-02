@@ -18,5 +18,5 @@ Install-Package Limbo.Umbraco.Spa -Version 1.0.0-alpha003
 
 ### Other versions of Umbraco
 
-- **Umbraco 10:** See the [v2/main](https://github.com/limbo-works/Limbo.Umbraco.Spa/tree/v2/main) branch.
-- **Umbraco 8:** See our older [Skybrud.Umbraco.Spa](https://github.com/skybrud/Skybrud.Umbraco.Spa) package.
+- **Umbraco 10:** See the [`v2/main`](https://github.com/limbo-works/Limbo.Umbraco.Spa/tree/v2/main) branch.
+- **Umbraco 8:** See our older [`Skybrud.Umbraco.Spa`](https://github.com/skybrud/Skybrud.Umbraco.Spa) package.

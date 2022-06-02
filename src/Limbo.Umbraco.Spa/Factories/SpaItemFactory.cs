@@ -19,16 +19,6 @@ namespace Limbo.Umbraco.Spa.Factories {
         /// </summary>
         /// <param name="content">The content to be converted into a navigation item.</param>
         /// <param name="request">The current SPA request.</param>
-        /// <returns>An instance of <see cref="ISpaNavigationItem"/> if successful; otherwise, <c>false</c>.</returns>
-        public virtual ISpaNavigationItem CreateNavigationItem(IPublishedContent content, SpaRequest request) {
-            return CreateNavigationItem(content, request, 1, 1);
-        }
-
-        /// <summary>
-        /// Creates a new navigation item for the specified <paramref name="content"/>.
-        /// </summary>
-        /// <param name="content">The content to be converted into a navigation item.</param>
-        /// <param name="request">The current SPA request.</param>
         /// <param name="maxLevels">The maximum level.</param>
         /// <param name="level">The current level.</param>
         /// <returns>An instance of <see cref="ISpaNavigationItem"/> if successful; otherwise, <c>false</c>.</returns>

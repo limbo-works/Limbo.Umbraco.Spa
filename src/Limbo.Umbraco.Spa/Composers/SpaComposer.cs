@@ -1,6 +1,7 @@
 ﻿using Limbo.Umbraco.Spa.Factories;
 using Limbo.Umbraco.Spa.Repositories;
 using Limbo.Umbraco.Spa.Services;
+using Microsoft.Extensions.DependencyInjection;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Events;
@@ -16,12 +17,12 @@ namespace Limbo.Umbraco.Spa.Composers {
         public void Compose(IUmbracoBuilder builder) {
             
             // Register services
-            builder.Services.AddUnique<SpaRequestHelperDependencies>();
+            builder.Services.AddSingleton<SpaRequestHelperDependencies>();
             builder.Services.AddUnique<ISpaCacheService, SpaCacheService>();
             builder.Services.AddUnique<ISpaContentFactory, SpaContentFactory>();
             builder.Services.AddUnique<ISpaMetaDataFactory, SpaMetaDataFactory>();
             builder.Services.AddUnique<ISpaRequestAccessor, SpaRequestAccessor>();
-            builder.Services.AddUnique<SpaDomainRepository>();
+            builder.Services.AddSingleton<SpaDomainRepository>();
             
             // Add notification handlers
             builder.AddNotificationHandler<ContentSavedNotification, SpaCacheNotificationHandler>();

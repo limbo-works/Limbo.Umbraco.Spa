@@ -2,12 +2,12 @@
 
   <PropertyGroup>
     <LangVersion>9.0</LangVersion>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
     <VersionPrefix>1.0.0-alpha003</VersionPrefix>
-    <VersionSuffix Condition="'$(Configuration)'=='Debug'">build$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
+    <VersionSuffix Condition="'$(Configuration)'=='Debug'">$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
     <Company>Limbo</Company>
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © 2022</Copyright>
@@ -32,9 +32,9 @@
     <PackageReference Include="Skybrud.Essentials" Version="1.1.41" />
     <PackageReference Include="Skybrud.Essentials.AspNetCore" Version="1.0.0-alpha003" />
     <PackageReference Include="Skybrud.Essentials.Umbraco" Version="1.0.0-alpha002" />
-    <PackageReference Include="Umbraco.Cms.Core" Version="9.0.0" />
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="9.0.0" />
-    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="9.0.0" />
+    <PackageReference Include="Umbraco.Cms.Core" Version="10.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="10.0.0-rc4" />
+    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="10.0.0-rc4" />
   </ItemGroup>
 
   <!-- Include package icon for NuGet -->

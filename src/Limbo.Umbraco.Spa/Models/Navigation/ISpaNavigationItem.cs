@@ -4,65 +4,65 @@ using Newtonsoft.Json;
 namespace Limbo.Umbraco.Spa.Models.Navigation {
 
     /// <summary>
-    /// Class representing an item in the navigation.
+    /// Interface describing an item in the navigation.
     /// </summary>
-    public class SpaNavigationItem : ISpaNavigationItem {
+    public interface ISpaNavigationItem {
 
         #region Properties
 
         /// <summary>
-        /// Gets or sets the ID of the item.
+        /// Gets the ID of the item.
         /// </summary>
         [JsonProperty("id")]
-        public int Id { get; set; }
+        int Id { get; }
 
         /// <summary>
-        /// Gets or sets the title of the item.
+        /// Gets the title of the item.
         /// </summary>
         [JsonProperty("title")]
-        public string Title { get; set; }
+        public string Title { get; }
 
         /// <summary>
         /// Gets or sets the URL of the item.
         /// </summary>
         [JsonProperty("url")]
-        public string Url { get; set; }
+        public string Url { get; }
 
         /// <summary>
         /// Gets or sets the parent ID of the item.
         /// </summary>
         [JsonProperty("parentId")]
-        public int ParentId { get; set; }
+        public int ParentId { get; }
 
         /// <summary>
         /// Gets or sets the template of the item.
         /// </summary>
         [JsonProperty("template")]
-        public string Template { get; set; }
+        public string Template { get; }
 
         /// <summary>
         /// Gets or sets the culture of the item.
         /// </summary>
         [JsonProperty("culture")]
-        public string Culture { get; set; }
+        public string Culture { get; }
 
         /// <summary>
         /// Gets or sets whether the item has any children.
         /// </summary>
         [JsonProperty("hasChildren")]
-        public bool HasChildren { get; set; }
+        public bool HasChildren { get; }
 
         /// <summary>
         /// Gets or sets whether the item is visible.
         /// </summary>
         [JsonProperty("isVisible")]
-        public bool IsVisible { get; set; }
+        public bool IsVisible { get; }
 
         /// <summary>
         /// Gets or sets the children of the item.
         /// </summary>
         [JsonProperty("children")]
-        public IReadOnlyList<ISpaNavigationItem> Children { get; set; }
+        public IReadOnlyList<ISpaNavigationItem> Children { get; }
 
         #endregion
 

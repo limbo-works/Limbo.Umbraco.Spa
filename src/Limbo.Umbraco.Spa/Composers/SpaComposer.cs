@@ -20,6 +20,7 @@ namespace Limbo.Umbraco.Spa.Composers {
             builder.Services.AddSingleton<SpaRequestHelperDependencies>();
             builder.Services.AddUnique<ISpaCacheService, SpaCacheService>();
             builder.Services.AddUnique<ISpaContentFactory, SpaContentFactory>();
+            builder.Services.AddUnique<ISpaItemFactory, SpaItemFactory>();
             builder.Services.AddUnique<ISpaMetaDataFactory, SpaMetaDataFactory>();
             builder.Services.AddUnique<ISpaRequestAccessor, SpaRequestAccessor>();
             builder.Services.AddSingleton<SpaDomainRepository>();

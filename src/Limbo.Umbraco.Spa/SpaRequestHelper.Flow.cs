@@ -78,7 +78,7 @@ namespace Limbo.Umbraco.Spa {
             if (string.IsNullOrWhiteSpace(request.Arguments.HostName)) return;
 
             // Try get siteId from the domain
-            if (!request.Arguments.IsDefaultPort && TryGetDomain(request.Arguments.HostName, out IDomain domain)) {
+            if (request.Arguments.IsDefaultPort && TryGetDomain(request.Arguments.HostName, out IDomain domain)) {
                 // TODO: Should we set "request.Domain" here?
                 request.Arguments.SiteId = domain.RootContentId ?? -1;
             }

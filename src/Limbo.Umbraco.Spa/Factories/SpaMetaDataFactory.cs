@@ -118,7 +118,7 @@ namespace Limbo.Umbraco.Spa.Factories {
             OpenGraphProperties og = new() {
                 Url = content.Url(mode: UrlMode.Absolute),
                 SiteName = request.Site.Name,
-                Title = content.Name,
+                Title = metaData.Title,
                 Description = metaData.MetaDescription
             };
 

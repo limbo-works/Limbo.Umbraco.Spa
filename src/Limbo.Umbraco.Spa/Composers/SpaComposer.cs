@@ -39,8 +39,8 @@ namespace Limbo.Umbraco.Spa.Composers {
 
     }
 
-    public class SpaCacheNotificationHandler : INotificationHandler<ContentSavedNotification>, INotificationHandler<ContentMovingToRecycleBinNotification>, INotificationHandler<ContentDeletedNotification>  {
-        
+    public class SpaCacheNotificationHandler : INotificationHandler<ContentSavedNotification>, INotificationHandler<ContentMovingToRecycleBinNotification>, INotificationHandler<ContentDeletedNotification> {
+
         private readonly ISpaCacheService _spaCacheService;
 
         public SpaCacheNotificationHandler(ISpaCacheService spaCacheService) {

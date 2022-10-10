@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json.Linq;
+﻿using System.Collections.Generic;
+using Newtonsoft.Json.Linq;
 
 // ReSharper disable once InconsistentNaming
 
@@ -8,6 +9,27 @@ namespace Limbo.Umbraco.Spa {
     /// Various utility methods for woroking with the SPA.
     /// </summary>
     public static class SpaUtils {
+
+        /// <summary>
+        /// Returns whether the specified <paramref name="name"/> matches the name of a special SPA query string parameter.
+        /// </summary>
+        /// <param name="name">The parameter name.</param>
+        /// <returns><c>true</c> if <paramref name="name"/> matches the name of a special SPA query string parameter; otherwise, <c>false</c>.</returns>
+        public static bool IsSpaParameter(string name) {
+            return !string.IsNullOrWhiteSpace(name) && _spaParameters.Contains(name);
+        }
+
+        private static readonly HashSet<string> _spaParameters = new() {
+            "appHost",
+            "appProtocol",
+            "navLevels",
+            "navContext",
+            "parts",
+            "url",
+            "siteId",
+            "pageId",
+            "culture"
+        };
 
         /// <summary>
         /// Various utility methods for woroking with JSON.

@@ -1,7 +1,9 @@
-﻿using Limbo.Umbraco.Spa.Factories;
+﻿using Limbo.Umbraco.Spa.Configuration;
+using Limbo.Umbraco.Spa.Factories;
 using Limbo.Umbraco.Spa.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.PublishedCache;
@@ -14,6 +16,8 @@ namespace Limbo.Umbraco.Spa {
     /// Class used for handling the DI dependencies of the <see cref="SpaRequestHelper"/> class.
     /// </summary>
     public class SpaRequestHelperDependencies {
+
+        private readonly IOptions<SpaConfiguration> _spaConfiguration;
 
         #region Properties
         
@@ -67,6 +71,11 @@ namespace Limbo.Umbraco.Spa {
         /// </summary>
         public ISpaContentFactory ContentFactory { get; }
 
+        /// <summary>
+        /// Gets a reference to the <see cref="SpaConfiguration"/>.
+        /// </summary>
+        public SpaConfiguration Configuration => _spaConfiguration.Value;
+
         #endregion
 
         #region Constructors
@@ -83,7 +92,12 @@ namespace Limbo.Umbraco.Spa {
         /// <param name="publishedSnapshotAccessor"></param>
         /// <param name="domainRepository"></param>
         /// <param name="contentFactory"></param>
-        public SpaRequestHelperDependencies(IWebHostEnvironment environment, IUmbracoContextAccessor umbracoContextAccessor, ServiceContext serviceContext, AppCaches appCaches, ILogger<SpaRequestHelper> logger, IVariationContextAccessor variationContextAccessor, IPublishedSnapshotAccessor publishedSnapshotAccessor, SpaDomainRepository domainRepository, ISpaContentFactory contentFactory) {
+        /// <param name="spaConfiguration"></param>
+        public SpaRequestHelperDependencies(IWebHostEnvironment environment, IUmbracoContextAccessor umbracoContextAccessor,
+            ServiceContext serviceContext, AppCaches appCaches, ILogger<SpaRequestHelper> logger,
+            IVariationContextAccessor variationContextAccessor, IPublishedSnapshotAccessor publishedSnapshotAccessor,
+            SpaDomainRepository domainRepository, ISpaContentFactory contentFactory, IOptions<SpaConfiguration> spaConfiguration) {
+            _spaConfiguration = spaConfiguration;
             Environment = environment;
             UmbracoContextAccessor = umbracoContextAccessor;
             Services = serviceContext;

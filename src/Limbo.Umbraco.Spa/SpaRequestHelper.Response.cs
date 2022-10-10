@@ -180,7 +180,7 @@ namespace Limbo.Umbraco.Spa {
             if (data is SpaDataModel dataModel) dataModel.Meta.StatusCode = statusCode;
 
             // Overwrite the status code to make the frontenders happy
-            if (OverwriteStatusCodes) {
+            if (Configuration.OverwriteStatusCodes) {
                 switch (statusCode) {
                     case HttpStatusCode.NotFound:
                     case HttpStatusCode.TemporaryRedirect:

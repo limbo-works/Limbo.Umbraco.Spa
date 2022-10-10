@@ -1,9 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Web;
+using Limbo.Umbraco.Spa.Configuration;
+using Limbo.Umbraco.Spa.Extensions;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Primitives;
 using Skybrud.Essentials.AspNetCore;
 using Skybrud.Essentials.Enums;
+
+// ReSharper disable VirtualMemberCallInConstructor
 
 namespace Limbo.Umbraco.Spa.Models {
 
@@ -174,15 +182,17 @@ namespace Limbo.Umbraco.Spa.Models {
             // Parse the requests "parts"
             Parts = GetParts(r.Query["parts"]);
 
-            // Get the URL and URI of the requested page
+            // Get the URL of the requested page
             Url = r.Query["url"];
-            Uri = new Uri($"{Protocol}://{HostName}{Url}");
+            QueryString = GetClientQueryString(r, helper);
+
+            // Calculate the URI of the requested page
+            Uri = GetCurrentUri(r, helper);
 
             // Parse the "siteId" and "pageId" parameters
             SiteId = r.Query.GetInt32("siteId", -1);
             PageId = r.Query.GetInt32("pageId", -1);
 
-            QueryString = r.Query;
 
             Culture = r.Query["culture"];
 
@@ -208,6 +218,57 @@ namespace Limbo.Umbraco.Spa.Models {
         #region Member methods
 
         /// <summary>
+        /// Returns the client-side query string based on the specified <paramref name="request"/> and current SPA configuration.
+        /// </summary>
+        /// <param name="request">A reference to the current <see cref="HttpRequest"/>.</param>
+        /// <param name="helper">A reference to the current <see cref="SpaRequestHelper"/>.</param>
+        /// <returns>An instance of <see cref="IQueryCollection"/> representing the client-side query string.</returns>
+        protected virtual IQueryCollection GetClientQueryString(HttpRequest request, SpaRequestHelper helper) {
+
+            switch (helper.Configuration.QueryStringMode) {
+
+                case SpaQueryStringMode.Encode:
+                    request.Query.TryGetValue("query", out StringValues values);
+                    return new QueryCollection(QueryHelpers.ParseQuery(HttpUtility.UrlDecode(values)));
+
+                case SpaQueryStringMode.Legacy:
+                    return request.Query
+                        .Where(x => !SpaUtils.IsSpaParameter(x.Key))
+                        .ToDictionary(x => x.Key, x => x.Value)
+                        .ToQueryCollection();
+
+                case SpaQueryStringMode.Auto:
+                default:
+                    if (!request.Query.TryGetValue("query", out values)) {
+                        return request.Query
+                            .Where(x => !SpaUtils.IsSpaParameter(x.Key))
+                            .ToDictionary(x => x.Key, x => x.Value)
+                            .ToQueryCollection();
+                    }
+                    return new QueryCollection(QueryHelpers.ParseQuery(HttpUtility.UrlDecode(values)));
+
+            }
+
+        }
+
+        /// <summary>
+        /// Calculates the URL of the requested page. In a SPA context, this is not the same as the requested URI.
+        /// </summary>
+        /// <param name="request">A reference to the current <see cref="HttpRequest"/>.</param>
+        /// <param name="helper">A reference to the current <see cref="SpaRequestHelper"/>.</param>
+        /// <returns>An instance of <see cref="System.Uri"/> representing the URI of the current page.</returns>
+        protected virtual Uri GetCurrentUri(HttpRequest request, SpaRequestHelper helper) {
+
+            UriBuilder uriBuilder = new($"{Protocol}://{HostName}{Url}");
+            if (!IsDefaultPort) uriBuilder.Port = PortNumber;
+
+            uriBuilder.Query = QueryString.ToUrlEncodedString();
+
+            return uriBuilder.Uri;
+
+        }
+
+        /// <summary>
         /// Converts the specified string of <paramref name="parts"/> to <see cref="List{SpaApiPart}"/>.
         /// </summary>
         /// <param name="parts">The string with the parts.</param>
@@ -217,8 +278,8 @@ namespace Limbo.Umbraco.Spa.Models {
             // No parts means all parts
             if (string.IsNullOrWhiteSpace(parts)) return new List<SpaApiPart> { SpaApiPart.Content, SpaApiPart.Navigation, SpaApiPart.Site };
 
-            List<SpaApiPart> temp = new List<SpaApiPart>();
-            foreach (string item in parts.Split(new[] {','}, StringSplitOptions.RemoveEmptyEntries)) {
+            List<SpaApiPart> temp = new();
+            foreach (string item in parts.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
                 if (EnumUtils.TryParseEnum(item, out SpaApiPart part)) temp.Add(part);
             }
 

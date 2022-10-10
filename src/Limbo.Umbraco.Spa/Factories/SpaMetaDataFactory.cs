@@ -6,7 +6,7 @@ using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Extensions;
 
 namespace Limbo.Umbraco.Spa.Factories {
-    
+
     /// <summary>
     /// The SPA's default implementation of the <see cref="ISpaMetaDataFactory"/> interface.
     /// </summary>

@@ -26,7 +26,7 @@ namespace Limbo.Umbraco.Spa.Models {
         /// <c>appSiteId</c> parameters in the query string.
         /// </summary>
         public int SiteId { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the URL of the requested page.
         /// </summary>
@@ -44,7 +44,7 @@ namespace Limbo.Umbraco.Spa.Models {
 
         /// <summary>
         /// Gets a list of the requested <see cref="SpaApiPart"/> based on the <c>parts</c> query string parameter. If
-        /// empty or not specified specified, all parts are assumed. 
+        /// empty or not specified specified, all parts are assumed.
         /// </summary>
         public List<SpaApiPart> Parts { get; set; }
 
@@ -154,7 +154,7 @@ namespace Limbo.Umbraco.Spa.Models {
 
             // Get the URI of the current request
             Uri uri = r.GetUri();
-            
+
             // Get the host name from the query
             string appHost = r.Query["appHost"];
 
@@ -213,7 +213,7 @@ namespace Limbo.Umbraco.Spa.Models {
         /// <param name="parts">The string with the parts.</param>
         /// <returns>An an instance of <see cref="List{SpaApiPart}"/> containing each <see cref="SpaApiPart"/> specified in <paramref name="parts"/>.</returns>
         private static List<SpaApiPart> GetParts(string parts = "") {
-            
+
             // No parts means all parts
             if (string.IsNullOrWhiteSpace(parts)) return new List<SpaApiPart> { SpaApiPart.Content, SpaApiPart.Navigation, SpaApiPart.Site };
 

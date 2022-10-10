@@ -1,7 +1,7 @@
 ﻿using Limbo.Umbraco.Spa.Models;
 
 namespace Limbo.Umbraco.Spa {
-    
+
     /// <summary>
     /// Interface describing a way to access the current <see cref="SpaRequest"/>.
     /// </summary>

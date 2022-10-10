@@ -1,7 +1,7 @@
 ﻿using System;
 using Limbo.Umbraco.Spa.Models;
 
-namespace Limbo.Umbraco.Spa.Exceptions  {
+namespace Limbo.Umbraco.Spa.Exceptions {
 
     /// <summary>
     /// Class representing a basic exception triggered while processing a <see cref="SpaRequest"/>.

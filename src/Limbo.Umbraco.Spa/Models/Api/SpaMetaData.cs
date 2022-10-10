@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 
 namespace Limbo.Umbraco.Spa.Models.Api {
-    
+
     /// <summary>
     /// Class representing the meta data of a JSON response.
     /// </summary>

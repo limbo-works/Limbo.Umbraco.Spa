@@ -82,7 +82,7 @@ namespace Limbo.Umbraco.Spa.Models.Navigation {
         protected SpaNavigationItem(IPublishedContent content, int levels = 1, int levelcount = 1) {
 
             IPublishedContent[] children = content.Children(x => x.TemplateId > 0 && x.IsVisible()).ToArray();
-            
+
             Id = content.Id;
             Title = content.Name;
             Url = content.Url();

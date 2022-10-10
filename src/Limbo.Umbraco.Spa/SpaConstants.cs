@@ -13,7 +13,7 @@ namespace Limbo.Umbraco.Spa {
         /// Gets the prefix used for micro caching.
         /// </summary>
         public const string CachePrefix = "SpaMicroCache-";
-        
+
         /// <summary>
         /// Gets a reference to the <strong>418 I'm a teapot</strong> status code as it isn't available in <see cref="HttpStatusCode"/>.
         /// </summary>

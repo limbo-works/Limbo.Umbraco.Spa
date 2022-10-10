@@ -78,7 +78,7 @@ namespace Limbo.Umbraco.Spa.Models {
         /// </summary>
         /// <param name="site">An instance of <see cref="IPublishedContent"/> representing the site node.</param>
         public SpaSiteModel(IPublishedContent site) {
-            
+
             // Site
             Site = site ?? throw new ArgumentNullException(nameof(site));
             Id = site.Id;
@@ -95,7 +95,7 @@ namespace Limbo.Umbraco.Spa.Models {
         /// <param name="site">An instance of <see cref="IPublishedContent"/> representing the site node.</param>
         /// <param name="culture">An instance of <see cref="IPublishedContent"/> representing the culture node.</param>
         public SpaSiteModel(IPublishedContent site, IPublishedContent culture) {
-            
+
             // Site
             Site = site ?? throw new ArgumentNullException(nameof(site));
             Id = site.Id;

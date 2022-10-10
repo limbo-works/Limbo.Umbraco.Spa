@@ -22,7 +22,7 @@ namespace Limbo.Umbraco.Spa.Composers {
             builder.Services.AddUnique<ISpaMetaDataFactory, SpaMetaDataFactory>();
             builder.Services.AddUnique<ISpaRequestAccessor, SpaRequestAccessor>();
             builder.Services.AddUnique<SpaDomainRepository>();
-            
+
             // Add notification handlers
             builder.AddNotificationHandler<ContentSavedNotification, SpaCacheNotificationHandler>();
             builder.AddNotificationHandler<ContentMovingToRecycleBinNotification, SpaCacheNotificationHandler>();
@@ -39,7 +39,7 @@ namespace Limbo.Umbraco.Spa.Composers {
         public SpaCacheNotificationHandler(ISpaCacheService spaCacheService) {
             _spaCacheService = spaCacheService;
         }
-     
+
         public void Handle(ContentSavedNotification notification) {
             _spaCacheService.ClearAll();
         }

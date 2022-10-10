@@ -9,7 +9,7 @@ using Umbraco.Cms.Core.Web;
 namespace Limbo.Umbraco.Spa {
 
     public partial class SpaRequestHelper {
-        
+
         /// <summary>
         /// Virtual method for getting the <see cref="IPublishedContent"/> for the specified <paramref name="request"/>.
         /// </summary>
@@ -22,12 +22,12 @@ namespace Limbo.Umbraco.Spa {
             // Return NULL if we dont have an Umbraco context
             if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext umbracoContext)) return null;
 
-            int nodeId = request.Arguments.PageId; 
+            int nodeId = request.Arguments.PageId;
             string url = request.Arguments.Url;
 
             // If the current domain specifies a path, we remove that from the path of the current request
             if (request.Domain != null && request.Domain.Uri.AbsolutePath.Length > 1) url = url.Substring(request.Domain.Uri.AbsolutePath.Length);
-            
+
             // Attempt to get content item by either it's numeric ID or URL
             return nodeId > 0 ? umbracoContext.Content.GetById(nodeId) : umbracoContext.Content.GetByRoute(request.Site.Id + url, culture: request.CultureInfo.Name);
 
@@ -53,10 +53,10 @@ namespace Limbo.Umbraco.Spa {
 
             // Return NULL if we dont have an Umbraco context
             if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext umbracoContext)) return null;
-            
+
             // Attemp to get the culture ID from the URL of the current request
             int contentId = GetCultureIdFromUrl(request);
-            
+
             // Get the IPublishedContent matching "contentId"
             return contentId > 0 ? umbracoContext.Content.GetById(contentId) : null;
 
@@ -70,13 +70,13 @@ namespace Limbo.Umbraco.Spa {
         /// <returns><c>true</c> if a matching domain was found, otherwise <c>false</c>.</returns>
         protected virtual bool TryGetDomain(string domainName, out IDomain domain) {
 
-	        // TODO: Should we validate the domain name?
+            // TODO: Should we validate the domain name?
 
-	        domain = Services.DomainService.GetByName(domainName);
+            domain = Services.DomainService.GetByName(domainName);
 
-	        return domain != null;
+            return domain != null;
 
-	    }
+        }
 
         /// <summary>
         /// Serializes the specified <paramref name="data"/> into a JSON string.

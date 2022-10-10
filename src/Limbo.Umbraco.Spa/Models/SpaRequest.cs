@@ -135,7 +135,7 @@ namespace Limbo.Umbraco.Spa.Models {
         /// Gets a reference to the domain of the request.
         /// </summary>
         public DomainAndUri Domain { get; set; }
-        
+
         /// <summary>
         /// Gets a reference to the culture of the request.
         /// </summary>
@@ -153,7 +153,7 @@ namespace Limbo.Umbraco.Spa.Models {
             HttpContext = context ?? throw new ArgumentNullException(nameof(context));
             Stopwatch = Stopwatch.StartNew();
         }
-        
+
         #endregion
 
     }

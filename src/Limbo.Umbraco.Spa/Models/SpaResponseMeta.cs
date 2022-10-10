@@ -2,7 +2,7 @@
 using Newtonsoft.Json;
 
 namespace Limbo.Umbraco.Spa.Models {
-    
+
     /// <summary>
     /// Class with meta data about the SPA response.
     /// </summary>
@@ -13,7 +13,7 @@ namespace Limbo.Umbraco.Spa.Models {
         /// </summary>
         [JsonProperty("code")]
         public HttpStatusCode StatusCode { get; set; }
-        
+
         /// <summary>
         /// Initializes a new instance based on <see cref="HttpStatusCode"/>.
         /// </summary>

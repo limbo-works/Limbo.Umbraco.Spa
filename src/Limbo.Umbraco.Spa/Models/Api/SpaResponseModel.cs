@@ -2,20 +2,20 @@
 using Newtonsoft.Json;
 
 namespace Limbo.Umbraco.Spa.Models.Api {
-    
+
     /// <summary>
     /// Class representing the model of a SPA response.
     /// </summary>
     public class SpaResponseModel {
 
         #region Properties
-        
+
         /// <summary>
         /// Gets or sets the meta data for the response.
         /// </summary>
         [JsonProperty(PropertyName = "meta")]
         public SpaMetaData Meta { get; set; }
-        
+
         /// <summary>
         /// Gets or sets the data object.
         /// </summary>
@@ -23,13 +23,13 @@ namespace Limbo.Umbraco.Spa.Models.Api {
         public object Data { get; set; }
 
         #endregion
-        
+
         #region Constructors
 
         #endregion
 
         #region Static methods
-        
+
         /// <summary>
         /// Creates a new error response with the specified error message.
         /// </summary>

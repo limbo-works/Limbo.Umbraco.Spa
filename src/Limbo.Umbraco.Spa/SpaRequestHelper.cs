@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Net;
 using System.Net.Http;
 using System.Text.RegularExpressions;
+using Limbo.Umbraco.Spa.Configuration;
 using Limbo.Umbraco.Spa.Exceptions;
 using Limbo.Umbraco.Spa.Factories;
 using Limbo.Umbraco.Spa.Models;
@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Skybrud.Essentials.AspNetCore;
 using Skybrud.Essentials.Strings.Extensions;
+using Skybrud.Umbraco.Redirects.Services;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.PublishedCache;
@@ -53,10 +54,10 @@ namespace Limbo.Umbraco.Spa  {
         /// </summary>
         protected AppCaches AppCaches { get; }
 
-        ///// <summary>
-        ///// Gets a reference to the redirects service.
-        ///// </summary>
-        //protected IRedirectsService RedirectsService { get; }
+        /// <summary>
+        /// Gets a reference to the redirects service.
+        /// </summary>
+        protected IRedirectsService RedirectsService { get; }
 
         /// <summary>
         /// Gets a reference to Umbraco's logger.
@@ -84,13 +85,9 @@ namespace Limbo.Umbraco.Spa  {
         public ISpaContentFactory ContentFactory { get; }
 
         /// <summary>
-        /// Gets whether the helper should overwrite the status code of responses returned by the helper. Default is <c>true</c>.
-        ///
-        /// When enabled, status codes like <see cref="HttpStatusCode.MovedPermanently"/>,
-        /// <see cref="HttpStatusCode.TemporaryRedirect"/> and <see cref="HttpStatusCode.NotFound"/> will be set to
-        /// <see cref="HttpStatusCode.OK"/>.
+        /// Gets a reference to the <see cref="SpaConfiguration"/>.
         /// </summary>
-        public bool OverwriteStatusCodes { get; set; }
+        public SpaConfiguration Configuration { get; }
 
         #endregion
 
@@ -100,20 +97,19 @@ namespace Limbo.Umbraco.Spa  {
         /// Initializes a new helper instance.
         /// </summary>
         protected SpaRequestHelper(SpaRequestHelperDependencies dependencies) {
-            
+
             // Set dependencies
             Environment = dependencies.Environment;
             UmbracoContextAccessor = dependencies.UmbracoContextAccessor;
             Services = dependencies.Services;
             AppCaches = dependencies.AppCaches;
             Logger = dependencies.Logger;
+            RedirectsService = dependencies.RedirectsService;
             VariationContextAccessor = dependencies.VariationContextAccessor;
             PublishedSnapshotAccessor = dependencies.PublishedSnapshotAccessor;
             DomainRepository = dependencies.DomainRepository;
             ContentFactory = dependencies.ContentFactory;
-            
-            // Default options
-            OverwriteStatusCodes = true;
+            Configuration = dependencies.Configuration;
 
         }
 

@@ -1,9 +1,14 @@
 ﻿using System;
 using System.Globalization;
 using System.Net;
+using System.Web;
 using Limbo.Umbraco.Spa.Constants;
 using Limbo.Umbraco.Spa.Exceptions;
 using Limbo.Umbraco.Spa.Models;
+using Skybrud.Essentials.Strings.Extensions;
+using Skybrud.Umbraco.Redirects.Extensions;
+using Skybrud.Umbraco.Redirects.Models;
+using Skybrud.Umbraco.Redirects.Models.Outbound;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Services;
@@ -293,22 +298,27 @@ namespace Limbo.Umbraco.Spa {
         /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
         protected virtual bool HandleSkybrudRedirect(SpaRequest request) {
 
-            return false;
+            // Get the decoded URL of the request
+            string requestUrl = request.Url.UrlDecode();
 
-            //// Look for a global Skybrud redirect
-            //RedirectItem redirect = RedirectsService.GetRedirectByUrl(0, HttpUtility.UrlDecode(request.Url));
+            // Look for a global Skybrud redirect
+            IRedirect redirect = RedirectsService.GetRedirectByUrl(Guid.Empty, requestUrl);
 
-            //// If nothing is found at this point, look for a site specific Skybrud redirect
-            //if (request.SiteId > 0 && redirect == null) {
-            //    redirect = RedirectsService.GetRedirectByUrl(request.SiteId, HttpUtility.UrlDecode(request.Url));
-            //}
+            // If nothing is found at this point, look for a site specific Skybrud redirect
+            if (request.SiteId > 0 && redirect == null) {
+                redirect = RedirectsService.GetRedirectByUrl(request.Site.Key, HttpUtility.UrlDecode(request.Url));
+            }
 
-            //if (redirect == null) return false;
+            if (redirect == null) return false;
 
-            //// Return a redirect response based on the Skybrud redirect
-            //request.Response = ReturnRedirect(request, redirect.LinkUrl, redirect.IsPermanent);
+            // Calculate the current URL of the destination. If query string forwarding is enabled, this then also
+            // involves merging the two query strings
+            string destinationUrl = RedirectsService.GetDestinationUrl(redirect, request.Arguments.Uri);
 
-            //return true;
+            // Return a redirect response based on the Skybrud redirect
+            request.Response = ReturnRedirect(request, destinationUrl, redirect.IsPermanent);
+
+            return true;
 
         }
 
@@ -339,13 +349,13 @@ namespace Limbo.Umbraco.Spa {
         /// <param name="request">The current request.</param>
         protected virtual void HandleOutboundRedirects(SpaRequest request) {
 
-            //// Get the outbound URL from the current page (if set)
-            //OutboundRedirect redirect = request.Content?.GetOutboundRedirect();
+            // Get the outbound URL from the current page (if set)
+            IOutboundRedirect redirect = request.Content?.GetOutboundRedirect();
+            if (redirect is not { HasDestination: true }) return;
 
-            //// If the redirect is valid, we'll set the response to return a redirect
-            //if (redirect != null && redirect.HasDestination) {
-            //    request.Response = ReturnRedirect(request, redirect.Destination.Url, redirect.IsPermanent);
-            //}
+            // If the redirect is valid, we'll set the response to return a redirect
+            string destinationUrl = RedirectsService.GetDestinationUrl(redirect, request.Arguments.Uri);
+            request.Response = ReturnRedirect(request, destinationUrl, redirect.IsPermanent);
 
         }
 

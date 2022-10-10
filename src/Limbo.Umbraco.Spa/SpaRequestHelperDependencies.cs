@@ -4,6 +4,7 @@ using Limbo.Umbraco.Spa.Repositories;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Skybrud.Umbraco.Redirects.Services;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.PublishedCache;
@@ -41,10 +42,10 @@ namespace Limbo.Umbraco.Spa {
         /// </summary>
         public AppCaches AppCaches { get; }
 
-        ///// <summary>
-        ///// Gets a reference to the redirects service.
-        ///// </summary>
-        //protected IRedirectsService RedirectsService { get; }
+        /// <summary>
+        /// Gets a reference to the redirects service.
+        /// </summary>
+        public IRedirectsService RedirectsService { get; }
 
         /// <summary>
         /// Gets a reference to Umbraco's logger.
@@ -87,6 +88,7 @@ namespace Limbo.Umbraco.Spa {
         /// <param name="umbracoContextAccessor"></param>
         /// <param name="serviceContext"></param>
         /// <param name="appCaches"></param>
+        /// <param name="redirectsService"></param>
         /// <param name="logger"></param>
         /// <param name="variationContextAccessor"></param>
         /// <param name="publishedSnapshotAccessor"></param>
@@ -95,13 +97,15 @@ namespace Limbo.Umbraco.Spa {
         /// <param name="spaConfiguration"></param>
         public SpaRequestHelperDependencies(IWebHostEnvironment environment, IUmbracoContextAccessor umbracoContextAccessor,
             ServiceContext serviceContext, AppCaches appCaches, ILogger<SpaRequestHelper> logger,
-            IVariationContextAccessor variationContextAccessor, IPublishedSnapshotAccessor publishedSnapshotAccessor,
-            SpaDomainRepository domainRepository, ISpaContentFactory contentFactory, IOptions<SpaConfiguration> spaConfiguration) {
+            IRedirectsService redirectsService, IVariationContextAccessor variationContextAccessor,
+            IPublishedSnapshotAccessor publishedSnapshotAccessor, SpaDomainRepository domainRepository,
+            ISpaContentFactory contentFactory, IOptions<SpaConfiguration> spaConfiguration) {
             _spaConfiguration = spaConfiguration;
             Environment = environment;
             UmbracoContextAccessor = umbracoContextAccessor;
             Services = serviceContext;
             AppCaches = appCaches;
+            RedirectsService = redirectsService;
             Logger = logger;
             VariationContextAccessor = variationContextAccessor;
             PublishedSnapshotAccessor = publishedSnapshotAccessor;

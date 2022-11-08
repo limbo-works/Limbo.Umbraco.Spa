@@ -308,7 +308,7 @@ namespace Limbo.Umbraco.Spa {
             SpaResponseModel body = SpaResponseModel.GetError(statusCode, "Page has moved", data);
 
             // Overwrite the status code to make the frontenders happy
-            statusCode = OverwriteStatusCodes ? HttpStatusCode.OK : SpaConstants.Teapot;
+            statusCode = Configuration.OverwriteStatusCodes ? HttpStatusCode.OK : SpaConstants.Teapot;
 
             // Generate the response
             return CreateSpaResponse(statusCode, body);

@@ -56,7 +56,7 @@ namespace Limbo.Umbraco.Spa.Factories {
         /// <param name="request">The current request.</param>
         /// <returns>The browser title.</returns>
         public virtual string GetTitle(SpaMetaData metaData, IPublishedContent content, SpaRequest request) {
-            return $"{GetMetaTitle(metaData, content, request)} - {request.Site.Name}";
+            return $"{GetMetaTitle(metaData, content, request)} - {request.SiteModel?.Name ?? request.Site.Name}";
         }
 
         /// <summary>

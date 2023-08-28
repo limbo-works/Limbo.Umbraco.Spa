@@ -446,11 +446,11 @@ namespace Limbo.Umbraco.Spa {
             // Skip if caching is disabled
             if (request.Arguments.EnableCaching == false) return;
 
-            // Attempt to get the data model from the runtime cache
-            request.DataModel = AppCaches.RuntimeCache.Get(request.Arguments.CacheKey) as SpaDataModel;
+            // Attempt to get the cached model from the runtime cache
+            if (AppCaches.RuntimeCache.Get(request.Arguments.CacheKey) is not SpaCachedModel cached) return;
 
-            // Did we get a model?
-            if (request.DataModel == null) return;
+            // Update the data model with the model from the cached
+            request.DataModel = cached.Data;
 
             // Update the data model with properties specific to this request
             request.DataModel.ExecuteTimeMs = request.Stopwatch.ElapsedMilliseconds;
@@ -459,6 +459,8 @@ namespace Limbo.Umbraco.Spa {
             // Update the status code based on the cached model (eg. 404)
             request.ResponseStatusCode = request.DataModel.Meta.StatusCode;
 
+            // Update the culture info of the current request
+            request.CultureInfo = cached.CultureInfo;
 
         }
 
@@ -486,7 +488,7 @@ namespace Limbo.Umbraco.Spa {
 
             if (request.Arguments.EnableCaching == false) return;
 
-            AppCaches.RuntimeCache.Insert(request.Arguments.CacheKey, () => request.DataModel, TimeSpan.FromSeconds(60));
+            AppCaches.RuntimeCache.Insert(request.Arguments.CacheKey, () => new SpaCachedModel(request.DataModel, request.CultureInfo), TimeSpan.FromSeconds(60));
 
         }
 

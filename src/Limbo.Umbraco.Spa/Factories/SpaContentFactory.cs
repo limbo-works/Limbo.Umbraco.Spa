@@ -10,17 +10,10 @@ namespace Limbo.Umbraco.Spa.Factories {
 
         /// <inheritdoc/>
         public SpaContentModel CreateContentModel(IPublishedContent content, PublishedValueFallback publishedValueFallback, SpaRequest request) {
-
-            switch (request.Content) {
-
-                case PublishedContentModel pcm:
-                    return new SpaContentModel(pcm, publishedValueFallback);
-
-                default:
-                    return null;
-
-            }
-
+            return request.Content switch {
+                PublishedContentModel pcm => new SpaContentModel(pcm, publishedValueFallback),
+                _ => null
+            };
         }
 
     }

@@ -22,7 +22,7 @@ namespace Limbo.Umbraco.Spa.Models.Flow {
         /// </summary>
         /// <param name="actions">The actions that should make up the action group.</param>
         public SpaActionGroup(params Action<SpaRequest>[] actions) {
-            Run = r => true;
+            Run = _ => true;
             Actions = actions;
         }
 

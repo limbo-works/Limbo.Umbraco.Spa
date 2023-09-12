@@ -26,10 +26,10 @@ namespace Limbo.Umbraco.Spa {
             string url = request.Arguments.Url;
 
             // If the current domain specifies a path, we remove that from the path of the current request
-            if (request.Domain != null && request.Domain.Uri.AbsolutePath.Length > 1) url = url.Substring(request.Domain.Uri.AbsolutePath.Length);
+            if (request.Domain is { Uri: { AbsolutePath: { Length: > 1 } } }) url = url[request.Domain.Uri.AbsolutePath.Length..];
 
             // Attempt to get content item by either it's numeric ID or URL
-            return nodeId > 0 ? umbracoContext.Content.GetById(nodeId) : umbracoContext.Content.GetByRoute(request.Site.Id + url, culture: request.CultureInfo.Name);
+            return nodeId > 0 ? umbracoContext.Content?.GetById(nodeId) : umbracoContext.Content?.GetByRoute($"{request.Site.Id}{url}", culture: request.CultureInfo.Name);
 
         }
 
@@ -58,7 +58,7 @@ namespace Limbo.Umbraco.Spa {
             int contentId = GetCultureIdFromUrl(request);
 
             // Get the IPublishedContent matching "contentId"
-            return contentId > 0 ? umbracoContext.Content.GetById(contentId) : null;
+            return contentId > 0 ? umbracoContext.Content?.GetById(contentId) : null;
 
         }
 
@@ -72,7 +72,7 @@ namespace Limbo.Umbraco.Spa {
 
 	        // TODO: Should we validate the domain name?
 
-	        domain = Services.DomainService.GetByName(domainName);
+	        domain = Services.DomainService!.GetByName(domainName);
 
 	        return domain != null;
 

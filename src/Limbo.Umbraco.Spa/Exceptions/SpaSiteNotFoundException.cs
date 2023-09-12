@@ -14,9 +14,7 @@ namespace Limbo.Umbraco.Spa.Exceptions {
         /// </summary>
         /// <param name="request">The current SPA request.</param>
         /// <param name="message">The message of the exception.</param>
-        public SpaSiteNotFoundException(SpaRequest request, string message) : base(request, message) {
-
-        }
+        public SpaSiteNotFoundException(SpaRequest request, string message) : base(request, message) { }
 
         #endregion
 

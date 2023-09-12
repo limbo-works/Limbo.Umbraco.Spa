@@ -21,7 +21,7 @@ namespace Limbo.Umbraco.Spa.Services {
         /// <summary>
         /// Clears all caches related to the SPA.
         /// </summary>
-        public void ClearAll() {
+        public virtual void ClearAll() {
 
             // Change the content GUID so the frontend knows the content has been updated
             SpaEnvironment.ContentGuid = Guid.NewGuid();

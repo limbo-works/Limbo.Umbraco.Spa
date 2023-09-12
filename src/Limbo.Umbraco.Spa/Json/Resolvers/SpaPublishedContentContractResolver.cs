@@ -12,12 +12,6 @@ namespace Limbo.Umbraco.Spa.Json.Resolvers {
 
     public class SpaPublishedContentContractResolver : DefaultContractResolver {
 
-        #region Constructors
-
-        public SpaPublishedContentContractResolver() { }
-
-        #endregion
-
         #region Member methods
 
         protected virtual bool ShouldSerialize(MemberInfo member, JsonProperty property) {
@@ -77,36 +71,20 @@ namespace Limbo.Umbraco.Spa.Json.Resolvers {
             JsonProperty property = base.CreateProperty(member, memberSerialization);
 
             // Should we serialize the property?
-			property.ShouldSerialize = instance => ShouldSerialize(member, property);
+			property.ShouldSerialize = _ => ShouldSerialize(member, property);
 
             // Make sure the property names are in lower camel case
             property.PropertyName = StringUtils.ToCamelCase(property.PropertyName);
 
             // Overwrite the order of certain properties
-            switch (member.Name) {
-
-                case "Id":
-                    property.Order = -99;
-                    break;
-
-                case "Key":
-                    property.Order = -98;
-                    break;
-
-                case "Name":
-                    property.Order = -97;
-                    break;
-
-                case "Level":
-                    property.Order = -96;
-                    break;
-
-                case "Url":
-                    property.Order = -95;
-                    break;
-
-            }
-
+            property.Order = member.Name switch {
+                "Id" => -99,
+                "Key" => -98,
+                "Name" => -97,
+                "Level" => -96,
+                "Url" => -95,
+                _ => property.Order
+            };
 
             return property;
         }

@@ -367,7 +367,7 @@ namespace Limbo.Umbraco.Spa  {
             if (!url[0].EndsWith("/")) return;
 
             // Remove the trailing slash
-            url[0] = url[0].Substring(0, url[0].Length - 1);
+            url[0] = url[0][..^1];
 
             // Redirect the user to the correct URL
             request.Response = ReturnRedirect(request, string.Join("?", url));

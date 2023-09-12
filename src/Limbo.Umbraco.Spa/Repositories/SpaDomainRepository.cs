@@ -45,7 +45,7 @@ namespace Limbo.Umbraco.Spa.Repositories {
             if (nodeId <= 0) return null;
 
             // get the domains on that node
-            var domains = snapshot.Domains.GetAssigned(nodeId).ToArray();
+            var domains = snapshot!.Domains!.GetAssigned(nodeId).ToArray();
 
             // none?
             if (domains.Length == 0) return null;
@@ -105,11 +105,11 @@ namespace Limbo.Umbraco.Spa.Repositories {
 
                 // TODO: Look at the "siteId" parameter as well (may be relevant for virtual content etc.)
 
-                IPublishedContent c = snapshot.Content.GetById(request.Arguments.PageId);
+                IPublishedContent c = snapshot!.Content?.GetById(request.Arguments.PageId);
 
                 if (c != null) {
                     request.Domain = DomainForNode(c, null, request.Arguments.Culture);
-                    if (request.Domain != null) {
+                    if (!string.IsNullOrWhiteSpace(request.Domain?.Culture)) {
                         request.CultureInfo = CultureInfo.GetCultureInfo(request.Domain.Culture);
                         return true;
                     }
@@ -119,7 +119,7 @@ namespace Limbo.Umbraco.Spa.Repositories {
 
             }
 
-            var domainsCache = snapshot.Domains;
+            var domainsCache = snapshot!.Domains!;
             var domains = domainsCache.GetAll(includeWildcards: false).ToList();
 
             // determines whether a domain corresponds to a published document, since some
@@ -129,7 +129,7 @@ namespace Limbo.Umbraco.Spa.Repositories {
             bool IsPublishedContentDomain(Domain domain) {
 
                 // just get it from content cache - optimize there, not here
-                var domainDocument = snapshot.Content.GetById(domain.ContentId);
+                var domainDocument = snapshot.Content?.GetById(domain.ContentId);
 
                 // not published - at all
                 if (domainDocument == null)
@@ -152,12 +152,12 @@ namespace Limbo.Umbraco.Spa.Repositories {
             var domainAndUri = SelectDomain(domains, uri, defaultCulture: defaultCulture);
 
             // handle domain - always has a contentId and a culture
-            if (domainAndUri != null) {
+            if (!string.IsNullOrWhiteSpace(domainAndUri?.Culture)) {
                 request.Domain = domainAndUri;
                 request.CultureInfo = CultureInfo.GetCultureInfo(domainAndUri.Culture);
 
             } else {
-                request.CultureInfo = defaultCulture == null ? CultureInfo.CurrentUICulture : new CultureInfo(defaultCulture);
+                request.CultureInfo = new CultureInfo(defaultCulture);
             }
 
             return request.Domain != null;
@@ -180,8 +180,8 @@ namespace Limbo.Umbraco.Spa.Repositories {
                 return null;
 
             // sanitize cultures
-            culture = culture.NullOrWhiteSpaceAsNull();
-            defaultCulture = defaultCulture.NullOrWhiteSpaceAsNull();
+            culture = culture?.NullOrWhiteSpaceAsNull();
+            defaultCulture = defaultCulture?.NullOrWhiteSpaceAsNull();
 
             if (uri == null) {
                 // no uri - will only rely on culture

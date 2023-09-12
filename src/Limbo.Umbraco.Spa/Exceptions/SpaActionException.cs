@@ -25,7 +25,7 @@ namespace Limbo.Umbraco.Spa.Exceptions {
         /// <summary>
         /// Gets the message of the exception.
         /// </summary>
-        public override string Message => "Failed executing SPA action " + MethodName;
+        public override string Message => $"Failed executing SPA action {MethodName}";
 
         #endregion
 

@@ -14,7 +14,7 @@ namespace Limbo.Umbraco.Spa.Models.Meta {
         /// <summary>
         /// Initializes a new instance with default options.
         /// </summary>
-        public SpaMetaData() : base() { }
+        public SpaMetaData() { }
 
         /// <summary>
         /// Initializes a new instance based on the specified <paramref name="culture"/>.

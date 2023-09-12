@@ -9,7 +9,7 @@ namespace Limbo.Umbraco.Spa.Json.Converters {
     public class SpaMetaDataJsonConverter : JsonConverter {
 
         public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer) {
-            if (!(value is SpaMetaData meta)) throw new ArgumentException("Must be an instance of SpaMetaData", nameof(value));
+            if (value is not SpaMetaData meta) throw new ArgumentException("Must be an instance of SpaMetaData", nameof(value));
             meta.ToVueMetaJson().WriteTo(writer);
         }
 

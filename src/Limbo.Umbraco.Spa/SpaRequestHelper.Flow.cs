@@ -44,13 +44,13 @@ namespace Limbo.Umbraco.Spa {
 
                 // TODO: Look at the "siteId" parameter as well (may be relevant for virtual content etc.)
 
-                IPublishedContent c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content.GetById(request.Arguments.PageId);
+                IPublishedContent c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content?.GetById(request.Arguments.PageId);
 
                 if (c != null) {
 
                     request.Domain = DomainRepository.DomainForNode(c, null, request.Arguments.QueryString["culture"]);
 
-                    if (request.Domain != null) {
+                    if (!string.IsNullOrWhiteSpace(request.Domain?.Culture)) {
                         request.CultureInfo = CultureInfo.GetCultureInfo(request.Domain.Culture);
                     }
 
@@ -74,7 +74,7 @@ namespace Limbo.Umbraco.Spa {
 
             // If "pageId" exists, prefer content from that node
             if (request.Arguments.PageId > 0) {
-                IPublishedContent c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content.GetById(request.Arguments.PageId);
+                IPublishedContent c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content?.GetById(request.Arguments.PageId);
                 if (c != null) request.Arguments.Url = c.Url();
             }
 
@@ -119,7 +119,7 @@ namespace Limbo.Umbraco.Spa {
             // Get a reference to the site node
             request.Site = UmbracoContextAccessor
                 .GetRequiredUmbracoContext()
-                .Content
+                .Content?
                 .GetById(request.Arguments.SiteId);
 
             // Throw an exception if we can't determine the site node
@@ -154,8 +154,8 @@ namespace Limbo.Umbraco.Spa {
                 // Get a reference to the current page (fetched regardless of "parts" as the URL determines the culture)
                 request.Content = UmbracoContextAccessor
                     .GetRequiredUmbracoContext()
-                    .Content.
-                    GetById(true, request.Arguments.PageId);
+                    .Content?
+                    .GetById(true, request.Arguments.PageId);
 
             } else {
 
@@ -330,11 +330,11 @@ namespace Limbo.Umbraco.Spa {
         protected virtual bool HandleUmbracoRedirect(SpaRequest request) {
 
             // Look for a matching redirect
-            IRedirectUrl umbRedirect = Services.RedirectUrlService.GetMostRecentRedirectUrl(request.SiteId + request.Url.TrimEnd('/'));
+            IRedirectUrl umbRedirect = Services.RedirectUrlService!.GetMostRecentRedirectUrl(request.SiteId + request.Url.TrimEnd('/'));
             if (umbRedirect == null) return false;
 
             // Get the destination page from the content cache
-            IPublishedContent newContent = UmbracoContextAccessor.GetRequiredUmbracoContext().Content.GetById(umbRedirect.ContentId);
+            IPublishedContent newContent = UmbracoContextAccessor.GetRequiredUmbracoContext().Content?.GetById(umbRedirect.ContentId);
             if (newContent == null) return false;
 
             // Send a redirect response if a page was found
@@ -472,12 +472,8 @@ namespace Limbo.Umbraco.Spa {
         /// </summary>
         /// <param name="request">The current SPA request.</param>
         private void PrePushToCache(SpaRequest request) {
-
-            if (request.DataModel == null) return;
-            if (request.DataModel.ExecuteTimeMs >= 0) return;
-
+            if (request.DataModel is not { ExecuteTimeMs: < 0 }) return;
             request.DataModel.ExecuteTimeMs = request.Stopwatch.ElapsedMilliseconds;
-
         }
 
         /// <summary>

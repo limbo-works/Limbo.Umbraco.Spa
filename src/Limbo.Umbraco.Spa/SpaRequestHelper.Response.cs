@@ -95,6 +95,9 @@ namespace Limbo.Umbraco.Spa {
         /// <returns>An instance of <see cref="ActionResult"/>.</returns>
         protected virtual ActionResult ReturnHtmlError(SpaRequest request, Exception exception) {
 
+            // Get the cache key of the current request
+            string cacheKey = GetCacheKey(request);
+
             StringBuilder sb = new();
 
             sb.AppendLine("<style>");
@@ -134,7 +137,7 @@ namespace Limbo.Umbraco.Spa {
                 sb.AppendLine("<tr><th>Parts</th><td>" + string.Join(", ", from p in request.Arguments.Parts select p.ToString()) + "</td></tr>");
                 sb.AppendLine("<tr><th>Nav levels</th><td>" + request.Arguments.NavLevels + "</td></tr>");
                 sb.AppendLine("<tr><th>Nav context</th><td>" + request.Arguments.NavContext + "</td></tr>");
-                sb.AppendLine("<tr><th>Cache key</th><td>" + request.Arguments.CacheKey + "</td></tr>");
+                sb.AppendLine("<tr><th>Cache key</th><td>" + cacheKey + "</td></tr>");
                 sb.AppendLine("<tr><th>Enable caching</th><td>" + request.Arguments.EnableCaching + "</td></tr>");
                 sb.AppendLine("</table>");
             }

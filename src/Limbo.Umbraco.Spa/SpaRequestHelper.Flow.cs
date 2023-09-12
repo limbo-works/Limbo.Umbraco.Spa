@@ -446,8 +446,11 @@ namespace Limbo.Umbraco.Spa {
             // Skip if caching is disabled
             if (request.Arguments.EnableCaching == false) return;
 
+            // Get the cache key of "request"
+            string cacheKey = GetCacheKey(request);
+
             // Attempt to get the cached model from the runtime cache
-            if (AppCaches.RuntimeCache.Get(request.Arguments.CacheKey) is not SpaCachedModel cached) return;
+            if (AppCaches.RuntimeCache.Get(cacheKey) is not SpaCachedModel cached) return;
 
             // Update the data model with the model from the cached
             request.DataModel = cached.Data;
@@ -488,7 +491,11 @@ namespace Limbo.Umbraco.Spa {
 
             if (request.Arguments.EnableCaching == false) return;
 
-            AppCaches.RuntimeCache.Insert(request.Arguments.CacheKey, () => new SpaCachedModel(request.DataModel, request.CultureInfo), TimeSpan.FromSeconds(60));
+            // Get the cache key of "request"
+            string cacheKey = GetCacheKey(request);
+
+            // Insert the cached model into the runtime cache
+            AppCaches.RuntimeCache.Insert(cacheKey, () => new SpaCachedModel(request.DataModel, request.CultureInfo), TimeSpan.FromSeconds(60));
 
         }
 

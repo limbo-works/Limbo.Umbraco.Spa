@@ -386,6 +386,21 @@ namespace Limbo.Umbraco.Spa  {
             var unprotected = cookieOptions.TicketDataFormat.Unprotect(cookie);
             var backOfficeIdentity = unprotected?.Principal.GetUmbracoIdentity();
             return backOfficeIdentity is { IsAuthenticated: true };
+        }
+
+        /// <summary>
+        /// Returns a unique key that identifies the current SPA API <paramref name="request"/>. The key will be used
+        /// for storing and retrieving the <c>data</c> part in the runtime cache.
+        /// </summary>
+        /// <param name="request">The SPA request,</param>
+        /// <returns>A unique cache key for <paramref name="request"/>.</returns>
+        /// <remarks>The default cache key does not take members into account. If your site has a members area with
+        /// login, an identifier for the member currently logged in should be a part of the cache key.</remarks>
+        public virtual string GetCacheKey(SpaRequest request) {
+
+            SpaRequestOptions options = request.Arguments;
+
+            return $"{SpaConstants.CachePrefix}{options.PageId}-{options.SiteId}-{options.Url}-{options.IsPreview}-{string.Join(",", options.Parts ?? new List<SpaApiPart>())}-{options.Protocol}-{options.HostName}-{options.PortNumber}-{options.NavLevels}-{options.NavContext}";
 
         }
 

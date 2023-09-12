@@ -90,14 +90,6 @@ namespace Limbo.Umbraco.Spa.Models {
         public bool NavContext { get; set; }
 
         /// <summary>
-        /// Gets a unique key that identifies the current SPA API request. The key will be used for storing and retrieving the <c>data</c> part in the runtime cache.
-        ///
-        /// <strong>Notice:</strong> the default cache key does not take members into account. If your site has a members area with login, an identifier for the
-        /// member currently logged in should be a part of the cache key.
-        /// </summary>
-        public virtual string CacheKey => $"{SpaConstants.CachePrefix}{PageId}-{SiteId}-{Url}-{IsPreview}-{string.Join(",", Parts ?? new List<SpaApiPart>())}-{Protocol}-{HostName}-{PortNumber}-{NavLevels}-{NavContext}";
-
-        /// <summary>
         /// Gets a reference to the query string of the current SPA API request.
         /// </summary>
         public IQueryCollection QueryString { get; set; }

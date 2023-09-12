@@ -43,11 +43,11 @@ namespace Limbo.Umbraco.Spa {
                 // can determine the sitenode
 
                 // TODO: Look at the "siteId" parameter as well (may be relevant for virtual content etc.)
-                
+
                 IPublishedContent c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content.GetById(request.Arguments.PageId);
 
                 if (c != null) {
-                    
+
                     request.Domain = DomainRepository.DomainForNode(c, null, request.Arguments.QueryString["culture"]);
 
                     if (request.Domain != null) {
@@ -107,7 +107,7 @@ namespace Limbo.Umbraco.Spa {
             if (!HasBackofficeIdentity(request.HttpContext)) {
                 request.Response = ReturnError(HttpStatusCode.Unauthorized, "User not authenticated.");
             }
-            
+
         }
 
         /// <summary>
@@ -183,15 +183,15 @@ namespace Limbo.Umbraco.Spa {
         /// we set the current page as the frontpage of the culture instead:
         /// <code>
         /// protected override void PostContentLookup(SpaRequest request) {
-        /// 
+        ///
         ///     // Skip if we don't have a content item
         ///     if (request.Content == null) return;
-        /// 
+        ///
         ///     // If "content" matches the culture node, we get the content of the front page instead
         ///     if (request.Content.ContentType.Alias == SkyConstants.DocumentTypes.Culture) {
         ///         request.Content = request.Content.FirstChild(SkyConstants.DocumentTypes.FrontPage) ?? request.Content;
         ///     }
-        /// 
+        ///
         /// }
         /// </code>
         /// </example>
@@ -221,7 +221,7 @@ namespace Limbo.Umbraco.Spa {
 
         /// <summary>
         /// Populates the <see cref="SpaRequest.SiteModel"/> property based on <see cref="SpaRequest.Site"/> (and <see cref="SpaRequest.Culture"/> if present).
-        /// 
+        ///
         /// The site model is an instance of <see cref="SpaSiteModel"/> (or it may be a subclass thereof if <see cref="InitSiteModel"/> is overridden).
         /// </summary>
         /// <example>
@@ -252,13 +252,13 @@ namespace Limbo.Umbraco.Spa {
         /// Example on how to populated the <see cref="SpaSiteModel.NotFoundPage"/> property:
         /// <code>
         /// public class MySiteModel : SpaSiteModel {
-        /// 
+        ///
         ///     public MySiteModel(IPublishedContent site) : this(site, null) { }
-        /// 
+        ///
         ///     public MySiteModel(IPublishedContent site, IPublishedContent culture) : base(site, culture) {
         ///         NotFoundPage = Culture.TypedContent("skyNotFoundPage");
         ///     }
-        /// 
+        ///
         /// }
         /// </code>
         /// </example>
@@ -376,17 +376,17 @@ namespace Limbo.Umbraco.Spa {
         /// For more control over the returned models, you can override the method as shown below.
         /// <code>
         /// protected override void InitContentModel(SpaRequest request) {
-        /// 
+        ///
         ///     if (request.Content == null || request.Arguments.Parts.Contains(SpaApiPart.Content) == false) return;
-        /// 
+        ///
         ///     switch (request.Content.ContentType.Alias) {
-        /// 
+        ///
         ///         case "myArticle":
         ///             request.ContentModel = new MyArticle(request.Content);
         ///             break;
-        ///         
+        ///
         ///     }
-        /// 
+        ///
         /// }
         /// </code>
         /// </example>
@@ -395,7 +395,7 @@ namespace Limbo.Umbraco.Spa {
 
             // Skip this part if the "content" part wasn't requested
             if (request.Arguments.Parts.Contains(SpaApiPart.Content) == false) return;
-            
+
             // Initialize the new model
             request.ContentModel = ContentFactory.CreateContentModel(request.Content, new PublishedValueFallback(Services, VariationContextAccessor), request);
 

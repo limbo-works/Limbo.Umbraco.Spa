@@ -75,7 +75,7 @@ namespace Limbo.Umbraco.Spa.Json.Resolvers {
 
             // Get a JsonProperty instance from the parent
             JsonProperty property = base.CreateProperty(member, memberSerialization);
-            
+
             // Should we serialize the property?
 			property.ShouldSerialize = instance => ShouldSerialize(member, property);
 
@@ -118,7 +118,7 @@ namespace Limbo.Umbraco.Spa.Json.Resolvers {
             // this will only be called once and then cached
             if (objectType == typeof(HtmlString)) {
                 contract.Converter = new StringJsonConverter();
-            }		
+            }
 
             return contract;
 

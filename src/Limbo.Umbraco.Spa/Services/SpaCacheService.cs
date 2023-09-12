@@ -2,9 +2,9 @@
 using Umbraco.Cms.Core.Cache;
 
 namespace Limbo.Umbraco.Spa.Services {
-    
+
     /// <summary>
-    /// Base implementation of a cache service for the SPA. 
+    /// Base implementation of a cache service for the SPA.
     /// </summary>
     public class SpaCacheService : ISpaCacheService {
 

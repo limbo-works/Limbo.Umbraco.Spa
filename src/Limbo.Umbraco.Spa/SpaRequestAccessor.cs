@@ -8,7 +8,7 @@ namespace Limbo.Umbraco.Spa {
     /// Class describing a way to access the current <see cref="SpaRequest"/>.
     /// </summary>
     public class SpaRequestAccessor : ISpaRequestAccessor {
-        
+
         private readonly IHttpContextAccessor _httpContextAccessor;
 
         #region Properties

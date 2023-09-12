@@ -73,12 +73,12 @@ namespace Limbo.Umbraco.Spa.Models {
 
         /// <summary>
         /// Initializes a new site model from the specified <paramref name="site"/>.
-        /// 
+        ///
         /// When this constructor is used, it's assumed that the site doesn't use cultures.
         /// </summary>
         /// <param name="site">An instance of <see cref="IPublishedContent"/> representing the site node.</param>
         public SpaSiteModel(IPublishedContent site) {
-            
+
             // Site
             Site = site ?? throw new ArgumentNullException(nameof(site));
             Id = site.Id;
@@ -89,13 +89,13 @@ namespace Limbo.Umbraco.Spa.Models {
 
         /// <summary>
         /// Initializes a new site model from the specified <paramref name="site"/> and <paramref name="culture"/>.
-        /// 
+        ///
         /// When this constructor is used, a culture node must be present.
         /// </summary>
         /// <param name="site">An instance of <see cref="IPublishedContent"/> representing the site node.</param>
         /// <param name="culture">An instance of <see cref="IPublishedContent"/> representing the culture node.</param>
         public SpaSiteModel(IPublishedContent site, IPublishedContent culture) {
-            
+
             // Site
             Site = site ?? throw new ArgumentNullException(nameof(site));
             Id = site.Id;

@@ -12,7 +12,7 @@ using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
 
 namespace Limbo.Umbraco.Spa {
-    
+
     /// <summary>
     /// Class used for handling the DI dependencies of the <see cref="SpaRequestHelper"/> class.
     /// </summary>
@@ -21,7 +21,7 @@ namespace Limbo.Umbraco.Spa {
         private readonly IOptions<SpaConfiguration> _spaConfiguration;
 
         #region Properties
-        
+
         /// <summary>
         /// Gets a reference to the current environment.
         /// </summary>
@@ -80,7 +80,7 @@ namespace Limbo.Umbraco.Spa {
         #endregion
 
         #region Constructors
-        
+
         /// <summary>
         /// Initializes a new instance based on the specified dependencies.
         /// </summary>

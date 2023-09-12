@@ -20,7 +20,7 @@ namespace Limbo.Umbraco.Spa.Models {
         /// </summary>
         [JsonProperty("target")]
         public string Target { get; }
-        
+
         /// <summary>
         /// Initializes a new link based on the specified <paramref name="url"/>.
         /// </summary>

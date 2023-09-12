@@ -11,7 +11,7 @@ namespace Limbo.Umbraco.Spa.Exceptions {
     public class SpaActionException : SpaException {
 
         #region Properties
-        
+
         /// <summary>
         /// A reference to the action group in which the exception was triggered.
         /// </summary>

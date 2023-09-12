@@ -3,7 +3,7 @@ using Limbo.Umbraco.Spa.Models.Navigation;
 using Umbraco.Cms.Core.Models.PublishedContent;
 
 namespace Limbo.Umbraco.Spa.Factories {
-    
+
     /// <summary>
     /// Interface describing a SPA item factory.
     /// </summary>

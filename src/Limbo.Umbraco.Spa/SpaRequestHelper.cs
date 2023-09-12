@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net.Http;
 using System.Text.RegularExpressions;
 using Limbo.Umbraco.Spa.Configuration;
@@ -33,7 +34,7 @@ namespace Limbo.Umbraco.Spa  {
     public partial class SpaRequestHelper {
 
         #region Properties
-        
+
         /// <summary>
         /// Gets a reference to the current environment.
         /// </summary>
@@ -119,7 +120,7 @@ namespace Limbo.Umbraco.Spa  {
         #region Member methods
 
         /// <summary>
-        /// Virtual method defining the actions groups required for a successful SPA request. 
+        /// Virtual method defining the actions groups required for a successful SPA request.
         /// </summary>
         /// <param name="request">The current SPA request.</param>
         /// <returns>An array of <see cref="SpaActionGroup"/>.</returns>
@@ -132,11 +133,11 @@ namespace Limbo.Umbraco.Spa  {
                 // First group - should always be executed
                 new SpaActionGroup(
                     _ => true,
-                    
+
                     InitArguments,
                     FindDomainAndCulture,
                     UpdateArguments,
-                    
+
                     ValidatePreviewAccess,
 
                     ReadFromCache
@@ -192,7 +193,7 @@ namespace Limbo.Umbraco.Spa  {
         public virtual ActionResult GetResponse(SpaRequest request) {
 
             try {
-                
+
                 // Iterate through the different methods in the page flow
                 foreach (SpaActionGroup group in GetActionGroups(request)) {
 
@@ -271,7 +272,7 @@ namespace Limbo.Umbraco.Spa  {
                 );
 
             } else {
-                
+
                 Logger.LogError(
                     exception, "SPA request for scheme {Scheme}, domain {Domain} and URL {Url} failed.",
                     uri.Scheme,
@@ -316,7 +317,7 @@ namespace Limbo.Umbraco.Spa  {
             Match match = Regex.Match(url.Split('?')[0].TrimEnd('/'), "^/([0-9]+)\\.aspx$");
             result = match.Success ? match.Groups[1].Value.ToInt32() : 0;
             if (result > 0) return true;
-            
+
             // Find the ID using REGEX
             match = Regex.Match(url.Split('?')[0].TrimEnd('/'), "^/([0-9]+)$");
             result = match.Success ? match.Groups[1].Value.ToInt32() : 0;
@@ -332,7 +333,7 @@ namespace Limbo.Umbraco.Spa  {
         /// </summary>
         /// <param name="request">The SPA request.</param>
         protected virtual void AddTrailingSlash(SpaRequest request) {
-            
+
             if (request.Url == null || request.IsPreview) return;
 
             // Slit the URL so we don't look at the query string
@@ -343,7 +344,7 @@ namespace Limbo.Umbraco.Spa  {
 
             // Append the trailing slash
             url[0] += "/";
-            
+
             // Redirect the user to the correct URL
             request.Response = ReturnRedirect(request, string.Join("?", url));
 
@@ -356,7 +357,7 @@ namespace Limbo.Umbraco.Spa  {
         /// </summary>
         /// <param name="request">The SPA request.</param>
         protected virtual void RemoveTrailingSlash(SpaRequest request) {
-            
+
             if (request.IsPreview) return;
 
             // Slit the URL so we don't look at the query string
@@ -367,7 +368,7 @@ namespace Limbo.Umbraco.Spa  {
 
             // Remove the trailing slash
             url[0] = url[0].Substring(0, url[0].Length - 1);
-            
+
             // Redirect the user to the correct URL
             request.Response = ReturnRedirect(request, string.Join("?", url));
 
@@ -382,7 +383,7 @@ namespace Limbo.Umbraco.Spa  {
             if (string.IsNullOrWhiteSpace(cookieOptions.Cookie.Name)) return false;
             if (!context.Request.Cookies.TryGetValue(cookieOptions.Cookie.Name, out string cookie)) return false;
             if (string.IsNullOrWhiteSpace(cookie)) return false;
-            
+
             var unprotected = cookieOptions.TicketDataFormat.Unprotect(cookie);
             var backOfficeIdentity = unprotected?.Principal.GetUmbracoIdentity();
             return backOfficeIdentity is { IsAuthenticated: true };

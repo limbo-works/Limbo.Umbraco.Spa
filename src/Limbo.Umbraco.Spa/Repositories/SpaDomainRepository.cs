@@ -9,12 +9,12 @@ using Umbraco.Cms.Core.Routing;
 using Umbraco.Extensions;
 
 namespace Limbo.Umbraco.Spa.Repositories {
-    
+
     /// <summary>
     /// Repository for working with Umbraco domains in relation to the SPA package.
     /// </summary>
     public class SpaDomainRepository {
-        
+
         private readonly IPublishedSnapshotAccessor _publishedSnapshotAccessor;
         private readonly ISiteDomainMapper _siteDomainMapper;
 
@@ -55,7 +55,7 @@ namespace Limbo.Umbraco.Spa.Repositories {
             return SelectDomain(domains, current, culture, snapshot.Domains.DefaultCulture, _siteDomainMapper.MapDomain);
 
         }
-        
+
         /// <summary>
         /// Returns the <see cref="DomainAndUri"/> for the specified <paramref name="content"/> node, or <c>null</c> if
         /// not found. The domain will be determined either from the node it self or one of it's ancestors.
@@ -163,7 +163,7 @@ namespace Limbo.Umbraco.Spa.Repositories {
             return request.Domain != null;
 
         }
-        
+
         private DomainAndUri SelectDomain(IEnumerable<Domain> domains, Uri uri, string culture = null, string defaultCulture = null, Func<IReadOnlyCollection<DomainAndUri>, Uri, string, string, DomainAndUri> filter = null) {
 
             // sanitize the list to have proper uris for comparison (scheme, path end with /)
@@ -243,7 +243,7 @@ namespace Limbo.Umbraco.Spa.Repositories {
         }
 
         private IReadOnlyCollection<DomainAndUri> SelectByCulture(IReadOnlyCollection<DomainAndUri> domainsAndUris, string culture, string defaultCulture) {
-            
+
             // we try our best to match cultures, but may end with a bogus domain
 
             if (culture != null) // try the supplied culture

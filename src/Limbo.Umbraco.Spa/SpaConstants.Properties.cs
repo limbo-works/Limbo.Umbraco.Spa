@@ -1,9 +1,9 @@
 ﻿// ReSharper disable InconsistentNaming
 
 namespace Limbo.Umbraco.Spa {
-    
+
     public static partial class SpaConstants {
-        
+
         /// <summary>
         /// Contants for various properties used throughout the SPA implementation.
         /// </summary>

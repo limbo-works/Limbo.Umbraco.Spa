@@ -192,7 +192,7 @@ namespace Limbo.Umbraco.Spa {
                         break;
                 }
             }
-            
+
             // Create a new response
             return new ContentResult {
                 StatusCode = (int)statusCode,
@@ -205,7 +205,7 @@ namespace Limbo.Umbraco.Spa {
         /// <summary>
         /// Returns a new JSON based instance of <see cref="ActionResult"/> for the specified
         /// <paramref name="data"/>.
-        /// 
+        ///
         /// If <paramref name="data"/> is an instance of <see cref="SpaResponseModel"/>, the status code will be
         /// inherited from the <see cref="SpaMetaData.Code"/> property. In any other cases, the status code will be
         /// <see cref="HttpStatusCode.OK"/>.
@@ -300,13 +300,13 @@ namespace Limbo.Umbraco.Spa {
         /// <param name="statusCode">The status code of the response - eg. <see cref="HttpStatusCode.MovedPermanently"/>.</param>
         /// <returns>An instance of <see cref="ActionResult"/>.</returns>
         protected virtual ActionResult ReturnRedirect(SpaRequest request, string destinationUrl, HttpStatusCode statusCode) {
-            
+
             // Initialize the "data" object for the response
             var data = new {
                 url = destinationUrl,
                 permanent = statusCode == HttpStatusCode.MovedPermanently
             };
-            
+
             // Initialize the response body (including the correct status code)
             SpaResponseModel body = SpaResponseModel.GetError(statusCode, "Page has moved", data);
 

@@ -26,7 +26,7 @@ namespace Limbo.Umbraco.Spa.Factories {
 
             // Nothing to work on, nothing to return
             if (content == null) return null;
-            
+
             // Initialize a new item
             SpaNavigationItem item = new();
 

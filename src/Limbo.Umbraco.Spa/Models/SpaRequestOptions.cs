@@ -164,10 +164,10 @@ namespace Limbo.Umbraco.Spa.Models {
             Uri uri = r.GetUri();
             
             // Get the host name from the query
-            string appHost = r.Query["appHost"];
+            string appHost = r.Query.GetString("appHost");
 
             // Get the protocol from the query
-            string appProtocol = r.Query["appProtocol"];
+            string appProtocol = r.Query.GetString("appProtocol");
 
             // Use the current URL as fallback for "appHost" and "appProtocol"
             HostName = string.IsNullOrWhiteSpace(appHost) ? uri.Host : appHost;
@@ -180,10 +180,10 @@ namespace Limbo.Umbraco.Spa.Models {
             NavContext = r.Query.GetBoolean("navContext");
 
             // Parse the requests "parts"
-            Parts = GetParts(r.Query["parts"]);
+            Parts = GetParts(r.Query.GetString("parts"));
 
             // Get the URL of the requested page
-            Url = r.Query["url"];
+            Url = r.Query.GetString("url");
             QueryString = GetClientQueryString(r, helper);
 
             // Calculate the URI of the requested page
@@ -194,7 +194,7 @@ namespace Limbo.Umbraco.Spa.Models {
             PageId = r.Query.GetInt32("pageId", -1);
 
 
-            Culture = r.Query["culture"];
+            Culture = r.Query.GetString("culture");
 
             // Determine whether the current request is in debug mode
             if (helper.TryGetPreviewId(Url, out int previewId)) {

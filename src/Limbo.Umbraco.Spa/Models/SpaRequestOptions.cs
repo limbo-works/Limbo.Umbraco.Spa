@@ -148,17 +148,10 @@ namespace Limbo.Umbraco.Spa.Models {
         /// </summary>
         /// <param name="request">A SPA request.</param>
         /// <param name="helper">A current SPA request helper.</param>
-        public SpaRequestOptions(SpaRequest request, SpaRequestHelper helper) : this(request.HttpContext, helper) { }
-
-        /// <summary>
-        /// Initializes a new instance based on the specified <paramref name="context"/>.
-        /// </summary>
-        /// <param name="context">A HTTP context.</param>
-        /// <param name="helper">A current SPA request helper.</param>
-        public SpaRequestOptions(HttpContext context, SpaRequestHelper helper) {
+        public SpaRequestOptions(SpaRequest request, SpaRequestHelper helper) {
 
             // Get a reference to the current request
-            HttpRequest r = context.Request;
+            HttpRequest r = request.HttpContext.Request;
 
             // Get the URI of the current request
             Uri uri = r.GetUri();

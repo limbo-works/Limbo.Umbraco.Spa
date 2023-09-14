@@ -6,13 +6,13 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>2.0.0-alpha003</VersionPrefix>
+    <VersionPrefix>2.0.0-alpha004</VersionPrefix>
     <VersionSuffix Condition="'$(Configuration)'=='Debug'">$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
     <Company>Limbo</Company>
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © 2023</Copyright>
     <Title>Limbo SPA</Title>
-    <Description>SPA (single page application) package for Umbraco 9.</Description>
+    <Description>SPA (single page application) package for Umbraco 10+.</Description>
   </PropertyGroup>
 
   <!-- Information for the NuGet package -->

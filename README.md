@@ -6,16 +6,16 @@
 
 ## Installation
 
-For Umbraco 10, the package is only available via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.Spa/2.0.0-alpha003). Either via the .NET CLI:
+For Umbraco 10+, the package is only available via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.Spa/2.0.0-alpha004). Either via the .NET CLI:
 
 ```
-dotnet add package Limbo.Umbraco.Spa --version 2.0.0-alpha003
+dotnet add package Limbo.Umbraco.Spa --version 2.0.0-alpha004
 ```
 
 or the NuGet Package Manager:
 
 ```
-Install-Package Limbo.Umbraco.Spa -Version 2.0.0-alpha003
+Install-Package Limbo.Umbraco.Spa -Version 2.0.0-alpha004
 ```
 
 ### Other versions of Umbraco

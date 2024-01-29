@@ -1,0 +1,3 @@
+# `SpaRequest` class
+
+*TBD*

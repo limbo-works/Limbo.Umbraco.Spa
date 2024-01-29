@@ -13,7 +13,7 @@ SPA (single page application) package for Umbraco 9+.
 
 For requests to the `GetData` end point, developers can specify an `appHost` parameter indicating the domain / host name of the inbound request. If not specified, the actual host name of the inbound request is used instead.
 
-Normally host name of the inbound request is the one you want to use, but in scenarios where multiple sites in the same solution all use the same API domain, or the backend is behind a reverse proxy, the `appHost` parameter may differ from the actual host name.
+Normally the host name of the inbound request is the one you want to use, but in scenarios where multiple sites in the same solution all use the same API domain, or the backend is behind a reverse proxy, the `appHost` parameter may differ from the actual host name.
 
 In such cases, it might be important that the backend sees the host name specified `appHost` instead of the host name of the request. This can done by adding the following lines to the `Configure` methond in your solution's `Startup.cs` file:
 
@@ -49,13 +49,13 @@ The methods listed below are all virtual, meaning you can create a custom class 
 
 ### First group
 
-- **InitArguments**
+- **InitArguments**  
 Responsible for initializing an instance of `SpaRequestOptions` wrapping some of the parameters passed to the `GetData` endpoint as well as reading from the package's configuration. Generally you should use the `UpdateArguments` method if you only need to change some of the arguments, while the `InitArguments` method can be used if you want to use a custom class that extends the default `SpaRequestOptions` class.
   
 - **UpdateArguments**  
 Let's you modify the `SpaRequestOptions` instance created by the `InitArguments`.
 
-- **ReadFromCache**
+- **ReadFromCache**  
 Tries to read the current page from the internal micro cache - based on the cache key specified by the `SpaRequestOptions` instance.
 
 ### Second group

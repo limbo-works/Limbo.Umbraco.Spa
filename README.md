@@ -69,7 +69,7 @@ Let's you hook into the page flow right after the `InitSite` method has been cal
 - **PreContentLookup**  
 Let's you hook into the page flow right before the `ContentLookup` method is called.
 
-**ContentLookup**  
+- **ContentLookup**  
 Method for resolving the `IPublishedContent` representing the current page.
 
 - **PostContentLookup**  

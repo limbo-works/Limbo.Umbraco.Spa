@@ -69,7 +69,7 @@ public static partial class SkyConstants {
         /// <summary>
         /// Gets the default property alias for the 404 page.
         /// </summary>
-        public const string NotFoundPage = "skyNotFoundPage";
+        public const string NotFoundPage = "notFoundPage";
 
         /// <summary>
         /// Gets the default property alias for the teaser text.

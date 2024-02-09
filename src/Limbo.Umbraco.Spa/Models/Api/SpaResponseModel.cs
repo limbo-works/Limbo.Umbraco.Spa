@@ -1,70 +1,68 @@
 ﻿using System.Net;
 using Newtonsoft.Json;
 
-namespace Limbo.Umbraco.Spa.Models.Api {
+namespace Limbo.Umbraco.Spa.Models.Api;
+
+/// <summary>
+/// Class representing the model of a SPA response.
+/// </summary>
+public class SpaResponseModel {
+
+    #region Properties
 
     /// <summary>
-    /// Class representing the model of a SPA response.
+    /// Gets or sets the meta data for the response.
     /// </summary>
-    public class SpaResponseModel {
+    [JsonProperty(PropertyName = "meta")]
+    public SpaMetaData Meta { get; set; }
 
-        #region Properties
+    /// <summary>
+    /// Gets or sets the data object.
+    /// </summary>
+    [JsonProperty(PropertyName = "data")]
+    public object Data { get; set; }
 
-        /// <summary>
-        /// Gets or sets the meta data for the response.
-        /// </summary>
-        [JsonProperty(PropertyName = "meta")]
-        public SpaMetaData Meta { get; set; }
+    #endregion
 
-        /// <summary>
-        /// Gets or sets the data object.
-        /// </summary>
-        [JsonProperty(PropertyName = "data")]
-        public object Data { get; set; }
+    #region Constructors
 
-        #endregion
+    #endregion
 
-        #region Constructors
+    #region Static methods
 
-        #endregion
-
-        #region Static methods
-
-        /// <summary>
-        /// Creates a new error response with the specified error message.
-        /// </summary>
-        /// <param name="error">The error message of the response.</param>
-        public static SpaResponseModel GetError(string error) {
-            return GetError(HttpStatusCode.InternalServerError, error);
-        }
-
-        /// <summary>
-        /// Creates a new error response with the specified status code and error message.
-        /// </summary>
-        /// <param name="code">The status code.</param>
-        /// <param name="error">The error message of the response.</param>
-        public static SpaResponseModel GetError(HttpStatusCode code, string error) {
-            return GetError(code, error, null);
-        }
-
-        /// <summary>
-        /// Creates a new error response with the specified status code and error message.
-        /// </summary>
-        /// <param name="code">The status code.</param>
-        /// <param name="error">The error message of the response.</param>
-        /// <param name="data">The data object.</param>
-        public static SpaResponseModel GetError(HttpStatusCode code, string error, object data) {
-            return new SpaResponseModel {
-                Meta = new SpaMetaData {
-                    Code = code,
-                    Error = error
-                },
-                Data = data
-            };
-        }
-
-        #endregion
-
+    /// <summary>
+    /// Creates a new error response with the specified error message.
+    /// </summary>
+    /// <param name="error">The error message of the response.</param>
+    public static SpaResponseModel GetError(string error) {
+        return GetError(HttpStatusCode.InternalServerError, error);
     }
+
+    /// <summary>
+    /// Creates a new error response with the specified status code and error message.
+    /// </summary>
+    /// <param name="code">The status code.</param>
+    /// <param name="error">The error message of the response.</param>
+    public static SpaResponseModel GetError(HttpStatusCode code, string error) {
+        return GetError(code, error, null);
+    }
+
+    /// <summary>
+    /// Creates a new error response with the specified status code and error message.
+    /// </summary>
+    /// <param name="code">The status code.</param>
+    /// <param name="error">The error message of the response.</param>
+    /// <param name="data">The data object.</param>
+    public static SpaResponseModel GetError(HttpStatusCode code, string error, object data) {
+        return new SpaResponseModel {
+            Meta = new SpaMetaData {
+                Code = code,
+                Error = error
+            },
+            Data = data
+        };
+    }
+
+    #endregion
 
 }

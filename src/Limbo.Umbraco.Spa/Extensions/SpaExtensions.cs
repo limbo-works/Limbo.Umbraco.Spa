@@ -2,17 +2,15 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Primitives;
 
-namespace Limbo.Umbraco.Spa.Extensions {
+namespace Limbo.Umbraco.Spa.Extensions;
 
-    /// <summary>
-    /// Static class with various extension methods for the SPA.
-    /// </summary>
-    public static class SpaExtensions {
+/// <summary>
+/// Static class with various extension methods for the SPA.
+/// </summary>
+public static class SpaExtensions {
 
-        internal static IQueryCollection ToQueryCollection(this Dictionary<string, StringValues> dictionary) {
-            return new QueryCollection(dictionary);
-        }
-
+    internal static IQueryCollection ToQueryCollection(this Dictionary<string, StringValues> dictionary) {
+        return new QueryCollection(dictionary);
     }
 
 }

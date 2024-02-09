@@ -1,5 +1,5 @@
 ﻿using Newtonsoft.Json;
-using Skybrud.Essentials.Json.Converters.Enums;
+using Skybrud.Essentials.Json.Newtonsoft.Converters.Enums;
 
 namespace Limbo.Umbraco.Spa.Models {
 

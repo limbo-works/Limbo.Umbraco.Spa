@@ -3,7 +3,7 @@ using System.Reflection;
 using Microsoft.AspNetCore.Html;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
-using Skybrud.Essentials.Json.Converters;
+using Skybrud.Essentials.Json.Newtonsoft.Converters;
 using Skybrud.Essentials.Strings;
 
 #pragma warning disable 1591

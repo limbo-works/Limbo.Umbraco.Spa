@@ -9,9 +9,11 @@
     <VersionPrefix>13.0.0-alpha001</VersionPrefix>
     <VersionSuffix Condition="'$(Configuration)'=='Debug'">$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
     <Company>Limbo</Company>
+    <Product>Limbo SPA</Product>
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © $([System.DateTime]::UtcNow.ToString(`yyyy`))</Copyright>
     <Title>Limbo SPA</Title>
+    <AssemblyTitle>Limbo SPA</AssemblyTitle>
     <Description>SPA (single page application) package for Umbraco 13.</Description>
   </PropertyGroup>
 
@@ -25,6 +27,14 @@
     <RepositoryType>git</RepositoryType>
     <RepositoryUrl>https://github.com/limbo-works/Limbo.Umbraco.Spa</RepositoryUrl>
   </PropertyGroup>
+
+  <!-- Include additional metadata in the assembly -->
+  <ItemGroup>
+    <AssemblyMetadata Include="PackageProjectUrl" Value="https://packages.limbo.works/limbo.umbraco.spa/" />
+    <AssemblyMetadata Include="DocumentationUrl" Value="https://packages.limbo.works/limbo.umbraco.spa/docs/v13/" />
+    <AssemblyMetadata Include="NuGetUrl" Value="https://www.nuget.org/packages/Limbo.Umbraco.Spa" />
+    <!--<AssemblyMetadata Include="UmbracoMarketplaceUrl" Value="https://marketplace.umbraco.com/package/limbo.umbraco.spa" />-->
+  </ItemGroup>
 
   <!-- Include NuGet dependencies -->
   <ItemGroup>

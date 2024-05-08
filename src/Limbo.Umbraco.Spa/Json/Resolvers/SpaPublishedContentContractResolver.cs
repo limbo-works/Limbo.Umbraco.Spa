@@ -6,6 +6,7 @@ using Newtonsoft.Json.Serialization;
 using Skybrud.Essentials.Json.Newtonsoft.Converters;
 using Skybrud.Essentials.Reflection.Extensions;
 using Skybrud.Essentials.Strings;
+using Umbraco.Cms.Core.Strings;
 
 #pragma warning disable 1591
 
@@ -90,7 +91,7 @@ public class SpaPublishedContentContractResolver : DefaultContractResolver {
         JsonContract contract = base.CreateContract(objectType);
 
         // this will only be called once and then cached
-        if (objectType == typeof(HtmlString)) {
+        if (objectType == typeof(HtmlString) || objectType == typeof(HtmlEncodedString)) {
             contract.Converter = new StringJsonConverter();
         }
 

@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Html;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
 using Skybrud.Essentials.Json.Newtonsoft.Converters;
+using Skybrud.Essentials.Reflection.Extensions;
 using Skybrud.Essentials.Strings;
 
 #pragma warning disable 1591
@@ -73,10 +74,15 @@ public class SpaPublishedContentContractResolver : DefaultContractResolver {
         // Should we serialize the property?
         property.ShouldSerialize = _ => ShouldSerialize(member, property);
 
-        // Make sure the property names are in lower camel case
-        property.PropertyName = StringUtils.ToCamelCase(property.PropertyName);
+        // Make sure the property names are in lower camel case, but also respect if an explicit property name has been specified
+        if (member.HasCustomAttribute(out JsonPropertyAttribute attribute) && !string.IsNullOrWhiteSpace(attribute.PropertyName)) {
+            property.PropertyName = attribute.PropertyName;
+        } else {
+            property.PropertyName = StringUtils.ToCamelCase(property.PropertyName);
+        }
 
         return property;
+
     }
 
     protected override JsonContract CreateContract(Type objectType) {

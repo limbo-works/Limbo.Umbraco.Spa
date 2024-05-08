@@ -76,16 +76,6 @@ public class SpaPublishedContentContractResolver : DefaultContractResolver {
         // Make sure the property names are in lower camel case
         property.PropertyName = StringUtils.ToCamelCase(property.PropertyName);
 
-        // Overwrite the order of certain properties
-        property.Order = member.Name switch {
-            "Id" => -99,
-            "Key" => -98,
-            "Name" => -97,
-            "Level" => -96,
-            "Url" => -95,
-            _ => property.Order
-        };
-
         return property;
     }
 

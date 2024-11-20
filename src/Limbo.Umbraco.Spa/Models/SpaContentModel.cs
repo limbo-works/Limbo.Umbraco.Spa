@@ -5,7 +5,7 @@ namespace Limbo.Umbraco.Spa.Models;
 /// <summary>
 /// Class representing a basic content model in context of the SPA.
 /// </summary>
-public class SpaContentModel : PublishedContentModel {
+public class SpaContentModel : PublishedContentModel, ISpaContentModel {
 
     /// <summary>
     /// Initializes a new instance based on the specified <paramref name="content"/>.

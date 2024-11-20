@@ -85,12 +85,12 @@ public class SpaRequest {
     /// <summary>
     /// Gets or sets the content model.
     /// </summary>
-    public SpaContentModel ContentModel { get; set; }
+    public ISpaContentModel ContentModel { get; set; }
 
     /// <summary>
     /// Gets the virtual parent if present; otherwise <c>null</c>.
     ///
-    /// A virtual parent is typically used when a content item should appear under another node than it's own parent.
+    /// A virtual parent is typically used when a content item should appear under another node than its own parent.
     /// </summary>
     [JsonIgnore]
     public IPublishedContent VirtualParent { get; set; }

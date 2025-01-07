@@ -12,7 +12,7 @@ public class SpaDataModel {
     #region Properties
 
     /// <summary>
-    /// Gets or sets teh meta data of the response.
+    /// Gets or sets teh metadata of the response.
     /// </summary>
     [JsonProperty("meta", Order = -150)]
     public SpaResponseMeta Meta { get; set; }
@@ -79,7 +79,7 @@ public class SpaDataModel {
     /// only be initialized if <see cref="SpaApiPart.Content"/> was specified in the request arguments.
     /// </summary>
     [JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-    public SpaContentModel Content { get; set; }
+    public ISpaContentModel Content { get; set; }
 
     #endregion
 

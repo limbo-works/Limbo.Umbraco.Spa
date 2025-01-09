@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Skybrud.Essentials.AspNetCore;
 using Skybrud.Essentials.Reflection;
+using Umbraco.Extensions;
 
 namespace Limbo.Umbraco.Spa;
 
@@ -139,6 +140,74 @@ public abstract partial class SpaRequestHelper {
             sb.AppendLine("<tr><th>Nav context</th><td>" + request.Arguments.NavContext + "</td></tr>");
             sb.AppendLine("<tr><th>Cache key</th><td>" + cacheKey + "</td></tr>");
             sb.AppendLine("<tr><th>Enable caching</th><td>" + request.Arguments.EnableCaching + "</td></tr>");
+            sb.AppendLine("</table>");
+        }
+
+        sb.AppendLine("<h3>Domain</h3>");
+        if (request.Domain is null) {
+            sb.AppendLine("<table><tr><td><em>No domain found.</em></td></tr></table>");
+        } else {
+            sb.AppendLine("<table>\n");
+            sb.AppendLine("<tr><th>ID</th><td>" + request.Domain.Id + "</td></tr>");
+            sb.AppendLine("<tr><th>URI</th><td>" + request.Domain.Uri + "</td></tr>");
+            sb.AppendLine("<tr><th>Culture</th><td>" + request.Domain.Culture + "</td></tr>");
+            sb.AppendLine("<tr><th>Content ID</th><td>" + request.Domain.ContentId + "</td></tr>");
+            sb.AppendLine("</table>");
+        }
+
+        sb.AppendLine("<h3>Domain Content</h3>");
+        if (request.DomainContent is null) {
+            sb.AppendLine("<table><tr><td><em>No domain content node found.</em></td></tr></table>");
+        } else {
+            sb.AppendLine("<table>\n");
+            sb.AppendLine("<tr><th>ID</th><td>" + request.DomainContent.Id + "</td></tr>");
+            sb.AppendLine("<tr><th>Key</th><td>" + request.DomainContent.Key + "</td></tr>");
+            sb.AppendLine("<tr><th>Name</th><td>" + request.DomainContent.Name + "</td></tr>");
+            sb.AppendLine("<tr><th>URL</th><td>" + request.DomainContent.Url() + "</td></tr>");
+            sb.AppendLine("<tr><th>Content type alias</th><td>" + request.DomainContent.ContentType.Alias + "</td></tr>");
+            sb.AppendLine("<tr><th>CLR type</th><td>" + request.DomainContent.GetType() + "</td></tr>");
+            sb.AppendLine("</table>");
+        }
+
+        sb.AppendLine("<h3>Site</h3>");
+        if (request.Site is null) {
+            sb.AppendLine("<table><tr><td><em>Site not determined.</em></td></tr></table>");
+        } else {
+            sb.AppendLine("<table>\n");
+            sb.AppendLine("<tr><th>ID</th><td>" + request.Site.Id + "</td></tr>");
+            sb.AppendLine("<tr><th>Key</th><td>" + request.Site.Key + "</td></tr>");
+            sb.AppendLine("<tr><th>Name</th><td>" + request.Site.Name + "</td></tr>");
+            sb.AppendLine("<tr><th>URL</th><td>" + request.Site.Url() + "</td></tr>");
+            sb.AppendLine("<tr><th>Content type alias</th><td>" + request.Site.ContentType.Alias + "</td></tr>");
+            sb.AppendLine("<tr><th>CLR type</th><td>" + request.Site.GetType() + "</td></tr>");
+            sb.AppendLine("</table>");
+        }
+
+        sb.AppendLine("<h3>Culture</h3>");
+        if (request.Culture is null) {
+            sb.AppendLine("<table><tr><td><em>Culture not determined.</em></td></tr></table>");
+        } else {
+            sb.AppendLine("<table>\n");
+            sb.AppendLine("<tr><th>ID</th><td>" + request.Culture.Id + "</td></tr>");
+            sb.AppendLine("<tr><th>Key</th><td>" + request.Culture.Key + "</td></tr>");
+            sb.AppendLine("<tr><th>Name</th><td>" + request.Culture.Name + "</td></tr>");
+            sb.AppendLine("<tr><th>URL</th><td>" + request.Culture.Url() + "</td></tr>");
+            sb.AppendLine("<tr><th>Content type alias</th><td>" + request.Culture.ContentType.Alias + "</td></tr>");
+            sb.AppendLine("<tr><th>CLR type</th><td>" + request.Culture.GetType() + "</td></tr>");
+            sb.AppendLine("</table>");
+        }
+
+        sb.AppendLine("<h3>Current Page</h3>");
+        if (request.Content is null) {
+            sb.AppendLine("<table><tr><td><em>Current page not determined.</em></td></tr></table>");
+        } else {
+            sb.AppendLine("<table>\n");
+            sb.AppendLine("<tr><th>ID</th><td>" + request.Content.Id + "</td></tr>");
+            sb.AppendLine("<tr><th>Key</th><td>" + request.Content.Key + "</td></tr>");
+            sb.AppendLine("<tr><th>Name</th><td>" + request.Content.Name + "</td></tr>");
+            sb.AppendLine("<tr><th>URL</th><td>" + request.Content.Url() + "</td></tr>");
+            sb.AppendLine("<tr><th>Content type alias</th><td>" + request.Content.ContentType.Alias + "</td></tr>");
+            sb.AppendLine("<tr><th>CLR type</th><td>" + request.Content.GetType() + "</td></tr>");
             sb.AppendLine("</table>");
         }
 

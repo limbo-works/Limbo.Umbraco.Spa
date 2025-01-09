@@ -305,16 +305,20 @@ public partial class SpaRequestHelper {
     protected virtual bool HandleSkybrudRedirect(SpaRequest request) {
 
         // Get the decoded URL of the request
-        string requestUrl = request.Url.UrlDecode();
+        string requestUrl = request.Url.UrlDecode()!;
 
-        // Look for a global Skybrud redirect
-        IRedirect redirect = RedirectsService.GetRedirectByUrl(Guid.Empty, requestUrl);
+        // Determine the key of the domain or site node
+        Guid rootNodeKey = request.DomainContent?.Key ?? request.Site.Key;
 
-        // If nothing is found at this point, look for a site specific Skybrud redirect
-        if (request.SiteId > 0 && redirect == null) {
-            redirect = RedirectsService.GetRedirectByUrl(request.Site.Key, HttpUtility.UrlDecode(request.Url));
-        }
+        IRedirect redirect = null;
 
+        // Look for a site specific redirect first
+        if (rootNodeKey != Guid.Empty) redirect = RedirectsService.GetRedirectByUrl(rootNodeKey, requestUrl);
+
+        // And if not found, a global redirect second
+        redirect ??= RedirectsService.GetRedirectByUrl(Guid.Empty, requestUrl);
+
+        // Exit if not redirect is found
         if (redirect == null) return false;
 
         // Calculate the current URL of the destination. If query string forwarding is enabled, this then also
@@ -335,8 +339,11 @@ public partial class SpaRequestHelper {
     /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
     protected virtual bool HandleUmbracoRedirect(SpaRequest request) {
 
+        // Determine the ID of the domain or site node
+        int rootNodeId = request.DomainContent?.Id ?? request.Site.Id;
+
         // Look for a matching redirect
-        IRedirectUrl umbRedirect = Services.RedirectUrlService!.GetMostRecentRedirectUrl(request.SiteId + request.Url.TrimEnd('/'));
+        IRedirectUrl umbRedirect = Services.RedirectUrlService!.GetMostRecentRedirectUrl(rootNodeId + request.Url.TrimEnd('/'));
         if (umbRedirect == null) return false;
 
         // Get the destination page from the content cache

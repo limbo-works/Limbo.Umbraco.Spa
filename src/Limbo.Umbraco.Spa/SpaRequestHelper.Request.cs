@@ -1,4 +1,5 @@
-﻿using Limbo.Umbraco.Spa.Json.Resolvers;
+﻿using Limbo.Umbraco.Spa.Exceptions;
+using Limbo.Umbraco.Spa.Json.Resolvers;
 using Limbo.Umbraco.Spa.Models;
 using Newtonsoft.Json;
 using Skybrud.Essentials.Common;
@@ -17,19 +18,26 @@ public partial class SpaRequestHelper {
     /// <returns>An instance of <see cref="IPublishedContent"/> representing the current page, or <c>null</c> if not found.</returns>
     protected virtual IPublishedContent GetContentFromRequest(SpaRequest request) {
 
+        // Throw an exception if we don't have a site reference at this point
         if (request.Site == null) throw new PropertyNotSetException(nameof(request.Site));
 
-        // Return NULL if we dont have an Umbraco context
+        // Return NULL if we don't have an Umbraco context
         if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext umbracoContext)) return null;
 
-        int nodeId = request.Arguments.PageId;
+        // Get the page ID and/or URL parameters
+        int pageId = request.Arguments.PageId;
         string url = request.Arguments.Url;
+        if (pageId <= 0 && string.IsNullOrWhiteSpace(url)) throw new SpaException(request, "Both 'pageId' and 'url' parameters are missing.");
 
         // If the current domain specifies a path, we remove that from the path of the current request
-        if (request.Domain is { Uri: { AbsolutePath: { Length: > 1 } } }) url = url[request.Domain.Uri.AbsolutePath.Length..];
+        if (request.Domain is { Uri: { AbsolutePath.Length: > 1 } uri }) url = url[uri.AbsolutePath.Length..];
+
+        // The domain may not be added to the site node, so we look for the content ID associated with the domain
+        // first, and if not available, use the site ID as fallback
+        int rootId = request.Domain?.ContentId ?? request.SiteId;
 
         // Attempt to get content item by either it's numeric ID or URL
-        return nodeId > 0 ? umbracoContext.Content?.GetById(nodeId) : umbracoContext.Content?.GetByRoute($"{request.Site.Id}{url}", culture: request.CultureInfo.Name);
+        return pageId > 0 ? umbracoContext.Content?.GetById(pageId) : umbracoContext.Content?.GetByRoute($"{rootId}{url}", culture: request.CultureInfo.Name);
 
     }
 

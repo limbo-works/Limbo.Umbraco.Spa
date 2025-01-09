@@ -72,7 +72,7 @@ public partial class SpaRequestHelper {
 
     /// <summary>
     /// SPA request event method responsible for updating the arguments of the request. Most arguments are
-    /// determined directly from the request (eg. from the query string), while some information is determined
+    /// determined directly from the request (e.g. from the query string), while some information is determined
     /// while the request is processed.
     /// </summary>
     /// <param name="request">The current SPA request.</param>
@@ -255,7 +255,7 @@ public partial class SpaRequestHelper {
     /// model that extends the <see cref="SpaSiteModel"/> class.
     /// </summary>
     /// <example>
-    /// Example on how to populated the <see cref="SpaSiteModel.NotFoundPage"/> property:
+    /// Example on how to populate the <see cref="SpaSiteModel.NotFoundPage"/> property:
     /// <code>
     /// public class MySiteModel : SpaSiteModel {
     ///
@@ -328,6 +328,7 @@ public partial class SpaRequestHelper {
         // Return a redirect response based on the Skybrud redirect
         request.Response = ReturnRedirect(request, destinationUrl, redirect.IsPermanent);
 
+        // Return true as we found a matching redirect
         return true;
 
     }

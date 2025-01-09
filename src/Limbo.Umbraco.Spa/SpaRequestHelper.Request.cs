@@ -59,7 +59,7 @@ public partial class SpaRequestHelper {
     /// <returns>An instance of <see cref="IPublishedContent"/> representing the culture node, or <c>null</c> if not found.</returns>
     protected virtual IPublishedContent GetCultureFromUrl(SpaRequest request) {
 
-        // Return NULL if we dont have an Umbraco context
+        // Return NULL if we don't have an Umbraco context
         if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext umbracoContext)) return null;
 
         // Attemp to get the culture ID from the URL of the current request

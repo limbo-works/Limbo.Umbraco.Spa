@@ -366,7 +366,7 @@ public abstract partial class SpaRequestHelper {
     /// </summary>
     /// <param name="request">The current request.</param>
     /// <param name="destinationUrl">The destination URL of the redirect.</param>
-    /// <param name="statusCode">The status code of the response - eg. <see cref="HttpStatusCode.MovedPermanently"/>.</param>
+    /// <param name="statusCode">The status code of the response - e.g. <see cref="HttpStatusCode.MovedPermanently"/>.</param>
     /// <returns>An instance of <see cref="ActionResult"/>.</returns>
     protected virtual ActionResult ReturnRedirect(SpaRequest request, string destinationUrl, HttpStatusCode statusCode) {
 

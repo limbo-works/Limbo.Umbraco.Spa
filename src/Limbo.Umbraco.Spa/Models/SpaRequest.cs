@@ -154,7 +154,7 @@ public class SpaRequest {
     #region Constructors
 
     /// <summary>
-    /// Initializes a new a instance based on the specified <paramref name="context"/>.
+    /// Initializes a new instance based on the specified <paramref name="context"/>.
     /// </summary>
     /// <param name="context">The HTTP context of the current request.</param>
     public SpaRequest(HttpContext context) {

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Globalization;
 using System.Net;
-using System.Web;
 using Limbo.Umbraco.Spa.Constants;
 using Limbo.Umbraco.Spa.Exceptions;
 using Limbo.Umbraco.Spa.Models;
@@ -12,6 +11,7 @@ using Skybrud.Umbraco.Redirects.Models.Outbound;
 using Umbraco.Cms.Core.Models;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.Services;
+using Umbraco.Cms.Core.Web;
 using Umbraco.Extensions;
 
 namespace Limbo.Umbraco.Spa;
@@ -35,16 +35,19 @@ public partial class SpaRequestHelper {
         // Find the domain (sets the "Domain" and "CultureInfo" of "request")
         DomainRepository.FindDomain(request, request.Arguments.Uri);
 
+        // Get a reference to the current Umbraco context
+        IUmbracoContext umbracoContext = UmbracoContextAccessor.GetRequiredUmbracoContext();
+
         if (request.Arguments.PageId > 0) {
 
             // If a page ID was specifically specified for the request, it may mean that we're
             // in preview mode or that the "url" parameter isn't specified. In either case, we
-            // need to find the assigned domains of the requested node (or it's ancestor) so we
-            // can determine the sitenode
+            // need to find the assigned domain of the requested node (or it's ancestor) so we
+            // can determine the site node
 
-            // TODO: Look at the "siteId" parameter as well (may be relevant for virtual content etc.)
+            // TODO: Look at the "siteId" parameter as well (might be relevant for virtual content etc.)
 
-            IPublishedContent c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content?.GetById(request.Arguments.PageId);
+            IPublishedContent c = umbracoContext.Content?.GetById(request.Arguments.PageId);
 
             if (c != null) {
 
@@ -58,6 +61,9 @@ public partial class SpaRequestHelper {
 
 
         }
+
+        // Set the domain content node if available
+        if (request.Domain?.ContentId is {} domainContentId) request.DomainContent = umbracoContext.Content?.GetById(domainContentId);
 
         // Make sure to overwrite the variation context
         VariationContextAccessor.VariationContext = new VariationContext(request.CultureInfo.Name);

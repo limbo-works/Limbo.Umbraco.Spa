@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Net;
 using Microsoft.AspNetCore.Http;
@@ -134,7 +135,14 @@ public class SpaRequest {
     /// <summary>
     /// Gets a reference to the domain of the request.
     /// </summary>
+    [MaybeNull]
     public DomainAndUri Domain { get; set; }
+
+    /// <summary>
+    /// Gets the <see cref="IPublishedContent"/> representing the domain node, or <see langword="null"/> if a doamin node has not or can not be determined.
+    /// </summary>
+    [MaybeNull]
+    public IPublishedContent DomainContent { get; set; }
 
     /// <summary>
     /// Gets a reference to the culture of the request.

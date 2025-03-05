@@ -7,16 +7,16 @@
 
 ## Installation
 
-For Umbraco 13, the package is only available via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.Spa/13.0.0-alpha004). Either via the .NET CLI:
+For Umbraco 13, the package is only available via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.Spa/13.0.0-alpha005). Either via the .NET CLI:
 
 ```
-dotnet add package Limbo.Umbraco.Spa --version 13.0.0-alpha004
+dotnet add package Limbo.Umbraco.Spa --version 13.0.0-alpha005
 ```
 
 or the NuGet Package Manager:
 
 ```
-Install-Package Limbo.Umbraco.Spa -Version 13.0.0-alpha004
+Install-Package Limbo.Umbraco.Spa -Version 13.0.0-alpha005
 ```
 
 ### Other versions of Umbraco

@@ -57,6 +57,12 @@ public class SpaRequest {
     public string Url => Arguments.Url;
 
     /// <summary>
+    /// Gets the URI of the current SPA request.
+    /// </summary>
+    [JsonIgnore]
+    public Uri Uri => Arguments.Uri;
+
+    /// <summary>
     /// Gets whether the user is currently in preview mode.
     /// </summary>
     [JsonProperty("isPreview")]

@@ -304,8 +304,8 @@ public partial class SpaRequestHelper {
     /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
     protected virtual bool HandleSkybrudRedirect(SpaRequest request) {
 
-        // Get the decoded URL of the request
-        string requestUrl = request.Url.UrlDecode()!;
+        // Get the path and query string of the request
+        string requestUrl = request.Uri.PathAndQuery;
 
         // Determine the key of the domain or site node
         Guid rootNodeKey = request.DomainContent?.Key ?? request.Site.Key;

@@ -144,7 +144,7 @@ public partial class SpaRequestHelper {
 
             ),
 
-            // Second group - not executed if we already have a data model (eg. from the cache)
+            // Second group - not executed if we already have a data model (e.g. from the cache)
             new SpaActionGroup(
 
                 // Continue if we don't have a model yet
@@ -249,8 +249,8 @@ public partial class SpaRequestHelper {
     /// If the method returns a <see cref="HttpResponseMessage"/>, that response will be returned directly to the
     /// client. If the method returns <c>null</c>, the exception will bubble up through the request pipeline.
     ///
-    /// By default, this method will write the exception to the Umbraco log, and if the solution is running i debug
-    /// mode, and the Accept header of the request contains <c>text/html</c>, a user friendly HTML error message
+    /// By default, this method will write the exception to the Umbraco log, and if the solution is running in debug
+    /// mode, and the Accept header of the request contains <c>text/html</c>, a user-friendly HTML error message
     /// will be returned to the user.
     /// </summary>
     /// <param name="request">The current SPA request.</param>
@@ -336,11 +336,11 @@ public partial class SpaRequestHelper {
 
         if (request.Url == null || request.IsPreview) return;
 
-        // Slit the URL so we don't look at the query string
+        // Slit the URL, so we don't look at the query string
         string[] url = request.Url.Split('?');
 
         // Return as the URL already ends with a trailing slash
-        if (url[0].EndsWith("/")) return;
+        if (url[0].EndsWith('/')) return;
 
         // Append the trailing slash
         url[0] += "/";
@@ -360,11 +360,11 @@ public partial class SpaRequestHelper {
 
         if (request.IsPreview) return;
 
-        // Slit the URL so we don't look at the query string
+        // Slit the URL, so we don't look at the query string
         string[] url = request.Url.Split('?');
 
         // Return as the URL doesn't end with a trailing slash
-        if (!url[0].EndsWith("/")) return;
+        if (!url[0].EndsWith('/')) return;
 
         // Remove the trailing slash
         url[0] = url[0][..^1];

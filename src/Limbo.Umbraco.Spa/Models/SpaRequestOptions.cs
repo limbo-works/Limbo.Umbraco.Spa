@@ -52,7 +52,7 @@ public class SpaRequestOptions {
 
     /// <summary>
     /// Gets a list of the requested <see cref="SpaApiPart"/> based on the <c>parts</c> query string parameter. If
-    /// empty or not specified specified, all parts are assumed.
+    /// empty or not specified, all parts are assumed.
     /// </summary>
     public List<SpaApiPart> Parts { get; set; }
 
@@ -74,7 +74,7 @@ public class SpaRequestOptions {
     public int PortNumber { get; set; }
 
     /// <summary>
-    /// Gets whether the inbound request is received via the default port number (eg. <c>80</c> for HTTP and <c>443</c> for HTTPS).
+    /// Gets whether the inbound request is received via the default port number (e.g. <c>80</c> for HTTP and <c>443</c> for HTTPS).
     /// </summary>
     public bool IsDefaultPort { get; set; }
 
@@ -107,7 +107,7 @@ public class SpaRequestOptions {
     public bool EnableCaching { get; set; }
 
     /// <summary>
-    /// Gets or sets whether the SPA should return a HTML response with exception details should part of the SPA or underlying logic fail.
+    /// Gets or sets whether the SPA should return an HTML response with exception details should part of the SPA or underlying logic fail.
     /// </summary>
     public bool ShowHtmlErrors { get; set; }
 
@@ -257,13 +257,13 @@ public class SpaRequestOptions {
     /// Converts the specified string of <paramref name="parts"/> to <see cref="List{SpaApiPart}"/>.
     /// </summary>
     /// <param name="parts">The string with the parts.</param>
-    /// <returns>An an instance of <see cref="List{SpaApiPart}"/> containing each <see cref="SpaApiPart"/> specified in <paramref name="parts"/>.</returns>
+    /// <returns>An instance of <see cref="List{SpaApiPart}"/> containing each <see cref="SpaApiPart"/> specified in <paramref name="parts"/>.</returns>
     private static List<SpaApiPart> GetParts(string parts = "") {
 
-        // No parts means all parts
-        if (string.IsNullOrWhiteSpace(parts)) return new List<SpaApiPart> { SpaApiPart.Content, SpaApiPart.Navigation, SpaApiPart.Site };
+        // No parts mean all parts
+        if (string.IsNullOrWhiteSpace(parts)) return [SpaApiPart.Content, SpaApiPart.Navigation, SpaApiPart.Site];
 
-        List<SpaApiPart> temp = new();
+        List<SpaApiPart> temp = [];
         foreach (string item in parts.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
             if (EnumUtils.TryParseEnum(item, out SpaApiPart part)) temp.Add(part);
         }

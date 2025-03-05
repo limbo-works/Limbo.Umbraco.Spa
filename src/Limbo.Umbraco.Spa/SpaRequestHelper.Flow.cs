@@ -4,7 +4,6 @@ using System.Net;
 using Limbo.Umbraco.Spa.Constants;
 using Limbo.Umbraco.Spa.Exceptions;
 using Limbo.Umbraco.Spa.Models;
-using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Redirects.Extensions;
 using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Redirects.Models.Outbound;
@@ -184,8 +183,8 @@ public partial class SpaRequestHelper {
     /// <example>
     /// This method can be used for creating custom internal redirects (showing another page than the one that was
     /// actually requested). In our typical site setup, we have a culture node with settings for that particular
-    /// culture - eg. site name and similar. The culture node mostly a settings node, and as such it doesn't have
-    /// any content. So when a user requests the culture node (eg. with an URL such as <c>/da/</c> or <c>/en/</c>),
+    /// culture - e.g. site name and similar. The culture node mostly a settings node, and as such it doesn't have
+    /// any content. So when a user requests the culture node (e.g. with a URL such as <c>/da/</c> or <c>/en/</c>),
     /// we set the current page as the frontpage of the culture instead:
     /// <code>
     /// protected override void PostContentLookup(SpaRequest request) {
@@ -473,7 +472,7 @@ public partial class SpaRequestHelper {
         request.DataModel.ExecuteTimeMs = request.Stopwatch.ElapsedMilliseconds;
         request.DataModel.IsCached = true;
 
-        // Update the status code based on the cached model (eg. 404)
+        // Update the status code based on the cached model (e.g. 404)
         request.ResponseStatusCode = request.DataModel.Meta.StatusCode;
 
         // Update the culture info of the current request
@@ -511,7 +510,7 @@ public partial class SpaRequestHelper {
 
     /// <summary>
     /// Virtual method that is executed at the end of the page cycle. It doesn't really do anything by default, but
-    /// you can override it to customize the response before it is send to the client.
+    /// you can override it to customize the response before it is sent to the client.
     ///
     /// Notice that this method is executed for both cached and non-cached responses.
     /// </summary>

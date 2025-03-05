@@ -30,7 +30,7 @@ public class SpaDomainRepository {
 
     /// <summary>
     /// Returns the <see cref="DomainAndUri"/> for the node with the specified <paramref name="nodeId"/>, or
-    /// <c>null</c> if not found. The domain will be determined either from the node it self or one of it's ancestors.
+    /// <c>null</c> if not found. The domain will be determined either from the node itself or one of its ancestors.
     /// </summary>
     /// <param name="nodeId">The ID of the node.</param>
     /// <param name="current">The URI of the request.</param>
@@ -58,7 +58,7 @@ public class SpaDomainRepository {
 
     /// <summary>
     /// Returns the <see cref="DomainAndUri"/> for the specified <paramref name="content"/> node, or <c>null</c> if
-    /// not found. The domain will be determined either from the node it self or one of it's ancestors.
+    /// not found. The domain will be determined either from the node itself or one of its ancestors.
     /// </summary>
     /// <param name="content">Ther node.</param>
     /// <param name="current">The URI of the request.</param>
@@ -188,8 +188,8 @@ public class SpaDomainRepository {
             return GetByCulture(domainsAndUris, culture, defaultCulture);
         }
 
-        // else we have a uri,
-        // try to match that uri, else filter
+        // else we have a URI,
+        // try to match that URI, else filter
 
         // if a culture is specified, then try to get domains for that culture
         // (else cultureDomains will be null)

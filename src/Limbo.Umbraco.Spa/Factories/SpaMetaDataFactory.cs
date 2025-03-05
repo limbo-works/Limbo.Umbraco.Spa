@@ -13,7 +13,7 @@ namespace Limbo.Umbraco.Spa.Factories;
 public class SpaMetaDataFactory : ISpaMetaDataFactory {
 
     /// <summary>
-    /// Returns the meta data for the specified <paramref name="content"/> item.
+    /// Returns the metadata for the specified <paramref name="content"/> item.
     /// </summary>
     /// <param name="content">The content item.</param>
     /// <param name="request">The current SPA request.</param>

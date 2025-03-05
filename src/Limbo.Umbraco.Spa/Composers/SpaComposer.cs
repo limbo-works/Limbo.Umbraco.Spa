@@ -11,7 +11,7 @@ using Umbraco.Extensions;
 
 #pragma warning disable 1591
 
-namespace Limbo.Umbraco.Spa.Composers; 
+namespace Limbo.Umbraco.Spa.Composers;
 
 public class SpaComposer : IComposer {
 

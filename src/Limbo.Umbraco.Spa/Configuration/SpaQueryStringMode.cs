@@ -19,7 +19,7 @@ public enum SpaQueryStringMode {
 
     /// <summary>
     /// Indciates that the SPA pacakge should look for a <c>query</c> parameter in the query string of the SPA API.
-    /// The value of the parameter is an URL encoded version of the client-side query string.
+    /// The value of the parameter is a URL encoded version of the client-side query string.
     /// </summary>
     Encode
 

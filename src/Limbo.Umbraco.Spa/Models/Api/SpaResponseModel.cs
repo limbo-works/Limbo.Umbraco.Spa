@@ -11,7 +11,7 @@ public class SpaResponseModel {
     #region Properties
 
     /// <summary>
-    /// Gets or sets the meta data for the response.
+    /// Gets or sets the metadata for the response.
     /// </summary>
     [JsonProperty(PropertyName = "meta")]
     public SpaMetaData Meta { get; set; }
@@ -21,10 +21,6 @@ public class SpaResponseModel {
     /// </summary>
     [JsonProperty(PropertyName = "data")]
     public object Data { get; set; }
-
-    #endregion
-
-    #region Constructors
 
     #endregion
 

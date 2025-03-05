@@ -21,6 +21,8 @@ namespace Limbo.Umbraco.Spa.Models;
 /// </summary>
 public class SpaRequestOptions {
 
+    private static readonly char[] _partsSeparator = [','];
+
     #region Properties
 
     /// <summary>
@@ -264,7 +266,7 @@ public class SpaRequestOptions {
         if (string.IsNullOrWhiteSpace(parts)) return [SpaApiPart.Content, SpaApiPart.Navigation, SpaApiPart.Site];
 
         List<SpaApiPart> temp = [];
-        foreach (string item in parts.Split(new[] { ',' }, StringSplitOptions.RemoveEmptyEntries)) {
+        foreach (string item in parts.Split(_partsSeparator, StringSplitOptions.RemoveEmptyEntries)) {
             if (EnumUtils.TryParseEnum(item, out SpaApiPart part)) temp.Add(part);
         }
 

@@ -4,7 +4,7 @@ using Newtonsoft.Json;
 namespace Limbo.Umbraco.Spa.Models;
 
 /// <summary>
-/// Class with meta data about the SPA response.
+/// Class with metadata about the SPA response.
 /// </summary>
 public class SpaResponseMeta {
 

@@ -19,7 +19,7 @@ public static class SpaUtils {
         return !string.IsNullOrWhiteSpace(name) && _spaParameters.Contains(name);
     }
 
-    private static readonly HashSet<string> _spaParameters = new() {
+    private static readonly HashSet<string> _spaParameters = [
         "appHost",
         "appProtocol",
         "navLevels",
@@ -29,7 +29,7 @@ public static class SpaUtils {
         "siteId",
         "pageId",
         "culture"
-    };
+    ];
 
     /// <summary>
     /// Various utility methods for woroking with JSON.

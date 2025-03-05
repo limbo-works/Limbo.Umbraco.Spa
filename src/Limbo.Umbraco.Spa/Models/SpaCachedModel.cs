@@ -17,7 +17,7 @@ public class SpaCachedModel {
     public SpaDataModel Data { get; }
 
     /// <summary>
-    /// Gets the culture. It's relevant to also cache the culture info so we'll be able
+    /// Gets the culture. It's relevant to also cache the culture info, so we'll be able
     /// to set the culture info of subsequent request when the model is read from the cache.
     /// </summary>
     public CultureInfo CultureInfo { get; }

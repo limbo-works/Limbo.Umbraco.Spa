@@ -1,4 +1,6 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
+using Limbo.Umbraco.Spa.Models;
 
 namespace Limbo.Umbraco.Spa.Configuration;
 
@@ -36,5 +38,26 @@ public class SpaConfiguration {
     /// <see cref="HttpStatusCode.OK"/>.
     /// </summary>
     public bool OverwriteStatusCodes { get; private set; } = true;
+
+    /// <summary>
+    /// Gets or sets a list of known SPA parameters.
+    /// </summary>
+    /// <remarks>
+    /// When processing an inbound SPA request, the query string may be a mix of SPA parameters and non-SPA parameters,
+    /// so the parameters configured through this setting are then removed from the inbound query string exposed by the
+    /// <see cref="SpaRequestOptions.Uri"/> and <see cref="SpaRequestOptions.QueryString"/> properties.
+    /// </remarks>
+    public HashSet<string> Parameters { get; set; } = [
+        "appHost",
+        "appProtocol",
+        "navLevels",
+        "navContext",
+        "parts",
+        "url",
+        "siteId",
+        "pageId",
+        "culture",
+        "cache"
+    ];
 
 }

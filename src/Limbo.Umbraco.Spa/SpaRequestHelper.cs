@@ -86,9 +86,14 @@ public partial class SpaRequestHelper {
     public ISpaContentFactory ContentFactory { get; }
 
     /// <summary>
+    /// Alias of <see cref="Settings"/>.
+    /// </summary>
+    public SpaConfiguration Configuration => Settings;
+
+    /// <summary>
     /// Gets a reference to the <see cref="SpaConfiguration"/>.
     /// </summary>
-    public SpaConfiguration Configuration { get; }
+    public SpaConfiguration Settings { get; }
 
     #endregion
 
@@ -110,7 +115,7 @@ public partial class SpaRequestHelper {
         PublishedSnapshotAccessor = dependencies.PublishedSnapshotAccessor;
         DomainRepository = dependencies.DomainRepository;
         ContentFactory = dependencies.ContentFactory;
-        Configuration = dependencies.Configuration;
+        Settings = dependencies.Configuration;
 
     }
 
@@ -403,6 +408,15 @@ public partial class SpaRequestHelper {
 
         return $"{SpaConstants.CachePrefix}{options.PageId}-{options.SiteId}-{options.Url}-{options.IsPreview}-{string.Join(",", options.Parts ?? new List<SpaApiPart>())}-{options.Protocol}-{options.HostName}-{options.PortNumber}-{options.NavLevels}-{options.NavContext}";
 
+    }
+
+    /// <summary>
+    /// Returns whether the specified <paramref name="name"/> matches the name of a special SPA query string parameter.
+    /// </summary>
+    /// <param name="name">The parameter name.</param>
+    /// <returns><see langword="false"/> if <paramref name="name"/> matches the name of a special SPA query string parameter; otherwise, <see langword="false"/>.</returns>
+    public virtual bool IsSpaParameter(string name) {
+        return !string.IsNullOrWhiteSpace(name) && Settings.Parameters.Contains(name);
     }
 
     #endregion

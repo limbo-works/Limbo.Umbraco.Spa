@@ -28,7 +28,8 @@ public static class SpaUtils {
         "url",
         "siteId",
         "pageId",
-        "culture"
+        "culture",
+        "cache"
     ];
 
     /// <summary>

@@ -220,7 +220,7 @@ public class SpaRequestOptions {
 
             case SpaQueryStringMode.Legacy:
                 return request.Query
-                    .Where(x => !SpaUtils.IsSpaParameter(x.Key))
+                    .Where(x => !IsSpaParameter(x.Key))
                     .ToDictionary(x => x.Key, x => x.Value)
                     .ToQueryCollection();
 
@@ -228,7 +228,7 @@ public class SpaRequestOptions {
             default:
                 if (!request.Query.TryGetValue("query", out values)) {
                     return request.Query
-                        .Where(x => !SpaUtils.IsSpaParameter(x.Key))
+                        .Where(x => !IsSpaParameter(x.Key))
                         .ToDictionary(x => x.Key, x => x.Value)
                         .ToQueryCollection();
                 }
@@ -272,6 +272,15 @@ public class SpaRequestOptions {
 
         return temp;
 
+    }
+
+    /// <summary>
+    /// Returns whether the specified <paramref name="name"/> matches the name of a special SPA query string parameter.
+    /// </summary>
+    /// <param name="name">The parameter name.</param>
+    /// <returns><see langword="false"/> if <paramref name="name"/> matches the name of a special SPA query string parameter; otherwise, <see langword="false"/>.</returns>
+    protected virtual bool IsSpaParameter(string name) {
+        return SpaUtils.IsSpaParameter(name);
     }
 
     #endregion

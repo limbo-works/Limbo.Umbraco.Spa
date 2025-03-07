@@ -14,7 +14,7 @@ public static class SpaUtils {
     /// Returns whether the specified <paramref name="name"/> matches the name of a special SPA query string parameter.
     /// </summary>
     /// <param name="name">The parameter name.</param>
-    /// <returns><c>true</c> if <paramref name="name"/> matches the name of a special SPA query string parameter; otherwise, <c>false</c>.</returns>
+    /// <returns><see langword="false"/> if <paramref name="name"/> matches the name of a special SPA query string parameter; otherwise, <see langword="false"/>.</returns>
     public static bool IsSpaParameter(string name) {
         return !string.IsNullOrWhiteSpace(name) && _spaParameters.Contains(name);
     }

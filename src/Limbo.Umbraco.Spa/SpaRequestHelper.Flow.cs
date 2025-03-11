@@ -4,6 +4,7 @@ using System.Net;
 using Limbo.Umbraco.Spa.Constants;
 using Limbo.Umbraco.Spa.Exceptions;
 using Limbo.Umbraco.Spa.Models;
+using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Redirects.Extensions;
 using Skybrud.Umbraco.Redirects.Models;
 using Skybrud.Umbraco.Redirects.Models.Outbound;
@@ -304,7 +305,7 @@ public partial class SpaRequestHelper {
     protected virtual bool HandleSkybrudRedirect(SpaRequest request) {
 
         // Get the path and query string of the request
-        string requestUrl = request.Uri.PathAndQuery;
+        string requestUrl = request.Uri.PathAndQuery.UrlDecode();
 
         // Determine the key of the domain or site node
         Guid rootNodeKey = request.DomainContent?.Key ?? request.Site.Key;
@@ -342,8 +343,11 @@ public partial class SpaRequestHelper {
         // Determine the ID of the domain or site node
         int rootNodeId = request.DomainContent?.Id ?? request.Site.Id;
 
+        // Get the URL without the domain and query string
+        string requestUrl = request.Uri.AbsolutePath.UrlDecode();
+
         // Look for a matching redirect
-        IRedirectUrl umbRedirect = Services.RedirectUrlService!.GetMostRecentRedirectUrl(rootNodeId + request.Url.TrimEnd('/'));
+        IRedirectUrl umbRedirect = Services.RedirectUrlService!.GetMostRecentRedirectUrl(rootNodeId + requestUrl);
         if (umbRedirect == null) return false;
 
         // Get the destination page from the content cache

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Skybrud.Essentials.AspNetCore;
 using Skybrud.Essentials.Reflection;
+using Skybrud.Essentials.Strings.Extensions;
 using Umbraco.Extensions;
 
 namespace Limbo.Umbraco.Spa;
@@ -129,8 +130,9 @@ public abstract partial class SpaRequestHelper {
             sb.AppendLine("<table>\n");
             sb.AppendLine("<tr><th>Page ID</th><td>" + request.Arguments.PageId + "</td></tr>");
             sb.AppendLine("<tr><th>Site ID</th><td>" + request.Arguments.SiteId + "</td></tr>");
+            sb.AppendLine("<tr><th>URI</th><td>" + request.Arguments.Uri + "</td></tr>");
             sb.AppendLine("<tr><th>URL</th><td>" + request.Arguments.Url + "</td></tr>");
-            sb.AppendLine("<tr><th>Query String</th><td>" + request.Arguments.QueryString.ToUrlEncodedString() + "</td></tr>");
+            sb.AppendLine("<tr><th>Query String</th><td>" + request.Arguments.QueryString.ToUrlEncodedString().UrlDecode() + "</td></tr>");
             sb.AppendLine("<tr><th>Preview</th><td>" + request.Arguments.IsPreview + "</td></tr>");
             sb.AppendLine("<tr><th>Protocol</th><td>" + request.Arguments.Protocol + "</td></tr>");
             sb.AppendLine("<tr><th>Host name</th><td>" + request.Arguments.HostName + "</td></tr>");

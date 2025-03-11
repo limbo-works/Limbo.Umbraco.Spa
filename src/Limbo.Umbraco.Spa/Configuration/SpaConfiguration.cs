@@ -28,7 +28,7 @@ public class SpaConfiguration {
     /// </li>
     /// </ul>
     /// </summary>
-    public SpaQueryStringMode QueryStringMode { get; private set; } = SpaQueryStringMode.Auto;
+    public SpaQueryStringMode QueryStringMode { get; set; } = SpaQueryStringMode.Auto;
 
     /// <summary>
     /// Gets whether the helper should overwrite the status code of responses returned by the helper. Default is <c>true</c>.
@@ -37,7 +37,7 @@ public class SpaConfiguration {
     /// <see cref="HttpStatusCode.TemporaryRedirect"/> and <see cref="HttpStatusCode.NotFound"/> will be set to
     /// <see cref="HttpStatusCode.OK"/>.
     /// </summary>
-    public bool OverwriteStatusCodes { get; private set; } = true;
+    public bool OverwriteStatusCodes { get; set; } = true;
 
     /// <summary>
     /// Gets or sets a list of known SPA parameters.

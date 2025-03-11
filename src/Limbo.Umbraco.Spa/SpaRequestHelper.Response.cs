@@ -213,10 +213,12 @@ public abstract partial class SpaRequestHelper {
             sb.AppendLine("</table>");
         }
 
-        sb.AppendLine("<h3>Config</h3>");
+        sb.AppendLine("<h3>Settings</h3>");
         sb.AppendLine("<table>\n");
         sb.AppendLine("<tr><th>IsDevelopment</th><td>" + Environment.IsDevelopment() + "</td></tr>");
-        //sb.AppendLine("<tr><th>IsCustomErrorEnabled</th><td>" + request.HttpContext.IsCustomErrorEnabled + "</td></tr>");
+        sb.AppendLine("<tr><th>QueryStringMode</th><td>" + Settings.QueryStringMode + "</td></tr>");
+        sb.AppendLine("<tr><th>OverwriteStatusCodes</th><td>" + Settings.OverwriteStatusCodes + "</td></tr>");
+        sb.AppendLine("<tr><th>Parameters</th><td>" + (from p in Settings.Parameters select $"<code>{p.HtmlEncode()}</code>").Join(", ") + "</td></tr>");
         sb.AppendLine("</table>");
 
         while (exception != null) {

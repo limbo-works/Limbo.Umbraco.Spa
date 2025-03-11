@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>13.0.0-alpha006</VersionPrefix>
+    <VersionPrefix>13.0.0-alpha007</VersionPrefix>
     <VersionSuffix Condition="'$(Configuration)'=='Debug'">$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
     <Company>Limbo</Company>
     <Product>Limbo SPA</Product>
@@ -51,6 +51,8 @@
   <!-- Include package icon for NuGet -->
   <ItemGroup>
     <Content Include="../build/Limbo.png" Pack="true" PackagePath="\" />
+    <Content Include="../../LICENSE.md" Pack="false" />
+    <Content Include="../../README.md" Pack="false" />
   </ItemGroup>
 
   <!-- Generate XML documentation -->

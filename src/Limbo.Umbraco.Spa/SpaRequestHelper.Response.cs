@@ -45,7 +45,7 @@ public abstract partial class SpaRequestHelper {
     public virtual ActionResult CreateTextResponse(HttpStatusCode statusCode, string text, Encoding encoding) {
         return new ContentResult {
             StatusCode = (int) HttpStatusCode.InternalServerError,
-            ContentType = "text/plain",
+            ContentType = Equals(encoding, Encoding.UTF8) ? "text/plain; charset=utf-8" : "text/plain",
             Content = text ?? string.Empty
         };
     }
@@ -83,7 +83,7 @@ public abstract partial class SpaRequestHelper {
     public virtual ActionResult CreateHtmlResponse(HttpStatusCode statusCode, string html, Encoding encoding) {
         return new ContentResult {
             StatusCode = (int) HttpStatusCode.InternalServerError,
-            ContentType = "text/html",
+            ContentType = Equals(encoding, Encoding.UTF8) ? "text/html; charset=utf-8" : "text/html",
             Content = html ?? string.Empty
         };
     }
@@ -264,8 +264,8 @@ public abstract partial class SpaRequestHelper {
 
         // Create a new response
         return new ContentResult {
-            StatusCode = (int)statusCode,
-            ContentType = "application/json",
+            StatusCode = (int) statusCode,
+            ContentType = "application/json; charset=utf-8",
             Content = Serialize(data)
         };
 

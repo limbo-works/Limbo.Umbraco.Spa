@@ -344,7 +344,7 @@ public partial class SpaRequestHelper {
         int rootNodeId = request.DomainContent?.Id ?? request.Site.Id;
 
         // Get the URL without the domain and query string
-        string requestUrl = request.Uri.AbsolutePath.UrlDecode();
+        string requestUrl = request.Uri.AbsolutePath.UrlDecode().TrimEnd('/');
 
         // Look for a matching redirect
         IRedirectUrl umbRedirect = Services.RedirectUrlService!.GetMostRecentRedirectUrl(rootNodeId + requestUrl);

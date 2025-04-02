@@ -1,6 +1,6 @@
 # Limbo SPA
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE.md)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://github.com/limbo-works/Limbo.Umbraco.Spa/blob/v13/main/LICENSE.md)
 [![NuGet](https://img.shields.io/nuget/v/Limbo.Umbraco.Spa.svg)](https://www.nuget.org/packages/Skybrud.Essentials)
 [![Limbo.Umbraco.Spa at packages.limbo.works](https://img.shields.io/badge/limbo-packages-blue)](https://packages.limbo.works/limbo.umbraco.spa/)
 
@@ -8,16 +8,16 @@
 
 ## Installation
 
-For Umbraco 13, the package is only available via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.Spa/13.0.0-alpha007). Either via the .NET CLI:
+For Umbraco 13, the package is only available via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.Spa/13.0.0-alpha008). Either via the .NET CLI:
 
 ```
-dotnet add package Limbo.Umbraco.Spa --version 13.0.0-alpha007
+dotnet add package Limbo.Umbraco.Spa --version 13.0.0-alpha008
 ```
 
 or the NuGet Package Manager:
 
 ```
-Install-Package Limbo.Umbraco.Spa -Version 13.0.0-alpha007
+Install-Package Limbo.Umbraco.Spa -Version 13.0.0-alpha008
 ```
 
 ### Other versions of Umbraco

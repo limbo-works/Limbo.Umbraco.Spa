@@ -43,9 +43,9 @@
     <PackageReference Include="Skybrud.Essentials.AspNetCore" Version="1.0.0" />
     <PackageReference Include="Skybrud.Essentials.Umbraco" Version="13.0.0" />
     <PackageReference Include="Skybrud.Umbraco.Redirects" Version="13.0.7" />
-    <PackageReference Include="Umbraco.Cms.Core" Version="[13.0.0,13.999)" />
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="[13.0.0,13.999)" />
-    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="[13.0.0,13.999)" />
+    <PackageReference Include="Umbraco.Cms.Core" Version="[13.0.0,13.999)" NoWarn="NU1902" />
+    <PackageReference Include="Umbraco.Cms.Web.Website" Version="[13.0.0,13.999)" NoWarn="NU1902" />
+    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="[13.0.0,13.999)" NoWarn="NU1902" />
   </ItemGroup>
 
   <!-- Include package icon for NuGet -->

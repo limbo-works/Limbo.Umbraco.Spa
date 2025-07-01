@@ -39,10 +39,10 @@
   <!-- Include NuGet dependencies -->
   <ItemGroup>
     <PackageReference Include="Limbo.MetaData" Version="1.0.0-alpha001" />
-    <PackageReference Include="Skybrud.Essentials" Version="1.1.58" />
-    <PackageReference Include="Skybrud.Essentials.AspNetCore" Version="1.0.0" />
-    <PackageReference Include="Skybrud.Essentials.Umbraco" Version="13.0.0" />
-    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="13.0.7" />
+    <PackageReference Include="Skybrud.Essentials" Version="1.1.60" />
+    <PackageReference Include="Skybrud.Essentials.AspNetCore" Version="1.0.1" />
+    <PackageReference Include="Skybrud.Essentials.Umbraco" Version="13.0.3" />
+    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="13.0.8" />
     <PackageReference Include="Umbraco.Cms.Core" Version="[13.0.0,13.999)" NoWarn="NU1902" />
     <PackageReference Include="Umbraco.Cms.Web.Website" Version="[13.0.0,13.999)" NoWarn="NU1902" />
     <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="[13.0.0,13.999)" NoWarn="NU1902" />

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Net;
+using System.Threading;
 using Limbo.Umbraco.Spa.Constants;
 using Limbo.Umbraco.Spa.Exceptions;
 using Limbo.Umbraco.Spa.Models;
@@ -484,6 +485,9 @@ public partial class SpaRequestHelper {
 
         // Update the culture info of the current request
         request.CultureInfo = cached.CultureInfo;
+
+        // Set the culture of the current thread/request
+        Thread.CurrentThread.CurrentCulture = Thread.CurrentThread.CurrentUICulture = request.CultureInfo;
 
     }
 

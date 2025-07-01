@@ -122,6 +122,9 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current SPA request.</param>
     protected virtual void InitSite(SpaRequest request) {
 
+        // If a previous step has already determined the site node, we should return right away
+        if (request.Site is not null) return;
+
         // Get a reference to the site node
         request.Site = UmbracoContextAccessor
             .GetRequiredUmbracoContext()

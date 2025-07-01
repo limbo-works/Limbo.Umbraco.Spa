@@ -302,7 +302,7 @@ public partial class SpaRequestHelper {
     /// <summary>
     /// Virtual method for handling inbound redirects created by editors through Skybrud's redirects package.
     ///
-    /// The redirects handled by this method are the ones retrived through the <c>IRedirectsService</c> service.
+    /// The redirects handled by this method are the ones retrieved through the <c>IRedirectsService</c> service.
     /// </summary>
     /// <param name="request">The current request.</param>
     /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
@@ -338,7 +338,7 @@ public partial class SpaRequestHelper {
     }
 
     /// <summary>
-    /// Virtual method for handling redirects created automatically by Umbraco when editors rename and move content. The redirects handled by this method are the ones retrived through the <see cref="IRedirectUrlService"/> service.
+    /// Virtual method for handling redirects created automatically by Umbraco when editors rename and move content. The redirects handled by this method are the ones retrieved through the <see cref="IRedirectUrlService"/> service.
     /// </summary>
     /// <param name="request">The current request.</param>
     /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
@@ -365,7 +365,7 @@ public partial class SpaRequestHelper {
     }
 
     /// <summary>
-    /// Virtual method for handling outbound redirects - wich is redirects pointing from content in Umbraco to somewhere else.
+    /// Virtual method for handling outbound redirects - which is redirects pointing from content in Umbraco to somewhere else.
     /// </summary>
     /// <param name="request">The current request.</param>
     protected virtual void HandleOutboundRedirects(SpaRequest request) {
@@ -390,7 +390,7 @@ public partial class SpaRequestHelper {
     /// Virtual method for initializing the <see cref="SpaContentModel"/> representing the requested page.
     ///
     /// The default implementation is able to detect models from ModelsBuilder, in which case it may not be
-    /// neccessary to override this method. On the other hand, you can create your own implementation to get a
+    /// necessary to override this method. On the other hand, you can create your own implementation to get a
     /// better control of the model returned for a given (type of) page.
     /// </summary>
     /// <example>

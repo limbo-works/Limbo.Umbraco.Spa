@@ -194,7 +194,7 @@ public class SpaRequestOptions {
         AcceptTypes = r.GetAcceptTypes() ?? string.Empty;
 
         // Determine whether caching should be enabled
-        EnableCaching = helper.Environment.IsDevelopment() == false && r.Query.GetBoolean("cache", true) && IsPreview == false;
+        EnableCaching = r.Query.GetBoolean("cache", helper.Environment.IsDevelopment() == false) && IsPreview == false;
 
         ShowHtmlErrors = helper.Environment.IsDevelopment()/* && context.IsCustomErrorEnabled == false*/ && AcceptTypes.Contains("text/html");
 

@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/Solution Items/">
+    <File Path="../debug.bat" />
+    <File Path="../LICENSE.md" />
+    <File Path="../README.md" />
+    <File Path="../release.bat" />
+    <File Path=".editorconfig" />
+    <File Path="Limbo.Umbraco.Spa.sln.DotSettings" />
+  </Folder>
+  <Project Path="Limbo.Umbraco.Spa/Limbo.Umbraco.Spa.csproj" />
+</Solution>

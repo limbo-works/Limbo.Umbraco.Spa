@@ -21,7 +21,6 @@ using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Redirects.Services;
 using Umbraco.Cms.Core.Cache;
 using Umbraco.Cms.Core.Models.PublishedContent;
-using Umbraco.Cms.Core.PublishedCache;
 using Umbraco.Cms.Core.Services;
 using Umbraco.Cms.Core.Web;
 using Umbraco.Extensions;
@@ -33,7 +32,14 @@ namespace Limbo.Umbraco.Spa;
 /// </summary>
 public partial class SpaRequestHelper {
 
+    private readonly SpaRequestHelperDependencies _dependencies;
+
     #region Properties
+
+    /// <summary>
+    /// Gets a reference to Umbraco's logger.
+    /// </summary>
+    public ILogger Logger { get; }
 
     /// <summary>
     /// Gets a reference to the current environment.
@@ -56,24 +62,19 @@ public partial class SpaRequestHelper {
     protected AppCaches AppCaches { get; }
 
     /// <summary>
+    /// Gets a reference to Umbraco's logger.
+    /// </summary>
+    public IDocumentUrlService DocumentUrlService => _dependencies.DocumentUrlService;
+
+    /// <summary>
     /// Gets a reference to the redirects service.
     /// </summary>
     protected IRedirectsService RedirectsService { get; }
 
     /// <summary>
-    /// Gets a reference to Umbraco's logger.
-    /// </summary>
-    public ILogger Logger { get; }
-
-    /// <summary>
     /// Gets a reference to the current <see cref="IVariationContextAccessor"/>.
     /// </summary>
     public IVariationContextAccessor VariationContextAccessor { get; }
-
-    /// <summary>
-    /// Gets a reference to the current published snapshot accessor.
-    /// </summary>
-    public IPublishedSnapshotAccessor PublishedSnapshotAccessor { get; }
 
     /// <summary>
     /// Gets a reference to the current published snapshot.
@@ -103,16 +104,16 @@ public partial class SpaRequestHelper {
     /// Initializes a new helper instance.
     /// </summary>
     protected SpaRequestHelper(SpaRequestHelperDependencies dependencies) {
+        _dependencies = dependencies;
 
         // Set dependencies
+        Logger = dependencies.Logger;
         Environment = dependencies.Environment;
         UmbracoContextAccessor = dependencies.UmbracoContextAccessor;
         Services = dependencies.Services;
         AppCaches = dependencies.AppCaches;
-        Logger = dependencies.Logger;
         RedirectsService = dependencies.RedirectsService;
         VariationContextAccessor = dependencies.VariationContextAccessor;
-        PublishedSnapshotAccessor = dependencies.PublishedSnapshotAccessor;
         DomainRepository = dependencies.DomainRepository;
         ContentFactory = dependencies.ContentFactory;
         Settings = dependencies.Configuration;

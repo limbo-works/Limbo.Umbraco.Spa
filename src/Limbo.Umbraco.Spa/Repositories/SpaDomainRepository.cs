@@ -15,16 +15,19 @@ namespace Limbo.Umbraco.Spa.Repositories;
 /// </summary>
 public class SpaDomainRepository {
 
-    private readonly IPublishedSnapshotAccessor _publishedSnapshotAccessor;
+    private readonly IDomainCache _domainCache;
+    private readonly IPublishedContentCache _publishedContentCache;
     private readonly ISiteDomainMapper _siteDomainMapper;
 
     /// <summary>
     /// Initializes a new instance.
     /// </summary>
-    /// <param name="publishedSnapshotAccessor">The current published snapshot accessor.</param>
+    /// <param name="domainCache">The current domain cache.</param>
+    /// <param name="publishedContentCache">The current published content cache.</param>
     /// <param name="siteDomainMapper">The current site domain mapper.</param>
-    public SpaDomainRepository(IPublishedSnapshotAccessor publishedSnapshotAccessor, ISiteDomainMapper siteDomainMapper) {
-        _publishedSnapshotAccessor = publishedSnapshotAccessor;
+    public SpaDomainRepository(IDomainCache domainCache, IPublishedContentCache publishedContentCache, ISiteDomainMapper siteDomainMapper) {
+        _domainCache = domainCache;
+        _publishedContentCache = publishedContentCache;
         _siteDomainMapper = siteDomainMapper;
     }
 
@@ -38,21 +41,18 @@ public class SpaDomainRepository {
     /// <returns>An instance of <see cref="DomainAndUri"/> representing the domain, or <c>null</c> if not domain was found.</returns>
     public DomainAndUri DomainForNode(int nodeId, Uri current, string culture = null) {
 
-        // Attempt to get a reference to the current snapshot
-        if (!_publishedSnapshotAccessor.TryGetPublishedSnapshot(out IPublishedSnapshot snapshot)) return null;
-
         // be safe
         if (nodeId <= 0) return null;
 
         // get the domains on that node
-        var domains = snapshot!.Domains!.GetAssigned(nodeId).ToArray();
+        Domain[] domains = _domainCache.GetAssigned(nodeId).ToArray();
 
         // none?
         if (domains.Length == 0) return null;
 
         // else filter
         // it could be that none apply (due to culture)
-        return SelectDomain(domains, current, culture, snapshot.Domains.DefaultCulture, _siteDomainMapper.MapDomain);
+        return SelectDomain(domains, current, culture, _domainCache.DefaultCulture, _siteDomainMapper.MapDomain);
 
     }
 
@@ -60,7 +60,7 @@ public class SpaDomainRepository {
     /// Returns the <see cref="DomainAndUri"/> for the specified <paramref name="content"/> node, or <c>null</c> if
     /// not found. The domain will be determined either from the node itself or one of its ancestors.
     /// </summary>
-    /// <param name="content">Ther node.</param>
+    /// <param name="content">The node.</param>
     /// <param name="current">The URI of the request.</param>
     /// <param name="culture">The culture code of the request.</param>
     /// <returns>An instance of <see cref="DomainAndUri"/> representing the domain, or <c>null</c> if not domain was found.</returns>
@@ -88,13 +88,10 @@ public class SpaDomainRepository {
     /// <returns><c>true</c> if a domain was found; otherwise <c>false</c>.</returns>
     public bool FindDomain(SpaRequest request, Uri uri) {
 
-        // Attempt to get a reference to the current snapshot
-        if (!_publishedSnapshotAccessor.TryGetPublishedSnapshot(out IPublishedSnapshot snapshot)) return false;
-
         // If a page ID was specifically specified for the request, it may mean that we're
         // in preview mode or that the "url" parameter isn't specified. In either case, we
         // need to find the assigned domains of the requested node (or it's ancestor) so we
-        // can determine the sitenode
+        // can determine the site node
 
         if (request.Arguments.PageId > 0) {
 
@@ -105,7 +102,7 @@ public class SpaDomainRepository {
 
             // TODO: Look at the "siteId" parameter as well (may be relevant for virtual content etc.)
 
-            IPublishedContent c = snapshot!.Content?.GetById(request.Arguments.PageId);
+            IPublishedContent c = _publishedContentCache.GetById(request.Arguments.PageId);
 
             if (c != null) {
                 request.Domain = DomainForNode(c, null, request.Arguments.Culture);
@@ -119,8 +116,7 @@ public class SpaDomainRepository {
 
         }
 
-        var domainsCache = snapshot!.Domains!;
-        var domains = domainsCache.GetAll(includeWildcards: false).ToList();
+        List<Domain> domains = _domainCache.GetAll(includeWildcards: false).ToList();
 
         // determines whether a domain corresponds to a published document, since some
         // domains may exist but on a document that has been unpublished - as a whole - or
@@ -129,7 +125,7 @@ public class SpaDomainRepository {
         bool IsPublishedContentDomain(Domain domain) {
 
             // just get it from content cache - optimize there, not here
-            var domainDocument = snapshot.Content?.GetById(domain.ContentId);
+            var domainDocument = _publishedContentCache.GetById(domain.ContentId);
 
             // not published - at all
             if (domainDocument == null)
@@ -146,7 +142,7 @@ public class SpaDomainRepository {
 
         domains = domains.Where(IsPublishedContentDomain).ToList();
 
-        var defaultCulture = domainsCache.DefaultCulture;
+        var defaultCulture = _domainCache.DefaultCulture;
 
         // try to find a domain matching the current request
         var domainAndUri = SelectDomain(domains, uri, defaultCulture: defaultCulture);

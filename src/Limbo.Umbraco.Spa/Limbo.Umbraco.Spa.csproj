@@ -2,19 +2,19 @@
 
   <PropertyGroup>
     <LangVersion>12.0</LangVersion>
-    <TargetFramework>net8.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>13.0.0-alpha009</VersionPrefix>
+    <VersionPrefix>17.0.0-alpha000</VersionPrefix>
     <VersionSuffix Condition="'$(Configuration)'=='Debug'">$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
     <Company>Limbo</Company>
     <Product>Limbo SPA</Product>
     <Authors>Anders Bjerner</Authors>
     <Copyright>Copyright © $([System.DateTime]::UtcNow.ToString(`yyyy`))</Copyright>
-    <Title>Limbo SPA</Title>
-    <AssemblyTitle>Limbo SPA</AssemblyTitle>
-    <Description>SPA (single page application) package for Umbraco 13.</Description>
+    <Title>$(Product)</Title>
+    <AssemblyTitle>$(Product)</AssemblyTitle>
+    <Description>SPA (single page application) package for Umbraco 17.</Description>
   </PropertyGroup>
 
   <!-- Information for the NuGet package -->
@@ -30,22 +30,26 @@
 
   <!-- Include additional metadata in the assembly -->
   <ItemGroup>
+    <AssemblyMetadata Include="Authors" Value="$(Authors)" />
     <AssemblyMetadata Include="PackageProjectUrl" Value="https://packages.limbo.works/limbo.umbraco.spa/" />
-    <AssemblyMetadata Include="DocumentationUrl" Value="https://packages.limbo.works/limbo.umbraco.spa/docs/v13/" />
+    <AssemblyMetadata Include="DocumentationUrl" Value="https://packages.limbo.works/limbo.umbraco.spa/docs/v17/" />
     <AssemblyMetadata Include="NuGetUrl" Value="https://www.nuget.org/packages/Limbo.Umbraco.Spa" />
     <!--<AssemblyMetadata Include="UmbracoMarketplaceUrl" Value="https://marketplace.umbraco.com/package/limbo.umbraco.spa" />-->
   </ItemGroup>
 
+  <!-- Ignore vulnerabilities from transient dependencies -->
+  <PropertyGroup>
+    <NuGetAuditMode>direct</NuGetAuditMode>
+  </PropertyGroup>
+
   <!-- Include NuGet dependencies -->
   <ItemGroup>
-    <PackageReference Include="Limbo.MetaData" Version="1.0.0-alpha001" />
-    <PackageReference Include="Skybrud.Essentials" Version="1.1.60" />
-    <PackageReference Include="Skybrud.Essentials.AspNetCore" Version="1.0.1" />
-    <PackageReference Include="Skybrud.Essentials.Umbraco" Version="13.0.3" />
-    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="13.0.8" />
-    <PackageReference Include="Umbraco.Cms.Core" Version="[13.0.0,13.999)" NoWarn="NU1902" />
-    <PackageReference Include="Umbraco.Cms.Web.Website" Version="[13.0.0,13.999)" NoWarn="NU1902" />
-    <PackageReference Include="Umbraco.Cms.Web.BackOffice" Version="[13.0.0,13.999)" NoWarn="NU1902" />
+    <PackageReference Include="Limbo.MetaData" Version="1.0.0" />
+    <PackageReference Include="Skybrud.Essentials" Version="1.1.69" />
+    <PackageReference Include="Skybrud.Essentials.AspNetCore" Version="1.0.2" />
+    <PackageReference Include="Skybrud.Essentials.Umbraco" Version="17.0.0-alpha008" />
+    <PackageReference Include="Skybrud.Umbraco.Redirects" Version="17.1.0-beta001" />
+    <PackageReference Include="Umbraco.Cms.Core" Version="[17.1.0,17.999)" NoWarn="NU1902" />
   </ItemGroup>
 
   <!-- Include package icon for NuGet -->

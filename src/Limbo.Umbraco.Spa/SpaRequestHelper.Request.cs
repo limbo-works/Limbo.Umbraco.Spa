@@ -1,4 +1,5 @@
-﻿using Limbo.Umbraco.Spa.Exceptions;
+﻿using System;
+using Limbo.Umbraco.Spa.Exceptions;
 using Limbo.Umbraco.Spa.Json.Resolvers;
 using Limbo.Umbraco.Spa.Models;
 using Newtonsoft.Json;
@@ -37,8 +38,14 @@ public partial class SpaRequestHelper {
         int rootId = request.Domain?.ContentId ?? request.SiteId;
 
         // Attempt to get content item by either it's numeric ID or URL
-        return pageId > 0 ? umbracoContext.Content?.GetById(pageId) : umbracoContext.Content?.GetByRoute($"{rootId}{url}", culture: request.CultureInfo.Name);
 
+        switch (pageId) {
+            case > 0:
+                return umbracoContext.Content.GetById(pageId);
+            default:
+                Guid? key = DocumentUrlService.GetDocumentKeyByRoute(url, null, rootId, false);
+                return key is null ? null : umbracoContext.Content.GetById(pageId);
+        }
     }
 
     /// <summary>
@@ -62,11 +69,11 @@ public partial class SpaRequestHelper {
         // Return NULL if we don't have an Umbraco context
         if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext umbracoContext)) return null;
 
-        // Attemp to get the culture ID from the URL of the current request
+        // Attempt to get the culture ID from the URL of the current request
         int contentId = GetCultureIdFromUrl(request);
 
         // Get the IPublishedContent matching "contentId"
-        return contentId > 0 ? umbracoContext.Content?.GetById(contentId) : null;
+        return contentId > 0 ? umbracoContext.Content.GetById(contentId) : null;
 
     }
 

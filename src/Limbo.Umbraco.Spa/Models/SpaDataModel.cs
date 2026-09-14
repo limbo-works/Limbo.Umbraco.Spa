@@ -1,6 +1,7 @@
 ﻿using System;
 using Limbo.Umbraco.Spa.Models.Navigation;
 using Newtonsoft.Json;
+using Skybrud.Essentials.Common;
 
 namespace Limbo.Umbraco.Spa.Models;
 
@@ -65,21 +66,21 @@ public class SpaDataModel {
     /// initialized if <see cref="SpaApiPart.Site"/> was specified in the request arguments.
     /// </summary>
     [JsonProperty("site", NullValueHandling = NullValueHandling.Ignore)]
-    public SpaSiteModel Site { get; set; }
+    public SpaSiteModel? Site { get; set; }
 
     /// <summary>
     /// Gets a reference to the <see cref="SpaNavigationModel"/> representing the navigation. This property will
     /// only be initialized if <see cref="SpaApiPart.Navigation"/> was specified in the request arguments.
     /// </summary>
     [JsonProperty("navigation", NullValueHandling = NullValueHandling.Ignore)]
-    public SpaNavigationModel Navigation { get; set; }
+    public SpaNavigationModel? Navigation { get; set; }
 
     /// <summary>
     /// Gets a reference to the <see cref="SpaContentModel"/> representing the current page. This property will
     /// only be initialized if <see cref="SpaApiPart.Content"/> was specified in the request arguments.
     /// </summary>
     [JsonProperty("content", NullValueHandling = NullValueHandling.Ignore)]
-    public ISpaContentModel Content { get; set; }
+    public ISpaContentModel? Content { get; set; }
 
     #endregion
 
@@ -109,7 +110,7 @@ public class SpaDataModel {
         Site = model.Site;
         Navigation = model.Navigation;
         Content = model.Content;
-        Meta = new SpaResponseMeta();
+        Meta = model.Meta;
     }
 
     /// <summary>
@@ -117,6 +118,8 @@ public class SpaDataModel {
     /// </summary>
     /// <param name="request">An instance of <see cref="SpaRequest"/>.</param>
     public SpaDataModel(SpaRequest request) {
+
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
 
         PageId = request.Content?.Id ?? -1;
         PageKey = request.Content?.Key ?? Guid.Empty;

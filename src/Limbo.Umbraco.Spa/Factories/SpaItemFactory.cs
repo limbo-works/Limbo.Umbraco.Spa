@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Limbo.Umbraco.Spa.Constants;
 using Limbo.Umbraco.Spa.Models;
@@ -25,33 +26,31 @@ public class SpaItemFactory : ISpaItemFactory {
     public virtual ISpaNavigationItem CreateNavigationItem(IPublishedContent content, SpaRequest request, int maxLevels, int level) {
 
         // Nothing to work on, nothing to return
-        if (content == null) return null;
-
-        // Initialize a new item
-        SpaNavigationItem item = new();
+        ArgumentNullException.ThrowIfNull(content);
 
         // Fetch all visible children that have a template
-        IPublishedContent[] children = content.Children(x => x.TemplateId > 0 && x.IsVisible())?.ToArray() ?? Array.Empty<IPublishedContent>();
+        IPublishedContent[] children = content.Children(x => x.TemplateId > 0 && x.IsVisible()).ToArray();
 
-        // Update basic properties
-        item.Id = content.Id;
-        item.Title = content.Name;
-        item.Url = content.Url();
-        item.ParentId = content.Parent?.Id ?? -1;
-        item.Template = content.GetTemplateAlias();
-        item.Culture = content.GetCultureInfo().Name;
-        item.HasChildren = children.Any();
-        item.IsVisible = content.Value<bool>(SkyConstants.Properties.UmbracoNaviHide) == false;
-        item.Children = Array.Empty<SpaNavigationItem>();
-
-        // Append the item (if any, and max level isn't reached)
+        // Convert the children to navigation items (if any, and max level isn't reached)
+        IReadOnlyList<ISpaNavigationItem> childrenItems = [];
         if (children.Length > 0 && maxLevels > level) {
-            item.Children = children
+            childrenItems = children
                 .Select(x => CreateNavigationItem(x, request, maxLevels, level + 1))
                 .ToArray();
         }
 
-        return item;
+        // Initialize a new item
+        return new SpaNavigationItem {
+            Id = content.Id,
+            Title = content.Name,
+            Url = content.Url(),
+            ParentId = content.Parent()?.Id ?? -1,
+            Template = content.GetTemplateAlias(), // TODO: don't use this as it may hit the database
+            Culture = content.GetCultureInfo()?.Name,
+            HasChildren = children.Length > 0,
+            IsVisible = !content.Value<bool>(SkyConstants.Properties.UmbracoNaviHide),
+            Children = childrenItems
+        };
 
     }
 

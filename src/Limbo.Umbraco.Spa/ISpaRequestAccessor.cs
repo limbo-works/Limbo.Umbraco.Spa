@@ -10,6 +10,6 @@ public interface ISpaRequestAccessor {
     /// <summary>
     /// Gets a reference to the current SPA request, if any.
     /// </summary>
-    SpaRequest Current { get; set; }
+    SpaRequest? Current { get; set; }
 
 }

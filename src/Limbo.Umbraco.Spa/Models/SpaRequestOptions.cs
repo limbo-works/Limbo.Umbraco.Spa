@@ -40,7 +40,7 @@ public class SpaRequestOptions {
     /// <summary>
     /// Gets or sets the URL of the requested page.
     /// </summary>
-    public string Url { get; set; }
+    public string? Url { get; set; }
 
     /// <summary>
     /// Gets or sets the URI of the requested page.
@@ -116,7 +116,7 @@ public class SpaRequestOptions {
     /// <summary>
     /// Gets or sets the culture of the request.
     /// </summary>
-    public string Culture { get; set; }
+    public string? Culture { get; set; }
 
     /// <summary>
     /// Gets the remote address of the user.
@@ -151,10 +151,10 @@ public class SpaRequestOptions {
         Uri uri = r.GetUri();
 
         // Get the host name from the query
-        string appHost = r.Query.GetString("appHost");
+        string? appHost = r.Query.GetString("appHost");
 
         // Get the protocol from the query
-        string appProtocol = r.Query.GetString("appProtocol");
+        string? appProtocol = r.Query.GetString("appProtocol");
 
         // Use the current URL as fallback for "appHost" and "appProtocol"
         HostName = string.IsNullOrWhiteSpace(appHost) ? uri.Host : appHost;
@@ -260,7 +260,7 @@ public class SpaRequestOptions {
     /// </summary>
     /// <param name="parts">The string with the parts.</param>
     /// <returns>An instance of <see cref="List{SpaApiPart}"/> containing each <see cref="SpaApiPart"/> specified in <paramref name="parts"/>.</returns>
-    private static List<SpaApiPart> GetParts(string parts = "") {
+    private static List<SpaApiPart> GetParts(string? parts = "") {
 
         // No parts mean all parts
         if (string.IsNullOrWhiteSpace(parts)) return [SpaApiPart.Content, SpaApiPart.Navigation, SpaApiPart.Site];

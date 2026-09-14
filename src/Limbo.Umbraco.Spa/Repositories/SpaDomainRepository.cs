@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using Limbo.Umbraco.Spa.Models;
+using Skybrud.Essentials.Common;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Cms.Core.PublishedCache;
 using Umbraco.Cms.Core.Routing;
@@ -39,7 +40,9 @@ public class SpaDomainRepository {
     /// <param name="current">The URI of the request.</param>
     /// <param name="culture">The culture code of the request.</param>
     /// <returns>An instance of <see cref="DomainAndUri"/> representing the domain, or <c>null</c> if not domain was found.</returns>
-    public DomainAndUri DomainForNode(int nodeId, Uri current, string culture = null) {
+    public DomainAndUri? DomainForNode(int nodeId, Uri current, string? culture = null) {
+
+        // TODO: should "current" be nullable?
 
         // be safe
         if (nodeId <= 0) return null;
@@ -64,14 +67,18 @@ public class SpaDomainRepository {
     /// <param name="current">The URI of the request.</param>
     /// <param name="culture">The culture code of the request.</param>
     /// <returns>An instance of <see cref="DomainAndUri"/> representing the domain, or <c>null</c> if not domain was found.</returns>
-    public DomainAndUri DomainForNode(IPublishedContent content, Uri current, string culture = null) {
+    public DomainAndUri? DomainForNode(IPublishedContent content, Uri current, string? culture = null) {
 
-        while (content != null) {
+        // TODO: should "current" be nullable?
 
-            DomainAndUri domain = DomainForNode(content.Id, current, culture);
+        IPublishedContent? scope = content;
+
+        while (scope != null) {
+
+            DomainAndUri? domain = DomainForNode(scope.Id, current, culture);
             if (domain != null) return domain;
 
-            content = content.Parent;
+            scope = scope.Parent();
 
         }
 
@@ -88,6 +95,8 @@ public class SpaDomainRepository {
     /// <returns><c>true</c> if a domain was found; otherwise <c>false</c>.</returns>
     public bool FindDomain(SpaRequest request, Uri uri) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+
         // If a page ID was specifically specified for the request, it may mean that we're
         // in preview mode or that the "url" parameter isn't specified. In either case, we
         // need to find the assigned domains of the requested node (or it's ancestor) so we
@@ -102,7 +111,7 @@ public class SpaDomainRepository {
 
             // TODO: Look at the "siteId" parameter as well (may be relevant for virtual content etc.)
 
-            IPublishedContent c = _publishedContentCache.GetById(request.Arguments.PageId);
+            IPublishedContent? c = _publishedContentCache.GetById(request.Arguments.PageId);
 
             if (c != null) {
                 request.Domain = DomainForNode(c, null, request.Arguments.Culture);
@@ -136,7 +145,7 @@ public class SpaDomainRepository {
                 return true;
 
             // variant, ensure that the culture corresponding to the domain's language is published
-            return domainDocument.Cultures.ContainsKey(domain.Culture);
+            return domain.Culture is not null && domainDocument.Cultures.ContainsKey(domain.Culture);
 
         }
 
@@ -160,7 +169,7 @@ public class SpaDomainRepository {
 
     }
 
-    private DomainAndUri SelectDomain(IEnumerable<Domain> domains, Uri uri, string culture = null, string defaultCulture = null, Func<IReadOnlyCollection<DomainAndUri>, Uri, string, string, DomainAndUri> filter = null) {
+    private DomainAndUri? SelectDomain(IEnumerable<Domain> domains, Uri uri, string? culture = null, string? defaultCulture = null, Func<IReadOnlyCollection<DomainAndUri>, Uri, string?, string?, DomainAndUri>? filter = null) {
 
         // sanitize the list to have proper uris for comparison (scheme, path end with /)
         // we need to end with / because example.com/foo cannot match example.com/foobar
@@ -180,6 +189,7 @@ public class SpaDomainRepository {
         defaultCulture = defaultCulture?.NullOrWhiteSpaceAsNull();
 
         if (uri == null) {
+            // TODO: ¯\_(ツ)_/¯
             // no uri - will only rely on culture
             return GetByCulture(domainsAndUris, culture, defaultCulture);
         }
@@ -238,18 +248,18 @@ public class SpaDomainRepository {
         return baseDomains;
     }
 
-    private IReadOnlyCollection<DomainAndUri> SelectByCulture(IReadOnlyCollection<DomainAndUri> domainsAndUris, string culture, string defaultCulture) {
+    private IReadOnlyCollection<DomainAndUri>? SelectByCulture(IReadOnlyCollection<DomainAndUri> domainsAndUris, string? culture, string? defaultCulture) {
 
         // we try our best to match cultures, but may end with a bogus domain
 
-        if (culture != null) // try the supplied culture
-        {
+        // try the supplied culture
+        if (culture != null) {
             var cultureDomains = domainsAndUris.Where(x => x.Culture.InvariantEquals(culture)).ToList();
             if (cultureDomains.Count > 0) return cultureDomains;
         }
 
-        if (defaultCulture != null) // try the defaultCulture culture
-        {
+        // try the defaultCulture culture
+        if (defaultCulture != null) {
             var cultureDomains = domainsAndUris.Where(x => x.Culture.InvariantEquals(defaultCulture)).ToList();
             if (cultureDomains.Count > 0) return cultureDomains;
         }
@@ -257,20 +267,20 @@ public class SpaDomainRepository {
         return null;
     }
 
-    private DomainAndUri GetByCulture(IReadOnlyCollection<DomainAndUri> domainsAndUris, string culture, string defaultCulture) {
+    private DomainAndUri GetByCulture(IReadOnlyCollection<DomainAndUri> domainsAndUris, string? culture, string? defaultCulture) {
 
-        DomainAndUri domainAndUri;
+        DomainAndUri? domainAndUri;
 
         // we try our best to match cultures, but may end with a bogus domain
 
-        if (culture != null) // try the supplied culture
-        {
+        // try the supplied culture
+        if (culture != null) {
             domainAndUri = domainsAndUris.FirstOrDefault(x => x.Culture.InvariantEquals(culture));
             if (domainAndUri != null) return domainAndUri;
         }
 
-        if (defaultCulture != null) // try the defaultCulture culture
-        {
+        // // try the defaultCulture culture
+        if (defaultCulture != null) {
             domainAndUri = domainsAndUris.FirstOrDefault(x => x.Culture.InvariantEquals(defaultCulture));
             if (domainAndUri != null) return domainAndUri;
         }

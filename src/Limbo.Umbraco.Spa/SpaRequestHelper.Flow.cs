@@ -5,6 +5,7 @@ using System.Threading;
 using Limbo.Umbraco.Spa.Constants;
 using Limbo.Umbraco.Spa.Exceptions;
 using Limbo.Umbraco.Spa.Models;
+using Skybrud.Essentials.Common;
 using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Redirects.Extensions;
 using Skybrud.Umbraco.Redirects.Models;
@@ -33,6 +34,8 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current SPA request.</param>
     protected virtual void FindDomainAndCulture(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+
         // Find the domain (sets the "Domain" and "CultureInfo" of "request")
         DomainRepository.FindDomain(request, request.Arguments.Uri);
 
@@ -48,7 +51,7 @@ public partial class SpaRequestHelper {
 
             // TODO: Look at the "siteId" parameter as well (might be relevant for virtual content etc.)
 
-            IPublishedContent c = umbracoContext.Content?.GetById(request.Arguments.PageId);
+            IPublishedContent? c = umbracoContext.Content.GetById(request.Arguments.PageId);
 
             if (c != null) {
 
@@ -64,7 +67,7 @@ public partial class SpaRequestHelper {
         }
 
         // Set the domain content node if available
-        if (request.Domain?.ContentId is {} domainContentId) request.DomainContent = umbracoContext.Content?.GetById(domainContentId);
+        if (request.Domain?.ContentId is {} domainContentId) request.DomainContent = umbracoContext.Content.GetById(domainContentId);
 
         // Make sure to overwrite the variation context
         VariationContextAccessor.VariationContext = new VariationContext(request.CultureInfo.Name);
@@ -79,9 +82,11 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current SPA request.</param>
     protected virtual void UpdateArguments(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+
         // If "pageId" exists, prefer content from that node
         if (request.Arguments.PageId > 0) {
-            IPublishedContent c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content?.GetById(request.Arguments.PageId);
+            IPublishedContent? c = UmbracoContextAccessor.GetRequiredUmbracoContext().Content.GetById(request.Arguments.PageId);
             if (c != null) request.Arguments.Url = c.Url();
         }
 
@@ -90,7 +95,7 @@ public partial class SpaRequestHelper {
         if (string.IsNullOrWhiteSpace(request.Arguments.HostName)) return;
 
         // Try get siteId from the domain
-        if (request.Arguments.IsDefaultPort && TryGetDomain(request.Arguments.HostName, out IDomain domain)) {
+        if (request.Arguments.IsDefaultPort && TryGetDomain(request.Arguments.HostName, out IDomain? domain)) {
             // TODO: Should we set "request.Domain" here?
             request.Arguments.SiteId = domain.RootContentId ?? -1;
         }
@@ -123,13 +128,15 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current SPA request.</param>
     protected virtual void InitSite(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+
         // If a previous step has already determined the site node, we should return right away
         if (request.Site is not null) return;
 
         // Get a reference to the site node
         request.Site = UmbracoContextAccessor
             .GetRequiredUmbracoContext()
-            .Content?
+            .Content
             .GetById(request.Arguments.SiteId);
 
         // Throw an exception if we can't determine the site node
@@ -155,6 +162,8 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current SPA request.</param>
     protected virtual void ContentLookup(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+
         // Return here as the content item already has been populated
         if (request.Content != null) return;
 
@@ -164,7 +173,7 @@ public partial class SpaRequestHelper {
             // Get a reference to the current page (fetched regardless of "parts" as the URL determines the culture)
             request.Content = UmbracoContextAccessor
                 .GetRequiredUmbracoContext()
-                .Content?
+                .Content
                 .GetById(true, request.Arguments.PageId);
 
         } else {
@@ -308,13 +317,16 @@ public partial class SpaRequestHelper {
     /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
     protected virtual bool HandleSkybrudRedirect(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+        PropertyNotSetException.ThrowIfNull(request.Site);
+
         // Get the path and query string of the request
         string requestUrl = request.Uri.PathAndQuery.UrlDecode();
 
         // Determine the key of the domain or site node
         Guid rootNodeKey = request.DomainContent?.Key ?? request.Site.Key;
 
-        IRedirect redirect = null;
+        IRedirect? redirect = null;
 
         // Look for a site specific redirect first
         if (rootNodeKey != Guid.Empty) redirect = RedirectsService.GetRedirectByUrl(rootNodeKey, requestUrl);
@@ -344,6 +356,9 @@ public partial class SpaRequestHelper {
     /// <returns><c>true</c> if a redirect was found, otherwise <c>false</c>.</returns>
     protected virtual bool HandleUmbracoRedirect(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+        PropertyNotSetException.ThrowIfNull(request.Site);
+
         // Determine the ID of the domain or site node
         int rootNodeId = request.DomainContent?.Id ?? request.Site.Id;
 
@@ -351,11 +366,11 @@ public partial class SpaRequestHelper {
         string requestUrl = request.Uri.AbsolutePath.UrlDecode().TrimEnd('/');
 
         // Look for a matching redirect
-        IRedirectUrl umbRedirect = Services.RedirectUrlService!.GetMostRecentRedirectUrl(rootNodeId + requestUrl);
+        IRedirectUrl? umbRedirect = RedirectUrlService.GetMostRecentRedirectUrl(rootNodeId + requestUrl);
         if (umbRedirect == null) return false;
 
         // Get the destination page from the content cache
-        IPublishedContent newContent = UmbracoContextAccessor.GetRequiredUmbracoContext().Content?.GetById(umbRedirect.ContentId);
+        IPublishedContent? newContent = UmbracoContextAccessor.GetRequiredUmbracoContext().Content.GetById(umbRedirect.ContentId);
         if (newContent == null) return false;
 
         // Send a redirect response if a page was found
@@ -370,8 +385,10 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current request.</param>
     protected virtual void HandleOutboundRedirects(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+
         // Get the outbound URL from the current page (if set)
-        IOutboundRedirect redirect = request.Content?.GetOutboundRedirect();
+        IOutboundRedirect? redirect = request.Content?.GetOutboundRedirect();
         if (redirect is not { HasDestination: true }) return;
 
         // If the redirect is valid, we'll set the response to return a redirect
@@ -414,11 +431,14 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current SPA request.</param>
     protected virtual void InitContentModel(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+        PropertyNotSetException.ThrowIfNull(request.Content);
+
         // Skip this part if the "content" part wasn't requested
-        if (request.Arguments.Parts.Contains(SpaApiPart.Content) == false) return;
+        if (!request.Arguments.Parts.Contains(SpaApiPart.Content)) return;
 
         // Initialize the new model
-        request.ContentModel = ContentFactory.CreateContentModel(request.Content, new PublishedValueFallback(Services, VariationContextAccessor), request);
+        request.ContentModel = ContentFactory.CreateContentModel(request.Content, new PublishedValueFallback(UmbracoServiceContext, VariationContextAccessor), request);
 
     }
 
@@ -429,8 +449,12 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current SPA request.</param>
     protected virtual void InitNavigationModel(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+        PropertyNotSetException.ThrowIfNull(request.DataModel);
+        PropertyNotSetException.ThrowIfNull(request.SiteModel);
+
         // Skip this part if the "navigation" part wasn't requested
-        if (request.Arguments.Parts.Contains(SpaApiPart.Navigation) == false) return;
+        if (!request.Arguments.Parts.Contains(SpaApiPart.Navigation)) return;
 
         // Initialize the navigation model
         request.DataModel.Navigation = request.SiteModel.GetNavigation();
@@ -464,8 +488,10 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current SPA request.</param>
     protected virtual void ReadFromCache(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+
         // Skip if caching is disabled
-        if (request.Arguments.EnableCaching == false) return;
+        if (!request.Arguments.EnableCaching) return;
 
         // Get the cache key of "request"
         string cacheKey = GetCacheKey(request);
@@ -507,9 +533,11 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current SPA request.</param>
     protected virtual void PushToCache(SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+
         if (request.DataModel == null) return;
 
-        if (request.Arguments.EnableCaching == false) return;
+        if (!request.Arguments.EnableCaching) return;
 
         // Get the cache key of "request"
         string cacheKey = GetCacheKey(request);

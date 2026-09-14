@@ -2,6 +2,7 @@
 using Limbo.MetaData.Models.Twitter;
 using Limbo.Umbraco.Spa.Models;
 using Limbo.Umbraco.Spa.Models.Meta;
+using Skybrud.Essentials.Common;
 using Umbraco.Cms.Core.Models.PublishedContent;
 using Umbraco.Extensions;
 
@@ -45,7 +46,7 @@ public class SpaMetaDataFactory : ISpaMetaDataFactory {
     /// <param name="request">The current request.</param>
     /// <returns>The canonical URL for <paramref name="content"/>.</returns>
     public virtual string GetCanonicalUrl(SpaMetaData metaData, IPublishedContent content, SpaRequest request) {
-        return content.Url(request.CultureInfo.ToString(), UrlMode.Absolute);
+        return content.Url(request.CultureInfo?.ToString(), UrlMode.Absolute);
     }
 
     /// <summary>
@@ -56,6 +57,7 @@ public class SpaMetaDataFactory : ISpaMetaDataFactory {
     /// <param name="request">The current request.</param>
     /// <returns>The browser title.</returns>
     public virtual string GetTitle(SpaMetaData metaData, IPublishedContent content, SpaRequest request) {
+        PropertyNotSetException.ThrowIfNull(request.Site);
         return $"{GetMetaTitle(metaData, content, request)} - {request.SiteModel?.Name ?? request.Site.Name}";
     }
 
@@ -77,7 +79,7 @@ public class SpaMetaDataFactory : ISpaMetaDataFactory {
     /// <param name="content">The page for which to get the page title.</param>
     /// <param name="request">The current request.</param>
     /// <returns>The meta description.</returns>
-    public virtual string GetMetaDescription(SpaMetaData metaData, IPublishedContent content, SpaRequest request) {
+    public virtual string? GetMetaDescription(SpaMetaData metaData, IPublishedContent content, SpaRequest request) {
         return content.Value<string>("teaser");
     }
 
@@ -89,6 +91,8 @@ public class SpaMetaDataFactory : ISpaMetaDataFactory {
     /// <param name="request">The current request.</param>
     /// <returns>The robots value.</returns>
     public virtual string GetRobots(SpaMetaData metaData, IPublishedContent content, SpaRequest request) {
+
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
 
         if (request.Arguments.HostName.Contains("liveserver.nu")) {
             return "noindex, nofollow";
@@ -115,6 +119,8 @@ public class SpaMetaDataFactory : ISpaMetaDataFactory {
     /// <returns>An instance of <see cref="OpenGraphProperties"/> representing the Open Graph information.</returns>
     public virtual OpenGraphProperties GetOpenGraph(SpaMetaData metaData, IPublishedContent content, SpaRequest request) {
 
+        PropertyNotSetException.ThrowIfNull(request.Site);
+
         OpenGraphProperties og = new() {
             Url = content.Url(mode: UrlMode.Absolute),
             SiteName = request.Site.Name,
@@ -134,6 +140,8 @@ public class SpaMetaDataFactory : ISpaMetaDataFactory {
     /// <param name="request">The current request.</param>
     /// <returns>An instance of <see cref="ITwitterCard"/> representing the Twitter card.</returns>
     public virtual ITwitterCard GetTwitterCard(SpaMetaData metaData, IPublishedContent content, SpaRequest request) {
+
+        PropertyNotSetException.ThrowIfNull(request.Site);
 
         return new TwitterSummaryCard {
             Site = request.Site.Name,

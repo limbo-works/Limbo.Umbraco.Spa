@@ -19,7 +19,7 @@ public class SpaLinkItem {
     /// Gets the <c>target</c> attribute of the link.
     /// </summary>
     [JsonProperty("target")]
-    public string Target { get; }
+    public string? Target { get; }
 
     /// <summary>
     /// Initializes a new link based on the specified <paramref name="url"/>.
@@ -43,7 +43,7 @@ public class SpaLinkItem {
     /// <param name="content">The instance of <see cref="IPublishedContent"/> the link should be based on.</param>
     /// <returns>An instance of <see cref="SpaLinkItem"/>.</returns>
     public static SpaLinkItem GetFromContent(IPublishedContent content) {
-        return content == null ? null : new SpaLinkItem(content);
+        return new SpaLinkItem(content);
     }
 
     /// <summary>
@@ -52,7 +52,7 @@ public class SpaLinkItem {
     /// <param name="url">The URL of the link.</param>
     /// <returns>An instance of <see cref="SpaLinkItem"/>.</returns>
     public static SpaLinkItem GetFromUrl(string url) {
-        return string.IsNullOrWhiteSpace(url) ? null : new SpaLinkItem(url);
+        return new SpaLinkItem(url);
     }
 
 }

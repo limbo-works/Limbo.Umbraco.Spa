@@ -16,7 +16,7 @@ public class SpaRequestAccessor : ISpaRequestAccessor {
     /// <summary>
     /// Gets a reference to the current SPA request, if any.
     /// </summary>
-    public SpaRequest Current {
+    public SpaRequest? Current {
         get {
             return _httpContextAccessor.HttpContext?.Items["SpaApiRequest"] as SpaRequest;
         }

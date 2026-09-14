@@ -17,6 +17,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Skybrud.Essentials.AspNetCore;
+using Skybrud.Essentials.Common;
 using Skybrud.Essentials.Strings.Extensions;
 using Skybrud.Umbraco.Redirects.Services;
 using Umbraco.Cms.Core.Cache;
@@ -39,12 +40,22 @@ public partial class SpaRequestHelper {
     /// <summary>
     /// Gets a reference to Umbraco's logger.
     /// </summary>
-    public ILogger Logger { get; }
+    internal ILogger Logger => _dependencies.Logger;
 
     /// <summary>
     /// Gets a reference to the current environment.
     /// </summary>
-    public IWebHostEnvironment Environment { get; }
+    public IWebHostEnvironment Environment => _dependencies.Environment;
+
+    /// <summary>
+    /// Gets a reference to Umbraco's service context.
+    /// </summary>
+    public ServiceContext UmbracoServiceContext => _dependencies.UmbracoServiceContext;
+
+    /// <summary>
+    /// Gets a reference to the current domain service.
+    /// </summary>
+    public IDomainService DomainService => _dependencies.DomainService;
 
     /// <summary>
     /// Gets a reference to the current Umbraco context accessor.
@@ -52,19 +63,19 @@ public partial class SpaRequestHelper {
     protected IUmbracoContextAccessor UmbracoContextAccessor { get; }
 
     /// <summary>
-    /// Gets a reference to Umbraco's service context.
-    /// </summary>
-    protected ServiceContext Services { get; }
-
-    /// <summary>
     /// Gets a reference to Umbraco's app caches.
     /// </summary>
     protected AppCaches AppCaches { get; }
 
     /// <summary>
-    /// Gets a reference to Umbraco's logger.
+    /// Gets a reference to Umbraco's document URL service.
     /// </summary>
     public IDocumentUrlService DocumentUrlService => _dependencies.DocumentUrlService;
+
+    /// <summary>
+    /// Gets a reference to Umbraco's redirect URL service.
+    /// </summary>
+    public IRedirectUrlService RedirectUrlService => _dependencies.RedirectUrlService;
 
     /// <summary>
     /// Gets a reference to the redirects service.
@@ -104,13 +115,11 @@ public partial class SpaRequestHelper {
     /// Initializes a new helper instance.
     /// </summary>
     protected SpaRequestHelper(SpaRequestHelperDependencies dependencies) {
+
         _dependencies = dependencies;
 
         // Set dependencies
-        Logger = dependencies.Logger;
-        Environment = dependencies.Environment;
         UmbracoContextAccessor = dependencies.UmbracoContextAccessor;
-        Services = dependencies.Services;
         AppCaches = dependencies.AppCaches;
         RedirectsService = dependencies.RedirectsService;
         VariationContextAccessor = dependencies.VariationContextAccessor;
@@ -262,7 +271,7 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current SPA request.</param>
     /// <param name="exception">The exception.</param>
     /// <returns>The response.</returns>
-    protected virtual ActionResult HandleGetResponseException(SpaRequest request, Exception exception) {
+    protected virtual ActionResult? HandleGetResponseException(SpaRequest request, Exception exception) {
 
         // Get a reference to the URI of the request
         Uri uri = request.HttpContext.Request.GetUri();
@@ -292,7 +301,7 @@ public partial class SpaRequestHelper {
         if (!Environment.IsDevelopment()) return null;
 
         // Get the accept header from the current request
-        string accept = request.HttpContext.Request.Headers["Accept"];
+        string? accept = request.HttpContext.Request.Headers["Accept"];
 
         if (Environment.IsDevelopment() && (accept?.Contains("text/html") ?? false)) {
             return ReturnHtmlError(request, exception);
@@ -308,7 +317,7 @@ public partial class SpaRequestHelper {
     /// <param name="url">The url.</param>
     /// <param name="result">When this method returns, contains the preview ID of <paramref name="url"/>.</param>
     /// <returns><c>true</c> if <paramref name="url"/> matches a preview URL; otherwise <c>false</c>.</returns>
-    public virtual bool TryGetPreviewId(string url, out int result) {
+    public virtual bool TryGetPreviewId(string? url, out int result) {
 
         // Shouldn't be null
         if (url == null) {
@@ -387,7 +396,7 @@ public partial class SpaRequestHelper {
             .Get(global::Umbraco.Cms.Core.Constants.Security.BackOfficeAuthenticationType);
 
         if (string.IsNullOrWhiteSpace(cookieOptions.Cookie.Name)) return false;
-        if (!context.Request.Cookies.TryGetValue(cookieOptions.Cookie.Name, out string cookie)) return false;
+        if (!context.Request.Cookies.TryGetValue(cookieOptions.Cookie.Name, out string? cookie)) return false;
         if (string.IsNullOrWhiteSpace(cookie)) return false;
 
         var unprotected = cookieOptions.TicketDataFormat.Unprotect(cookie);
@@ -405,7 +414,7 @@ public partial class SpaRequestHelper {
     /// login, an identifier for the member currently logged in should be a part of the cache key.</remarks>
     public virtual string GetCacheKey(SpaRequest request) {
 
-        SpaRequestOptions options = request.Arguments;
+        SpaRequestOptions options = request.Arguments ?? throw new PropertyNotSetException(nameof(request.Arguments));
 
         return $"{SpaConstants.CachePrefix}{options.PageId}-{options.SiteId}-{options.Url}-{options.IsPreview}-{string.Join(",", options.Parts ?? new List<SpaApiPart>())}-{options.Protocol}-{options.HostName}-{options.PortNumber}-{options.NavLevels}-{options.NavContext}";
 

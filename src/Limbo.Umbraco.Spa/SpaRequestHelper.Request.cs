@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics.CodeAnalysis;
 using Limbo.Umbraco.Spa.Exceptions;
 using Limbo.Umbraco.Spa.Json.Resolvers;
 using Limbo.Umbraco.Spa.Models;
@@ -17,13 +18,16 @@ public partial class SpaRequestHelper {
     /// </summary>
     /// <param name="request">The current request.</param>
     /// <returns>An instance of <see cref="IPublishedContent"/> representing the current page, or <c>null</c> if not found.</returns>
-    protected virtual IPublishedContent GetContentFromRequest(SpaRequest request) {
+    protected virtual IPublishedContent? GetContentFromRequest(SpaRequest request) {
+
+        PropertyNotSetException.ThrowIfNull(request.Arguments);
+        PropertyNotSetException.ThrowIfNull(request.Arguments.Url);
 
         // Throw an exception if we don't have a site reference at this point
         if (request.Site == null) throw new PropertyNotSetException(nameof(request.Site));
 
         // Return NULL if we don't have an Umbraco context
-        if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext umbracoContext)) return null;
+        if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext? umbracoContext)) return null;
 
         // Get the page ID and/or URL parameters
         int pageId = request.Arguments.PageId;
@@ -64,10 +68,10 @@ public partial class SpaRequestHelper {
     /// </summary>
     /// <param name="request">The current request.</param>
     /// <returns>An instance of <see cref="IPublishedContent"/> representing the culture node, or <c>null</c> if not found.</returns>
-    protected virtual IPublishedContent GetCultureFromUrl(SpaRequest request) {
+    protected virtual IPublishedContent? GetCultureFromUrl(SpaRequest request) {
 
         // Return NULL if we don't have an Umbraco context
-        if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext umbracoContext)) return null;
+        if (!UmbracoContextAccessor.TryGetUmbracoContext(out IUmbracoContext? umbracoContext)) return null;
 
         // Attempt to get the culture ID from the URL of the current request
         int contentId = GetCultureIdFromUrl(request);
@@ -83,11 +87,11 @@ public partial class SpaRequestHelper {
     /// <param name="domainName">The domain name.</param>
     /// <param name="domain">An instance of <see cref="IDomain"/> representing the domain, or <c>null</c> not found.</param>
     /// <returns><c>true</c> if a matching domain was found, otherwise <c>false</c>.</returns>
-    protected virtual bool TryGetDomain(string domainName, out IDomain domain) {
+    protected virtual bool TryGetDomain(string domainName, [NotNullWhen(true)] out IDomain? domain) {
 
         // TODO: Should we validate the domain name?
 
-        domain = Services.DomainService!.GetByName(domainName);
+        domain = DomainService.GetByName(domainName);
 
         return domain != null;
 

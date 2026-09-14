@@ -24,7 +24,7 @@ public class SpaRequestHelperDependencies {
     /// <summary>
     /// Gets a reference to Umbraco's logger.
     /// </summary>
-    public ILogger Logger { get; }
+    internal ILogger<SpaRequestHelper> Logger { get; }
 
     /// <summary>
     /// Gets a reference to the current environment.
@@ -32,14 +32,19 @@ public class SpaRequestHelperDependencies {
     public IWebHostEnvironment Environment { get; }
 
     /// <summary>
+    /// Gets a reference to Umbraco's service context.
+    /// </summary>
+    public ServiceContext UmbracoServiceContext { get; }
+
+    /// <summary>
+    /// Gets a reference to the current domain service.
+    /// </summary>
+    public IDomainService DomainService { get; }
+
+    /// <summary>
     /// Gets a reference to the current Umbraco context accessor.
     /// </summary>
     public IUmbracoContextAccessor UmbracoContextAccessor { get; }
-
-    /// <summary>
-    /// Gets a reference to Umbraco's service context.
-    /// </summary>
-    public ServiceContext Services { get; }
 
     /// <summary>
     /// Gets a reference to Umbraco's app caches.
@@ -50,6 +55,11 @@ public class SpaRequestHelperDependencies {
     /// Gets a reference to Umbraco's document URL service.
     /// </summary>
     public IDocumentUrlService DocumentUrlService { get; }
+
+    /// <summary>
+    /// Gets a reference to Umbraco's redirect URL service.
+    /// </summary>
+    public IRedirectUrlService RedirectUrlService { get; }
 
     /// <summary>
     /// Gets a reference to the redirects service.
@@ -85,31 +95,56 @@ public class SpaRequestHelperDependencies {
     /// </summary>
     /// <param name="logger"></param>
     /// <param name="environment"></param>
+    /// <param name="redirectUrlService"></param>
     /// <param name="umbracoContextAccessor"></param>
-    /// <param name="serviceContext"></param>
     /// <param name="appCaches"></param>
+    /// <param name="umbracoServiceContext"></param>
+    /// <param name="domainService"></param>
     /// <param name="documentUrlService"></param>
     /// <param name="redirectsService"></param>
     /// <param name="variationContextAccessor"></param>
     /// <param name="domainRepository"></param>
     /// <param name="contentFactory"></param>
     /// <param name="spaConfiguration"></param>
-    public SpaRequestHelperDependencies(ILogger<SpaRequestHelper> logger, IWebHostEnvironment environment, IUmbracoContextAccessor umbracoContextAccessor,
-        ServiceContext serviceContext, AppCaches appCaches, IDocumentUrlService documentUrlService,
-        IRedirectsService redirectsService, IVariationContextAccessor variationContextAccessor,
-        SpaDomainRepository domainRepository,
-        ISpaContentFactory contentFactory, IOptions<SpaConfiguration> spaConfiguration) {
-        _spaConfiguration = spaConfiguration;
-        Environment = environment;
-        UmbracoContextAccessor = umbracoContextAccessor;
-        Services = serviceContext;
-        AppCaches = appCaches;
-        DocumentUrlService = documentUrlService;
-        RedirectsService = redirectsService;
+    public SpaRequestHelperDependencies(
+
+        // .NET dependencies
+        ILogger<SpaRequestHelper> logger,
+        IWebHostEnvironment environment,
+
+        // Umbraco dependencies
+        ServiceContext umbracoServiceContext,
+        IDomainService domainService,
+        IDocumentUrlService documentUrlService,
+        IRedirectUrlService redirectUrlService,
+        IUmbracoContextAccessor umbracoContextAccessor,
+        IVariationContextAccessor variationContextAccessor,
+        AppCaches appCaches,
+
+        // Other
+        IRedirectsService redirectsService,
+
+        // SPA dependencies
+        IOptions<SpaConfiguration> spaConfiguration,
+        ISpaContentFactory contentFactory,
+        SpaDomainRepository domainRepository
+
+    ) {
+
         Logger = logger;
+        Environment = environment;
+        UmbracoServiceContext = umbracoServiceContext;
+        DomainService = domainService;
+        DocumentUrlService = documentUrlService;
+        RedirectUrlService = redirectUrlService;
+        UmbracoContextAccessor = umbracoContextAccessor;
         VariationContextAccessor = variationContextAccessor;
-        DomainRepository = domainRepository;
+        AppCaches = appCaches;
+        RedirectsService = redirectsService;
+        _spaConfiguration = spaConfiguration;
         ContentFactory = contentFactory;
+        DomainRepository = domainRepository;
+
     }
 
     #endregion

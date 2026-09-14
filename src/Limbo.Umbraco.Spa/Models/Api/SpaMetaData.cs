@@ -20,6 +20,6 @@ public class SpaMetaData {
     /// response.
     /// </summary>
     [JsonProperty(PropertyName = "error", NullValueHandling = NullValueHandling.Ignore)]
-    public string Error { get; set; }
+    public string? Error { get; set; }
 
 }

@@ -14,13 +14,13 @@ public class SpaResponseModel {
     /// Gets or sets the metadata for the response.
     /// </summary>
     [JsonProperty(PropertyName = "meta")]
-    public SpaMetaData Meta { get; set; }
+    public required SpaMetaData Meta { get; set; }
 
     /// <summary>
     /// Gets or sets the data object.
     /// </summary>
-    [JsonProperty(PropertyName = "data")]
-    public object Data { get; set; }
+    [JsonProperty(PropertyName = "data", DefaultValueHandling = DefaultValueHandling.Ignore)]
+    public required object? Data { get; set; }
 
     #endregion
 
@@ -49,7 +49,7 @@ public class SpaResponseModel {
     /// <param name="code">The status code.</param>
     /// <param name="error">The error message of the response.</param>
     /// <param name="data">The data object.</param>
-    public static SpaResponseModel GetError(HttpStatusCode code, string error, object data) {
+    public static SpaResponseModel GetError(HttpStatusCode code, string error, object? data) {
         return new SpaResponseModel {
             Meta = new SpaMetaData {
                 Code = code,

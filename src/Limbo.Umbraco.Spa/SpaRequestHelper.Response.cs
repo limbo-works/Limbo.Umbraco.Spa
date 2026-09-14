@@ -117,11 +117,15 @@ public abstract partial class SpaRequestHelper {
         }
 
         sb.AppendLine("<h3>HTTP Request</h3>");
-        sb.AppendLine("<table>\n");
-        sb.AppendLine("<tr><th>Remote Address</th><td>" + request.Arguments.RemoteAddress + "</td></tr>");
-        sb.AppendLine("<tr><th>User Agent</th><td>" + request.Arguments.UserAgent + "</td></tr>");
-        sb.AppendLine("<tr><th>Accept Header</th><td>" + request.Arguments.AcceptTypes + "</td></tr>");
-        sb.AppendLine("</table>");
+        if (request.Arguments == null) {
+            sb.AppendLine("<table><tr><td><em><code>request.Arguments</code> has not yet been initialized.</em></td></tr></table>");
+        } else {
+            sb.AppendLine("<table>\n");
+            sb.AppendLine("<tr><th>Remote Address</th><td>" + request.Arguments.RemoteAddress + "</td></tr>");
+            sb.AppendLine("<tr><th>User Agent</th><td>" + request.Arguments.UserAgent + "</td></tr>");
+            sb.AppendLine("<tr><th>Accept Header</th><td>" + request.Arguments.AcceptTypes + "</td></tr>");
+            sb.AppendLine("</table>");
+        }
 
         sb.AppendLine("<h3>SPA Options</h3>");
         if (request.Arguments == null) {
@@ -221,16 +225,18 @@ public abstract partial class SpaRequestHelper {
         sb.AppendLine("<tr><th>Parameters</th><td>" + (from p in Settings.Parameters select $"<code>{p.HtmlEncode()}</code>").Join(", ") + "</td></tr>");
         sb.AppendLine("</table>");
 
-        while (exception != null) {
+        Exception? ex = exception;
+
+        while (ex != null) {
 
             sb.AppendLine("<h3>Exception</h3>");
             sb.AppendLine("<table>\n");
-            sb.AppendLine("<tr><th>Type</th><td>" + exception.GetType() + "</td></tr>");
-            sb.AppendLine("<tr><th>Message</th><td><pre>" + exception.Message + "</pre></td></tr>");
-            sb.AppendLine("<tr><th>Stack trace</th><td><pre>" + exception.StackTrace + "</pre></td></tr>");
+            sb.AppendLine("<tr><th>Type</th><td>" + ex.GetType() + "</td></tr>");
+            sb.AppendLine("<tr><th>Message</th><td><pre>" + ex.Message + "</pre></td></tr>");
+            sb.AppendLine("<tr><th>Stack trace</th><td><pre>" + ex.StackTrace + "</pre></td></tr>");
             sb.AppendLine("</table>");
 
-            exception = exception.InnerException;
+            ex = ex.InnerException;
 
         }
 

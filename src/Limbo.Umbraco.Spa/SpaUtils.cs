@@ -5,12 +5,12 @@
 namespace Limbo.Umbraco.Spa;
 
 /// <summary>
-/// Various utility methods for woroking with the SPA.
+/// Various utility methods for working with the SPA.
 /// </summary>
 public static class SpaUtils {
 
     /// <summary>
-    /// Various utility methods for woroking with JSON.
+    /// Various utility methods for working with JSON.
     /// </summary>
     public static class Json {
 
@@ -21,8 +21,8 @@ public static class SpaUtils {
         /// <param name="name">The value of the <c>name</c> attribute.</param>
         /// <param name="content">The value of the <c>content</c> attribute.</param>
         /// <param name="mandatory">If <c>true</c> the <c>&lt;meta /&gt;</c> element will be appended regardless of <paramref name="content"/> being empty.</param>
-        public static void AddMetaContent(JArray meta, string name, string content, bool mandatory = false) {
-            if (string.IsNullOrWhiteSpace(content) && mandatory == false) return;
+        public static void AddMetaContent(JArray meta, string name, string? content, bool mandatory = false) {
+            if (string.IsNullOrWhiteSpace(content) && !mandatory) return;
             meta.Add(new JObject { { "name", name }, { "content", content ?? string.Empty } });
         }
 
@@ -33,8 +33,8 @@ public static class SpaUtils {
         /// <param name="property">The value of the <c>property</c> attribute.</param>
         /// <param name="content">The value of the <c>content</c> attribute.</param>
         /// <param name="mandatory">If <c>true</c> the <c>&lt;meta /&gt;</c> element will be appended regardless of <paramref name="content"/> being empty.</param>
-        public static void AddMetaProperty(JArray meta, string property, string content, bool mandatory = false) {
-            if (string.IsNullOrWhiteSpace(property) && mandatory == false) return;
+        public static void AddMetaProperty(JArray meta, string property, string? content, bool mandatory = false) {
+            if (string.IsNullOrWhiteSpace(property) && !mandatory) return;
             meta.Add(new JObject { { "property", property }, { "content", content ?? string.Empty } });
         }
 

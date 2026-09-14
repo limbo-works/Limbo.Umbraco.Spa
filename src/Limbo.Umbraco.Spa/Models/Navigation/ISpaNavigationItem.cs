@@ -38,13 +38,13 @@ public interface ISpaNavigationItem {
     /// Gets or sets the template of the item.
     /// </summary>
     [JsonProperty("template")]
-    public string Template { get; }
+    public string? Template { get; }
 
     /// <summary>
     /// Gets or sets the culture of the item.
     /// </summary>
     [JsonProperty("culture")]
-    public string Culture { get; }
+    public string? Culture { get; }
 
     /// <summary>
     /// Gets or sets whether the item has any children.

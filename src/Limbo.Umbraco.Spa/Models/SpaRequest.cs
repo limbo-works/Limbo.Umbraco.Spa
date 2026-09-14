@@ -26,7 +26,7 @@ public class SpaRequest {
     /// <summary>
     /// Gets the options/arguments determined from the current request.
     /// </summary>
-    public SpaRequestOptions Arguments { get; set; }
+    public SpaRequestOptions? Arguments { get; set; }
 
     /// <summary>
     /// Gets or sets the ID of the site.
@@ -37,62 +37,62 @@ public class SpaRequest {
     /// Gets a reference to the <see cref="IPublishedContent"/> representing the site node.
     /// </summary>
     [JsonIgnore]
-    public IPublishedContent Site { get; set; }
+    public IPublishedContent? Site { get; set; }
 
     /// <summary>
     /// Gets or sets an instance of <see cref="SpaSiteModel"/> representing the site model.
     /// </summary>
-    public SpaSiteModel SiteModel { get; set; }
+    public SpaSiteModel? SiteModel { get; set; }
 
     /// <summary>
     /// Gets a reference to the <see cref="IPublishedContent"/> representing the culture node.
     /// </summary>
     [JsonIgnore]
-    public IPublishedContent Culture { get; set; }
+    public IPublishedContent? Culture { get; set; }
 
     /// <summary>
     /// Gets the URL of the current page.
     /// </summary>
     [JsonProperty("url")]
-    public string Url => Arguments.Url;
+    public string Url => Arguments?.Url ?? throw new InvalidOperationException("Arguments cannot be null.");
 
     /// <summary>
     /// Gets the URI of the current SPA request.
     /// </summary>
     [JsonIgnore]
-    public Uri Uri => Arguments.Uri;
+    public Uri Uri => Arguments?.Uri ?? throw new InvalidOperationException("Arguments cannot be null.");
 
     /// <summary>
     /// Gets whether the user is currently in preview mode.
     /// </summary>
     [JsonProperty("isPreview")]
-    public bool IsPreview => Arguments.IsPreview;
+    public bool IsPreview => Arguments?.IsPreview ?? throw new InvalidOperationException("Arguments cannot be null.");
 
     /// <summary>
     /// Gets a collection of the parts being requested.
     /// </summary>
     [JsonProperty("parts")]
-    public SpaApiPart[] Parts => Arguments.Parts.ToArray();
+    public SpaApiPart[] Parts => Arguments?.Parts.ToArray() ?? throw new InvalidOperationException("Arguments cannot be null.");
 
     /// <summary>
     /// Gets the protocol of the current request.
     /// </summary>
-    public string Protocol => Arguments.Protocol;
+    public string Protocol => Arguments?.Protocol ?? throw new InvalidOperationException("Arguments cannot be null.");
 
     /// <summary>
     /// Gets the host name of the current request.
     /// </summary>
-    public string HostName => Arguments.HostName;
+    public string HostName => Arguments?.HostName ?? throw new InvalidOperationException("Arguments cannot be null.");
 
     /// <summary>
     /// Gets or sets the content item of the request.
     /// </summary>
-    public IPublishedContent Content { get; set; }
+    public IPublishedContent? Content { get; set; }
 
     /// <summary>
     /// Gets or sets the content model.
     /// </summary>
-    public ISpaContentModel ContentModel { get; set; }
+    public ISpaContentModel? ContentModel { get; set; }
 
     /// <summary>
     /// Gets the virtual parent if present; otherwise <c>null</c>.
@@ -100,12 +100,13 @@ public class SpaRequest {
     /// A virtual parent is typically used when a content item should appear under another node than its own parent.
     /// </summary>
     [JsonIgnore]
-    public IPublishedContent VirtualParent { get; set; }
+    public IPublishedContent? VirtualParent { get; set; }
 
     /// <summary>
     /// Gets whether the request has a virtual parent.
     /// </summary>
     [JsonIgnore]
+    [MemberNotNullWhen(true, nameof(VirtualParent))]
     public bool HasVirtualParent => VirtualParent != null;
 
     /// <summary>
@@ -121,7 +122,7 @@ public class SpaRequest {
     /// <summary>
     /// Gets or sets the data model.
     /// </summary>
-    public SpaDataModel DataModel { get; set; }
+    public SpaDataModel? DataModel { get; set; }
 
     /// <summary>
     /// Gets or sets the status code of the response.
@@ -131,7 +132,7 @@ public class SpaRequest {
     /// <summary>
     /// Gets or sets the response.
     /// </summary>
-    public ActionResult Response { get; set; }
+    public ActionResult? Response { get; set; }
 
     /// <summary>
     /// Gets the <see cref="Stopwatch"/> used for measuring the duration of the request.
@@ -141,19 +142,17 @@ public class SpaRequest {
     /// <summary>
     /// Gets a reference to the domain of the request.
     /// </summary>
-    [MaybeNull]
-    public DomainAndUri Domain { get; set; }
+    public DomainAndUri? Domain { get; set; }
 
     /// <summary>
-    /// Gets the <see cref="IPublishedContent"/> representing the domain node, or <see langword="null"/> if a doamin node has not or can not be determined.
+    /// Gets the <see cref="IPublishedContent"/> representing the domain node, or <see langword="null"/> if a domain node has not or can not be determined.
     /// </summary>
-    [MaybeNull]
-    public IPublishedContent DomainContent { get; set; }
+    public IPublishedContent? DomainContent { get; set; }
 
     /// <summary>
     /// Gets a reference to the culture of the request.
     /// </summary>
-    public CultureInfo CultureInfo { get; set; }
+    public CultureInfo? CultureInfo { get; set; }
 
     #endregion
 

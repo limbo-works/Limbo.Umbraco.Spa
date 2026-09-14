@@ -23,7 +23,7 @@ public class SpaSiteModel {
     /// Gets a reference to the content node that provides culture specific settings for the site.
     /// </summary>
     [JsonIgnore]
-    public IPublishedContent Culture { get; }
+    public IPublishedContent? Culture { get; }
 
     /// <summary>
     /// Gets the ID of the culture node, or <c>0</c> if the site context doesn't have a culture node.
@@ -59,7 +59,7 @@ public class SpaSiteModel {
     /// Gets a reference to the <see cref="IPublishedContent"/> representing the 404 page of the requested site (or culture).
     /// </summary>
     [JsonIgnore]
-    public IPublishedContent NotFoundPage { get; protected set; }
+    public IPublishedContent? NotFoundPage { get; protected set; }
 
     /// <summary>
     /// Gets whether the site has a 404 page.
@@ -82,7 +82,7 @@ public class SpaSiteModel {
         // Site
         Site = site ?? throw new ArgumentNullException(nameof(site));
         Id = site.Id;
-        Name = site.Value<string>(SpaConstants.Properties.SiteName);
+        Name = site.Value<string>(SpaConstants.Properties.SiteName) ?? site.Name;
         Url = site.Url();
 
     }
@@ -102,7 +102,7 @@ public class SpaSiteModel {
 
         // Culture
         Culture = culture ?? site;
-        Name = site.Value<string>(SpaConstants.Properties.SiteName);
+        Name = site.Value<string>(SpaConstants.Properties.SiteName) ?? site.Name;
         Url = site.Url();
 
     }

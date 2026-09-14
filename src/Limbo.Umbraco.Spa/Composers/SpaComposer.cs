@@ -1,21 +1,24 @@
 ﻿using Limbo.Umbraco.Spa.Configuration;
 using Limbo.Umbraco.Spa.Factories;
+using Limbo.Umbraco.Spa.Manifests;
 using Limbo.Umbraco.Spa.Repositories;
 using Limbo.Umbraco.Spa.Services;
 using Microsoft.Extensions.DependencyInjection;
+using Skybrud.Essentials.Umbraco.Composing;
 using Umbraco.Cms.Core.Composing;
 using Umbraco.Cms.Core.DependencyInjection;
 using Umbraco.Cms.Core.Events;
 using Umbraco.Cms.Core.Notifications;
 using Umbraco.Extensions;
 
-#pragma warning disable 1591
-
 namespace Limbo.Umbraco.Spa.Composers;
 
 public class SpaComposer : IComposer {
 
     public void Compose(IUmbracoBuilder builder) {
+
+        // Add our custom package manifest reader
+        builder.AddPackageManifestReader<SpaPackageManifestReader>();
 
         // Register options
         builder.Services.AddOptions<SpaConfiguration>()

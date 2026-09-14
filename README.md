@@ -8,20 +8,21 @@
 
 ## Installation
 
-For Umbraco 13, the package is only available via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.Spa/13.0.0-alpha009). Either via the .NET CLI:
+For Umbraco 13, the package is only available via [**NuGet**](https://www.nuget.org/packages/Limbo.Umbraco.Spa/13.0.0). Either via the .NET CLI:
 
 ```
-dotnet add package Limbo.Umbraco.Spa --version 13.0.0-alpha009
+dotnet add package Limbo.Umbraco.Spa --version 13.0.0
 ```
 
 or the NuGet Package Manager:
 
 ```
-Install-Package Limbo.Umbraco.Spa -Version 13.0.0-alpha009
+Install-Package Limbo.Umbraco.Spa -Version 13.0.0
 ```
 
 ### Other versions of Umbraco
 
+- **Umbraco 17:** See the [v17/main](https://github.com/limbo-works/Limbo.Umbraco.Spa/tree/v17/main) branch.
 - **Umbraco 10-12:** See the [v2/main](https://github.com/limbo-works/Limbo.Umbraco.Spa/tree/v2/main) branch.
 - **Umbraco 9:** See the [v1/main](https://github.com/limbo-works/Limbo.Umbraco.Spa/tree/v1/main) branch.
 - **Umbraco 8:** See our older [Skybrud.Umbraco.Spa](https://github.com/skybrud/Skybrud.Umbraco.Spa) package.

@@ -46,7 +46,7 @@ public class SpaMetaDataFactory : ISpaMetaDataFactory {
     /// <param name="request">The current request.</param>
     /// <returns>The canonical URL for <paramref name="content"/>.</returns>
     public virtual string GetCanonicalUrl(SpaMetaData metaData, IPublishedContent content, SpaRequest request) {
-        return content.Url(request.CultureInfo?.ToString(), UrlMode.Absolute);
+        return content.Url(request.CultureInfo.ToString(), UrlMode.Absolute);
     }
 
     /// <summary>

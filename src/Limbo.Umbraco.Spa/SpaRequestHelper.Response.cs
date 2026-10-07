@@ -309,15 +309,6 @@ public abstract partial class SpaRequestHelper {
     }
 
     /// <summary>
-    /// Returns a new JSON based error response with the specified <paramref name="statusCode"/>.
-    /// </summary>
-    /// <param name="statusCode">The status code to be used for the response.</param>
-    /// <returns>An instance of <see cref="ActionResult"/>.</returns>
-    protected virtual ActionResult ReturnError(HttpStatusCode statusCode) {
-        return CreateSpaResponse(SpaResponseModel.GetError(statusCode, null));
-    }
-
-    /// <summary>
     /// Returns a new JSON based error response with the specified <paramref name="message"/>.
     /// </summary>
     /// <param name="message">The message of the error response.</param>

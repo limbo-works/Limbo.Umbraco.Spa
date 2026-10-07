@@ -76,7 +76,7 @@ public class SpaPublishedContentContractResolver : DefaultContractResolver {
         property.ShouldSerialize = _ => ShouldSerialize(member, property);
 
         // Make sure the property names are in lower camel case, but also respect if an explicit property name has been specified
-        if (member.HasCustomAttribute(out JsonPropertyAttribute attribute) && !string.IsNullOrWhiteSpace(attribute.PropertyName)) {
+        if (member.HasCustomAttribute(out JsonPropertyAttribute? attribute) && !string.IsNullOrWhiteSpace(attribute.PropertyName)) {
             property.PropertyName = attribute.PropertyName;
         } else {
             property.PropertyName = StringUtils.ToCamelCase(property.PropertyName);

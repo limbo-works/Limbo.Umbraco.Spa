@@ -55,7 +55,7 @@ public partial class SpaRequestHelper {
 
             if (c != null) {
 
-                request.Domain = DomainRepository.DomainForNode(c, null, request.Arguments.QueryString["culture"]);
+                request.Domain = DomainRepository.DomainForNode(c, request.Arguments.Uri, request.Arguments.QueryString["culture"]);
 
                 if (!string.IsNullOrWhiteSpace(request.Domain?.Culture)) {
                     request.CultureInfo = CultureInfo.GetCultureInfo(request.Domain.Culture);
@@ -255,6 +255,7 @@ public partial class SpaRequestHelper {
     /// <param name="request">The current request.</param>
     protected virtual void InitSiteModel(SpaRequest request) {
         if (request.Site == null) return;
+        PropertyNotSetException.ThrowIfNull(request.Culture);
         request.SiteModel = new SpaSiteModel(request.Site, request.Culture);
     }
 

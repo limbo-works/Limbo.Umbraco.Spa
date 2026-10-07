@@ -114,7 +114,7 @@ public class SpaDomainRepository {
             IPublishedContent? c = _publishedContentCache.GetById(request.Arguments.PageId);
 
             if (c != null) {
-                request.Domain = DomainForNode(c, null, request.Arguments.Culture);
+                request.Domain = DomainForNode(c, uri, request.Arguments.Culture);
                 if (!string.IsNullOrWhiteSpace(request.Domain?.Culture)) {
                     request.CultureInfo = CultureInfo.GetCultureInfo(request.Domain.Culture);
                     return true;
@@ -169,13 +169,13 @@ public class SpaDomainRepository {
 
     }
 
-    private DomainAndUri? SelectDomain(IEnumerable<Domain> domains, Uri uri, string? culture = null, string? defaultCulture = null, Func<IReadOnlyCollection<DomainAndUri>, Uri, string?, string?, DomainAndUri>? filter = null) {
+    private DomainAndUri? SelectDomain(IEnumerable<Domain> domains, Uri uri, string? culture = null, string? defaultCulture = null, Func<IReadOnlyCollection<DomainAndUri>, Uri, string?, string?, DomainAndUri?>? filter = null) {
 
         // sanitize the list to have proper uris for comparison (scheme, path end with /)
         // we need to end with / because example.com/foo cannot match example.com/foobar
         // we need to order so example.com/foo matches before example.com/
         var domainsAndUris = domains
-            .Where(d => d.IsWildcard == false)
+            .Where(d => !d.IsWildcard)
             .Select(d => new DomainAndUri(d, uri))
             .OrderByDescending(d => d.Uri.ToString())
             .ToList();
@@ -187,15 +187,6 @@ public class SpaDomainRepository {
         // sanitize cultures
         culture = culture?.NullOrWhiteSpaceAsNull();
         defaultCulture = defaultCulture?.NullOrWhiteSpaceAsNull();
-
-        if (uri == null) {
-            // TODO: ¯\_(ツ)_/¯
-            // no uri - will only rely on culture
-            return GetByCulture(domainsAndUris, culture, defaultCulture);
-        }
-
-        // else we have a URI,
-        // try to match that URI, else filter
 
         // if a culture is specified, then try to get domains for that culture
         // (else cultureDomains will be null)
@@ -265,28 +256,6 @@ public class SpaDomainRepository {
         }
 
         return null;
-    }
-
-    private DomainAndUri GetByCulture(IReadOnlyCollection<DomainAndUri> domainsAndUris, string? culture, string? defaultCulture) {
-
-        DomainAndUri? domainAndUri;
-
-        // we try our best to match cultures, but may end with a bogus domain
-
-        // try the supplied culture
-        if (culture != null) {
-            domainAndUri = domainsAndUris.FirstOrDefault(x => x.Culture.InvariantEquals(culture));
-            if (domainAndUri != null) return domainAndUri;
-        }
-
-        // // try the defaultCulture culture
-        if (defaultCulture != null) {
-            domainAndUri = domainsAndUris.FirstOrDefault(x => x.Culture.InvariantEquals(defaultCulture));
-            if (domainAndUri != null) return domainAndUri;
-        }
-
-        return domainsAndUris.First(); // what else?
-
     }
 
 }

@@ -152,7 +152,7 @@ public class SpaRequest {
     /// <summary>
     /// Gets a reference to the culture of the request.
     /// </summary>
-    public CultureInfo? CultureInfo { get; set; }
+    public CultureInfo CultureInfo { get; set; }
 
     #endregion
 
@@ -165,6 +165,7 @@ public class SpaRequest {
     public SpaRequest(HttpContext context) {
         HttpContext = context ?? throw new ArgumentNullException(nameof(context));
         Stopwatch = Stopwatch.StartNew();
+        CultureInfo = CultureInfo.GetCultureInfo("da-DK");
     }
 
     #endregion

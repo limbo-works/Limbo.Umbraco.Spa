@@ -48,7 +48,7 @@ public partial class SpaRequestHelper {
                 return umbracoContext.Content.GetById(pageId);
             default:
                 Guid? key = DocumentUrlService.GetDocumentKeyByRoute(url, null, rootId, false);
-                return key is null ? null : umbracoContext.Content.GetById(pageId);
+                return key is null ? null : umbracoContext.Content.GetById(key.Value);
         }
     }
 

@@ -146,6 +146,7 @@ public abstract partial class SpaRequestHelper {
             sb.AppendLine("<tr><th>Nav context</th><td>" + request.Arguments.NavContext + "</td></tr>");
             sb.AppendLine("<tr><th>Cache key</th><td>" + cacheKey + "</td></tr>");
             sb.AppendLine("<tr><th>Enable caching</th><td>" + request.Arguments.EnableCaching + "</td></tr>");
+            sb.AppendLine("<tr><th>Culture info</th><td>" + request.CultureInfo + "</td></tr>");
             sb.AppendLine("</table>");
         }
 

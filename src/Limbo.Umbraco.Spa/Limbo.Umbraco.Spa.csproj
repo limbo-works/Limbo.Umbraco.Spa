@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <VersionPrefix>17.0.0-alpha001</VersionPrefix>
+    <VersionPrefix>17.0.0-alpha002</VersionPrefix>
     <VersionSuffix Condition="'$(Configuration)'=='Debug'">build$([System.DateTime]::UtcNow.ToString(`yyyyMMddHHmm`))</VersionSuffix>
     <Company>Limbo</Company>
     <Product>Limbo SPA</Product>
@@ -47,9 +47,9 @@
   <!-- Include NuGet dependencies -->
   <ItemGroup>
     <PackageReference Include="Limbo.MetaData" Version="1.0.0" />
-    <PackageReference Include="Skybrud.Essentials" Version="1.1.69" />
+    <PackageReference Include="Skybrud.Essentials" Version="1.1.70" />
     <PackageReference Include="Skybrud.Essentials.AspNetCore" Version="1.0.2" />
-    <PackageReference Include="Skybrud.Essentials.Umbraco" Version="17.0.0-alpha009" />
+    <PackageReference Include="Skybrud.Essentials.Umbraco" Version="17.0.0-alpha011" />
     <PackageReference Include="Skybrud.Umbraco.Redirects" Version="17.1.0-beta001" />
     <PackageReference Include="Umbraco.Cms.Core" Version="[17.1.0,17.999)" NoWarn="NU1902" />
   </ItemGroup>
